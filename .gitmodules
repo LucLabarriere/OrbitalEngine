@@ -1,0 +1,4 @@
+[submodule "OrbitalEngine/vendor/glm"]
+	path = OrbitalEngine/vendor/glm
+	url = git@github.com:g-truc/glm.git
+	branch = master

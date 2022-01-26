@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Context.h"
-
 #if defined(_MSC_VER)
 	//  Microsoft 
 	#define EXPORT __declspec(dllexport)
@@ -13,10 +11,10 @@
 	#define IMPORT
 
 #else
-	//  do nothing and hope for the best?
 	#define EXPORT
 	#define IMPORT
 	#pragma warning Unknown dynamic link import/export semantics.
+
 #endif
 
 #if ORBITAL_COMPILING

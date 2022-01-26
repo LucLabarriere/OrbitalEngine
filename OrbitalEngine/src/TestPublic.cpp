@@ -1,5 +1,3 @@
-#include "OrbitalEngine/Context.h"
-
 #include "OrbitalEngine/TestPublic.h"
 
 namespace OrbitalEngine

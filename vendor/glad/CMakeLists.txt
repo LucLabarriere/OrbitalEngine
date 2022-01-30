@@ -10,5 +10,3 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC
 		include
 )
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

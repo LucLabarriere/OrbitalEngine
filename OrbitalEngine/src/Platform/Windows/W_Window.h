@@ -4,7 +4,7 @@
 
 namespace OrbitalEngine
 {
-	class ORBITAL_API W_Window : public Window
+	class W_Window : public Window
 	{
 	public:
 		W_Window(unsigned int width, unsigned int height, const std::string& title);

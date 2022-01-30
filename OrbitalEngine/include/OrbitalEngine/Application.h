@@ -4,7 +4,7 @@
 
 namespace OrbitalEngine
 {
-	class ORBITAL_API Application
+	class Application
 	{
 	public:
 		Application();

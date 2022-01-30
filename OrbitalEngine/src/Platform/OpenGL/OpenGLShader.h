@@ -4,7 +4,7 @@
 
 namespace OrbitalEngine
 {
-	class ORBITAL_API OpenGLShader : public Shader
+	class OpenGLShader : public Shader
 	{
 	public:
 		struct Sources

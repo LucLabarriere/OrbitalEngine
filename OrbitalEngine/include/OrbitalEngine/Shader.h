@@ -7,7 +7,7 @@ namespace OrbitalEngine
 {
 	class Application;
 
-	class ORBITAL_API Shader
+	class Shader
 	{
 	public:
 		virtual ~Shader() {};

@@ -86,9 +86,7 @@ namespace OrbitalEngine
 
 
 	// Vertices
-	template struct Vertex<Position3>;
 	template struct Vertex<Position3, Color4>;
-	//using BasicVertex = Vertex<Position3>;
 
 	// Containers
 	template struct VertexContainer<Position3, Color4>;

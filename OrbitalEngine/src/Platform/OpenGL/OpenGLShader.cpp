@@ -1,16 +1,17 @@
 #include "OpenGLShader.h"
+#include "OrbitalEngine/Logger.h"
 
 namespace OrbitalEngine
 {
 	Shader* Shader::Create(unsigned int shaderId, const std::string& name, const std::string& filepath)
 	{
-		OE_DEBUG("OpenGLShader: Creating shader: {}", name);
+		Logger::Debug("OpenGLShader: Creating shader: {}", name);
 		return new OpenGLShader(shaderId, name, filepath);
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
-		OE_DEBUG("OpenGLShader: deleting shader: {}", m_rendererId);
+		Logger::Debug("OpenGLShader: deleting shader: {}", m_rendererId);
 		unbind();
 		glad_glDeleteProgram(m_rendererId);
 	}
@@ -92,7 +93,7 @@ namespace OrbitalEngine
 		int location = glad_glGetUniformLocation(m_rendererId, name.c_str());
 
 		if (location == -1)
-			OE_ERROR("OpenGLShader: In shader '{0}' Uniform {1} doesn't exist", m_name, name);
+			Logger::Error("OpenGLShader: In shader '{}' Uniform {} doesn't exist", m_name, name);
 
 		return location;
 	}
@@ -125,7 +126,7 @@ namespace OrbitalEngine
 
 		if (!compile_ok)
 		{
-			OE_ERROR("OpenGLShader: Error in shader {0}", m_name);
+			Logger::Error("OpenGLShader: Error in shader {}", m_name);
 			return -1;
 		}
 		
@@ -135,7 +136,7 @@ namespace OrbitalEngine
 	OpenGLShader::Sources OpenGLShader::parseSourceCode(const std::string& filepath)
 	{
 		std::ifstream sourceFile;
-		OE_ASSERT(fileExists(filepath), "OpenGLShader: {0}: no such file ", filepath);
+		OE_ASSERT(fileExists(filepath), "OpenGLShader: {}: no such file ", filepath);
 
 		sourceFile.open(filepath, std::ios::out);
 

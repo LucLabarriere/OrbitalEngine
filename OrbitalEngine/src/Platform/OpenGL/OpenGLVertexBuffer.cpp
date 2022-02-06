@@ -30,21 +30,21 @@ namespace OrbitalEngine
 		glad_glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void OpenGLVertexBuffer::allocateMemory(const void* data, unsigned int size) const
+	void OpenGLVertexBuffer::allocateMemory(const void* data, size_t size) const
 	{
 		glad_glBufferData(GL_ARRAY_BUFFER, size, data, m_drawMode);
 	}
 
-	void OpenGLVertexBuffer::setAttribute(unsigned int index, unsigned int count, unsigned int type,
-		unsigned int normalized, unsigned int size, const void* pointer) const
+	void OpenGLVertexBuffer::setAttribute(size_t index, size_t count, unsigned int type,
+		unsigned int normalized, size_t size, const void* pointer) const
 	{
-		glad_glEnableVertexAttribArray(index);
+		glad_glEnableVertexAttribArray((GLuint)index);
 		glad_glVertexAttribPointer(
-			index,
-			count,
+			(GLuint)index,
+			(GLint)count,
 			type,
 			normalized,
-			size,
+			(GLsizei)size,
 			pointer
 		);
 	}

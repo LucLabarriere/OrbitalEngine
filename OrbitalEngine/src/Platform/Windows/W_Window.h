@@ -13,13 +13,11 @@ namespace OrbitalEngine
 		virtual bool shouldClose() override;
 		virtual void onUpdate() override;
 		virtual void shutdown() override;
-		
+
 	private:
 		GLFWwindow* createWindow();
 
 	private:
-		int m_majorVersion = 4;
-		int m_minorVersion = 6;
 		GLFWwindow* m_glfwWindow = nullptr;
 	};
 }

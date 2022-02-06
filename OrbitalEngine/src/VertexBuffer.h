@@ -14,9 +14,9 @@ namespace OrbitalEngine
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 
-		virtual void allocateMemory(const void* data, unsigned int size) const = 0;
-		virtual void setAttribute(unsigned int index, unsigned int count, unsigned int type,
-			unsigned int normalized, unsigned int size, const void* pointer) const = 0;
+		virtual void allocateMemory(const void* data, size_t size) const = 0;
+		virtual void setAttribute(size_t index, size_t count, unsigned int type,
+			unsigned int normalized, size_t size, const void* pointer) const = 0;
 
 	protected:
 		VertexBuffer(unsigned int drawMode)

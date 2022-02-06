@@ -83,6 +83,7 @@ _deps
 # Project related
 *.vcxproj*
 *.sln
+out
 
 # User-specific files
 *.rsuser

@@ -1,10 +1,13 @@
 #pragma once
+#pragma warning(push)
+#pragma warning(disable : 4661)
+
 
 #define OE_ATTRIBUTE(name, count, ctype, oetype, normalized) \
 	public: \
 		static inline const std::string& getName() { return s_name; } \
-		static inline unsigned int GetCount() { return count; } \
-		static inline unsigned int GetSize() { return sizeof(ctype) * count; } \
+		static inline size_t GetCount() { return count; } \
+		static inline size_t GetSize() { return sizeof(ctype) * count; } \
 		static inline unsigned int GetType() { return oetype; } \
 		static inline unsigned int GetNormalized() { return normalized; } \
 	private: \
@@ -59,8 +62,8 @@ namespace OrbitalEngine
 		{
 		}
 
-		static unsigned int GetCount() { return (Bases::GetCount() + ...); }
-		static unsigned int GetSize() { return (Bases::GetSize() + ...); }
+		static size_t GetCount() { return (Bases::GetCount() + ...); }
+		static size_t GetSize() { return (Bases::GetSize() + ...); }
 		static unsigned int GetType() { return (Bases::GetType() + ...); }
 		static unsigned int GetNormalized() { return (Bases::GetNormalized() + ...); }
 	};
@@ -75,10 +78,9 @@ namespace OrbitalEngine
 		void allocateMemory(const VertexBuffer& buffer) const;
 		void setLayout(const VertexBuffer& buffer) const;
 
-		unsigned int getCount() const { return m_vertices.size(); }
-		unsigned int getSize() const { return m_vertices.size() * Vertex<Vertices...>::GetSize(); }
+		size_t getCount() const { return m_vertices.size(); }
+		size_t getSize() const { return m_vertices.size() * Vertex<Vertices...>::GetSize(); }
 		const void* getData() const { return m_vertices.data(); }
-
 
 	private:
 		std::vector <Vertex<Vertices...>> m_vertices;
@@ -89,5 +91,6 @@ namespace OrbitalEngine
 	template struct Vertex<Position3, Color4>;
 
 	// Containers
-	template struct VertexContainer<Position3, Color4>;
+	template class VertexContainer<Position3, Color4>;
 }
+#pragma warning(pop)

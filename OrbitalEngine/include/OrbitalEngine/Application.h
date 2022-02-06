@@ -1,6 +1,8 @@
 #pragma once
 
 #include "OrbitalEngine/Window.h"
+#include "OrbitalEngine/Time.h"
+#include "OrbitalEngine/LayerStack.h"
 
 namespace OrbitalEngine
 {
@@ -8,11 +10,13 @@ namespace OrbitalEngine
 	{
 	public:
 		Application();
-		~Application();
-			
+		virtual ~Application();
+		
+		void onEvent(Event& e);
 		void run();
 
-	private:
+	protected:
 		Scope<Window> m_window;
+		Scope<LayerStack> m_layerStack;
 	};	
 }

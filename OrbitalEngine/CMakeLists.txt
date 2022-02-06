@@ -1,18 +1,18 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.16.0)
 project(OrbitalEngine VERSION 0.1.0)
+set(CMAKE_CXX_STANDARD 23)
 
-add_compile_definitions(ORBITAL_OPENGL)
 
 file(GLOB_RECURSE SOURCES
-	src/*.cpp
+	*.cpp
+	*.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
-target_compile_definitions(${PROJECT_NAME}
-	PRIVATE
-		ORBITAL_COMPILING
-)
+target_compile_options(${PROJECT_NAME} PRIVATE "/wd6011")
+target_compile_definitions(${PROJECT_NAME} PUBLIC ORBITAL_OPENGL)
+target_compile_definitions(${PROJECT_NAME} PUBLIC ORBITAL_DEBUG)
 
 target_include_directories(${PROJECT_NAME}
 	PUBLIC
@@ -20,17 +20,16 @@ target_include_directories(${PROJECT_NAME}
 		${CMAKE_SOURCE_DIR}/vendor/glm
 		${CMAKE_SOURCE_DIR}/vendor/glad/include
 		${CMAKE_SOURCE_DIR}/vendor/glfw/include
-		${CMAKE_SOURCE_DIR}/vendor/spdlog/include
+		${CMAKE_SOURCE_DIR}/vendor/imgui/include
 	PRIVATE
 		src
 )
 
 target_precompile_headers(${PROJECT_NAME} PUBLIC include/OrbitalEngine/Context.h)
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		glad
 		glfw
-		spdlog
+		imgui
 )

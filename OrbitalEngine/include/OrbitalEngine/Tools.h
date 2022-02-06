@@ -1,5 +1,9 @@
 #pragma once
 
+#include "OrbitalEngine/Events/Events.h"
+#include "OrbitalEngine/Events/KeyEvents.h"
+#include "OrbitalEngine/Events/MouseEvents.h"
+
 namespace OrbitalEngine
 {
 	template<typename T>

@@ -1,0 +1,5 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define OE_ATTRIBUTE(name, count, ctype, oetype, normalized) public: static inline const std::string& getName() { return s_name; } static inline size_t GetCount() { return count; } static inline size_t GetSize() { return sizeof(ctype) * count; } static inline unsigned int GetType() { return oetype; } static inline unsigned int GetNormalized() { return normalized; } private: static inline const std::string& s_name = name;
+#define OE_EVENT_DEFINITION(type, categories, stringstream) static unsigned int GetCategories() { return categories; }

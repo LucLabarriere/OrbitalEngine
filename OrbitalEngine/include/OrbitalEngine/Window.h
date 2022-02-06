@@ -1,6 +1,5 @@
 #pragma once
 
-#include "OrbitalEngine/Context.h"
 #include "OrbitalEngine/Tools.h"
 
 namespace OrbitalEngine
@@ -19,6 +18,17 @@ namespace OrbitalEngine
 		unsigned int getWidth() { return m_width; }
 		unsigned int getHeight() { return m_height; }
 
+
+		void applicationCallback(Event& e)
+		{
+			m_eventCallback(e);
+		}
+		
+		void setApplicationCallBack(std::function<void(Event& e)> callback)
+		{
+			m_eventCallback = callback;
+		};
+
 		static Window* Create(unsigned int width, unsigned int height, const std::string& title);
 
 	protected:
@@ -26,5 +36,6 @@ namespace OrbitalEngine
 		unsigned int m_width;
 		unsigned int m_height;
 		std::string m_title;
+		std::function<void(Event& e)> m_eventCallback;
 	};
 }

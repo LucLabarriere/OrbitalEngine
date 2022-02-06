@@ -1,5 +1,6 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.16.0)
 project(Sandbox VERSION 0.1.0)
+set(CMAKE_CXX_STANDARD 23)
 
 file(GLOB SOURCES src/*.cpp)
 
@@ -12,5 +13,4 @@ target_include_directories(${PROJECT_NAME}
 		include
 )
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} PRIVATE OrbitalEngine)

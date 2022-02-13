@@ -14,19 +14,8 @@ public:
 	{
 
 	}
-
-	virtual bool onKeyPressed(KeyPressedEvent& e) override
-	{
-		Logger::Info("Game Layer: {}", e.getKeyCode());
-		return false;
-	}
-
-	virtual bool onMouseScrolled(MouseScrolledEvent& e) override
-	{
-		Logger::Info("Game Layer: {}", e.getX(), e.getY());
-		return true;
-	}
 };
+
 class MenuLayer : public Layer
 {
 public:
@@ -36,17 +25,5 @@ public:
 	virtual void update(Time dt) override
 	{
 
-	}
-
-	virtual bool onKeyPressed(KeyPressedEvent& e) override
-	{
-		Logger::Info("Menu Layer: {}", e.getKeyCode());
-		return false;
-	}
-
-	virtual bool onMouseScrolled(MouseScrolledEvent& e) override
-	{
-		Logger::Info("Menu Layer: {}", e.getX(), e.getY());
-		return true;
 	}
 };

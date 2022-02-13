@@ -17,7 +17,7 @@ namespace OrbitalEngine
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-
+		glad_glDeleteBuffers(1, &m_rendererId);
 	}
 
 	void OpenGLVertexBuffer::bind() const
@@ -33,6 +33,11 @@ namespace OrbitalEngine
 	void OpenGLVertexBuffer::allocateMemory(const void* data, size_t size) const
 	{
 		glad_glBufferData(GL_ARRAY_BUFFER, size, data, m_drawMode);
+	}
+
+	void OpenGLVertexBuffer::submitData(const void* data, size_t size) const
+	{
+		glad_glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 
 	void OpenGLVertexBuffer::setAttribute(size_t index, size_t count, unsigned int type,

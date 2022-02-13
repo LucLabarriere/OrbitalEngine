@@ -6,3 +6,6 @@
 	path = vendor/glfw
 	url = git@github.com:glfw/glfw.git
 	branch = 3.3-stable
+[submodule "vendor/entt"]
+	path = vendor/entt
+	url = git@github.com:skypjack/entt.git

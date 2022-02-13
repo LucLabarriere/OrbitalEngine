@@ -2,7 +2,7 @@
 
 namespace OrbitalEngine
 {
-	class Application;
+	class Batch;
 
 	class VertexArray
 	{
@@ -17,7 +17,7 @@ namespace OrbitalEngine
 		static VertexArray* Create();
 
 	protected:
-			friend Application;
+			friend Batch;
 
 			unsigned int m_rendererId;
 	};

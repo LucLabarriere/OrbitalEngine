@@ -9,8 +9,11 @@
 #include <sstream>
 #include <signal.h>
 #include <glm/glm.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtx/transform.hpp>
 #include <format>
 #include <functional>
+#include <entt/entt.hpp>
 
 #ifdef __INTELLISENSE__
 #pragma diag_suppress 2500
@@ -18,6 +21,10 @@
 
 // OpenGL
 #if defined(ORBITAL_OPENGL)
+	#if defined(ORBITAL_DEBUG)
+		#define GLAD_DEBUG
+	#endif
+
 	#define GLFW_INCLUDE_NONE
 	#include <GLFW/glfw3.h>
 	#include <glad/glad.h>

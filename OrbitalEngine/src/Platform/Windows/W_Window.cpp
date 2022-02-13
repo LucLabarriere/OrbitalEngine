@@ -16,10 +16,10 @@ namespace OrbitalEngine
 	{
 		switch (severity)
 		{
-			case GL_DEBUG_SEVERITY_HIGH:         Logger::Error("OpenGL: {}, {}, {}", id, type, message); return;
-			case GL_DEBUG_SEVERITY_MEDIUM:       Logger::Warn("OpenGL: {}, {}, {}", id, type, message); return;
-			case GL_DEBUG_SEVERITY_LOW:          Logger::Warn("OpenGL: {}, {}, {}", id, type, message); return;
-			case GL_DEBUG_SEVERITY_NOTIFICATION: Logger::Info("OpenGL: {}, {}, {}", id, type, message); return;
+			case GL_DEBUG_SEVERITY_HIGH:         Logger::Error("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
+			case GL_DEBUG_SEVERITY_MEDIUM:       Logger::Error("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
+			case GL_DEBUG_SEVERITY_LOW:          Logger::Warn("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
+			case GL_DEBUG_SEVERITY_NOTIFICATION: Logger::Debug("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
 		}
 	}
 
@@ -58,10 +58,10 @@ namespace OrbitalEngine
 		OE_ASSERT(gladSuccess, "W_Window: Could not initialize GLAD (OpenGL Error)");
 		Logger::Info("W_Window: OpenGL {} context created.", (const char*)glad_glGetString(GL_VERSION));
 
-		glad_glDebugMessageCallback(OpenGLMessageCallback, nullptr);
-		glad_glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 		glad_glEnable(GL_DEBUG_OUTPUT);
 		glad_glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glad_glDebugMessageCallback(OpenGLMessageCallback, nullptr);
+		glad_glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 
 		glfwSwapInterval(1);
 

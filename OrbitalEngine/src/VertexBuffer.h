@@ -4,7 +4,7 @@
 
 namespace OrbitalEngine
 {
-	class Application;
+	class Batch;
 
 	class VertexBuffer
 	{
@@ -15,6 +15,7 @@ namespace OrbitalEngine
 		virtual void unbind() const = 0;
 
 		virtual void allocateMemory(const void* data, size_t size) const = 0;
+		virtual void submitData(const void* data, size_t size) const = 0;
 		virtual void setAttribute(size_t index, size_t count, unsigned int type,
 			unsigned int normalized, size_t size, const void* pointer) const = 0;
 
@@ -24,7 +25,7 @@ namespace OrbitalEngine
 		static VertexBuffer* Create(unsigned int drawMode);
 
 	protected:
-		friend Application;
+		friend Batch;
 
 		unsigned int m_rendererId;
 		unsigned int m_drawMode;

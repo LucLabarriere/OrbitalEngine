@@ -1,10 +1,15 @@
 #include "OrbitalEngine/Application.h"
 #include "OrbitalEngine/Shader.h"
 #include "OrbitalEngine/Vertices.h"
+#include "OrbitalEngine/IndexContainer.h"
 #include "OrbitalEngine/Logger.h"
+#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/MeshManager.h"
+#include "OrbitalEngine/Batch.h"
+#include "OrbitalEngine/BatchManager.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
-#include <ranges>
+#include "IndexBuffer.h"
 
 #define OE_DISPATCH_LAYER(x) \
 	for (auto& layer : *m_layerStack) \
@@ -18,17 +23,24 @@ namespace OrbitalEngine
 	Application::Application()
 	{
 		#if defined(ORBITAL_DEBUG)
-			Logger::SetLevel(Logger::Level::Debug);
+			Logger::SetLevel(Logger::Level::Trace);
 		#endif
 	
 		m_window = Scope<Window>(Window::Create(800, 600, "Application"));
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		m_layerStack = CreateScope<LayerStack>();
+
+		MeshManager::Initialize();
+		BatchManager::Initialize();
 	}
 
 	Application::~Application()
 	{
 		Logger::Info("Application: Terminating");
+		m_window.reset();
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
 		glfwTerminate();
 	}
 
@@ -74,21 +86,43 @@ namespace OrbitalEngine
 			"c:/Users/lucla/Work/Programmes/Orbital/OrbitalEngine/assets/shaders/Base.glsl"
 		));
 
-		Ref<VertexArray> vao(VertexArray::Create());
-		Ref<VertexBuffer> vbo(VertexBuffer::Create(OE_STATIC_DRAW));
+		entt::registry registry;
 
-		using V = Vertex<Position3, Color4>;
+		auto entity1 = registry.create();
+		Components::Transform t1 = {
+			{ -0.5f, 0.5f, 0.0f },
+			{  0.0f, 0.0f, 45.0f },
+			{  0.5f, 0.5f, 1.0f }
+		};
+		registry.emplace<Components::Transform>(entity1, t1); // static batched
+		registry.emplace<Components::MeshRenderer>(entity1, MeshManager::Get("Quad"), true, true);
 
-		VertexContainer<Position3, Color4> vertices(
-			V({ -0.5f, -0.5f, 0.0f}, {0.1f, 0.9f, 0.1f, 1.0f}),
-			V({  0.5f, -0.5f, 0.0f}, {0.9f, 0.1f, 0.1f, 1.0f}),
-			V({ -0.5f,  0.5f, 0.0f}, {0.1f, 0.1f, 0.9f, 1.0f})
-		);
+		auto entity2 = registry.create();
+		Components::Transform t2 = {
+			{  0.5f, 0.5f, 0.0f },
+			{  0.0f, 0.0f, 0.0f },
+			{  0.5f, 0.5f, 1.0f }
+		};
+		registry.emplace<Components::Transform>(entity2, t2); // static !batched
+		registry.emplace<Components::MeshRenderer>(entity2, MeshManager::Get("Quad"), true, false);
 
-		vao->bind();
-		vbo->bind();
-		vertices.allocateMemory(*vbo);
-		vertices.setLayout(*vbo);
+		auto entity3 = registry.create();
+		Components::Transform t3 = {
+			{ -0.5f,-0.5f, 0.0f },
+			{  0.0f, 0.0f, 45.0f },
+			{  0.5f, 0.5f, 1.0f }
+		};
+		registry.emplace<Components::Transform>(entity3, t3); // dynamic !batched
+		registry.emplace<Components::MeshRenderer>(entity3, MeshManager::Get("Quad"), false, false);
+
+		auto entity4 = registry.create();
+		Components::Transform t4 = {
+			{  0.5f,-0.5f, 0.0f },
+			{  0.0f, 0.0f, 0.0f },
+			{  0.5f, 0.5f, 1.0f }
+		};
+		registry.emplace<Components::Transform>(entity4, t4); // dynamic batched
+		registry.emplace<Components::MeshRenderer>(entity4, MeshManager::Get("Quad"), false, true);
 
 		Time timeAtLastUpdate;
 		Time dt;
@@ -113,21 +147,25 @@ namespace OrbitalEngine
 			}
 
 			shader->bind();
-			vao->bind();
-			glad_glDrawArrays(GL_TRIANGLES, 0, 3);
 
+			auto view = registry.view<Components::Transform, Components::MeshRenderer>();
+			for (auto entity : view)
+			{
+				auto& transform = view.get<Components::Transform>(entity);
+				auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
+				
+				BatchManager::RegisterMesh(meshRenderer, transform);
+
+				if (meshRenderer.staticDraw and meshRenderer.batchedDraw)
+					meshRenderer.Batch->requestFlush();
+			}
+
+			BatchManager::RenderBatches();
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			m_window->onUpdate();
 		}
-
-		vao.reset();
-		vbo.reset();
-		m_window.reset();
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
 	}
 
 

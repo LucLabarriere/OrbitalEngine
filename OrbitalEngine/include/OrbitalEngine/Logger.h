@@ -10,6 +10,7 @@ namespace OrbitalEngine
 	public:
 		enum class Level
 		{
+			Trace,
 			Debug,
 			Info,
 			Warn,
@@ -24,11 +25,21 @@ namespace OrbitalEngine
 		}
 
 		template <typename ...Args>
+		static void Trace(std::string msg, Args... args)
+		{
+			if (s_level <= Level::Trace)
+			{
+				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Purple() + "Trace  " + Reset() + "] "
+					+ msg + EOL(), args...);
+			}
+		}
+
+		template <typename ...Args>
 		static void Debug(std::string msg, Args... args)
 		{
 			if (s_level <= Level::Debug)
 			{
-				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Green() + "Debug" + Reset() + "] "
+				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Green() + "Debug  " + Reset() + "] "
 					+ msg + EOL(), args...);
 			}
 		}
@@ -38,7 +49,7 @@ namespace OrbitalEngine
 		{
 			if (s_level <= Level::Info)
 			{
-				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Blue() + "Info" + Reset() + "] "
+				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Cyan() + "Info   " + Reset() + "] "
 					+ msg + EOL(), args...);
 			}
 		}
@@ -58,7 +69,7 @@ namespace OrbitalEngine
 		{
 			if (s_level <= Level::Error)
 			{
-				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Red() + "Error" + Reset() + "] "
+				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Red() + "Error  " + Reset() + "] "
 					+ msg + EOL(), args...);
 			}
 		}
@@ -73,7 +84,9 @@ namespace OrbitalEngine
 		static std::string EOL() { return Reset() + "\n"; }
 		static std::string Reset() { return "\033[0m"; }
 		static std::string Blue() { return "\033[34m"; }
+		static std::string Cyan() { return "\033[36m"; }
 		static std::string Green() { return "\033[32m"; }
+		static std::string Purple() { return "\033[38;2;150;0;255m"; }
 		static std::string Red() { return "\033[31m"; }
 		static std::string Yellow() { return "\033[33m"; }
 		static std::string Magenta() { return "\033[35m"; }

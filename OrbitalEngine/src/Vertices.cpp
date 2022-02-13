@@ -10,6 +10,12 @@ namespace OrbitalEngine
 	}
 
 	template<class ...Vertices>
+	void VertexContainer<Vertices...>::submitData(const VertexBuffer& buffer) const
+	{
+		buffer.submitData(getData(), getSize());
+	}
+
+	template<class ...Vertices>
 	void VertexContainer<Vertices...>::setLayout(const VertexBuffer& buffer) const
 	{
 		std::vector<size_t> counts = { Vertices::GetCount() ... };

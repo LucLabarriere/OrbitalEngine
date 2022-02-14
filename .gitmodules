@@ -9,7 +9,3 @@
 [submodule "vendor/entt"]
 	path = vendor/entt
 	url = git@github.com:skypjack/entt.git
-[submodule "vendor/imgui"]
-	path = vendor/imgui
-	url = git@github.com:ocornut/imgui.git
-	branch = docking

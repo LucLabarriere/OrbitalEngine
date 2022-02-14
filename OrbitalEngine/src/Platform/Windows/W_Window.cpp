@@ -63,7 +63,7 @@ namespace OrbitalEngine
 		glad_glDebugMessageCallback(OpenGLMessageCallback, nullptr);
 		glad_glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 
 		ImGui_ImplGlfw_InitForOpenGL(m_glfwWindow, true);
 		ImGui_ImplOpenGL3_Init("#version 430");

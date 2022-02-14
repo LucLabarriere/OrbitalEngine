@@ -99,15 +99,12 @@ namespace OrbitalEngine
 		}
 
 		m_currentIndex += indices.getCount();
-		
-		glm::mat4 model
-			= glm::mat4(1.0f)
-			* glm::translate(glm::mat4(1.0f), transform.Position)
-			* glm::scale(glm::mat4(1.0f), transform.Scale)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation[0]), glm::vec3(1.0f, 0.0f, 0.0f))
-			* glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation[1]), glm::vec3(0.0f, 1.0f, 0.0f))
-			* glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f))
-			;
+		glm::mat4 model(1.0f);
+		model = glm::translate(model, transform.Position);
+		model = glm::rotate(model, glm::radians(transform.Rotation[0]), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(transform.Rotation[1]), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(transform.Rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, transform.Scale);
 
 		for (size_t i = 0; i < vertices.getCount(); i++)
 		{

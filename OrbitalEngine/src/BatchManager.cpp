@@ -126,9 +126,16 @@ namespace OrbitalEngine
 		const auto& vertices = meshRenderer.Mesh->getVertices();
 		const auto& indices = meshRenderer.Mesh->getIndices();
 
+		if (s_dynamicBatched->getAvailableVertexCount() < vertices.getCount())
+		{
+			s_dynamicBatched->bind();
+			s_dynamicBatched->submitData();
+			glad_glDrawElements(GL_TRIANGLES, s_dynamicBatched->getIndexContainerCount(), GL_UNSIGNED_INT, nullptr);
+			s_dynamicBatched->flush();
+		}
+
 		meshRenderer.Batch = s_dynamicBatched;
 		meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
-		meshRenderer.Batch->allocateMemory();
 		meshRenderer.Batch->requestDraw();
 	}
 

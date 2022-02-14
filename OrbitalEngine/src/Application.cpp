@@ -88,44 +88,38 @@ namespace OrbitalEngine
 
 		entt::registry registry;
 
-		auto entity1 = registry.create();
-		Components::Transform t1 = {
-			{ -0.5f, 0.5f, 0.0f },
-			{  0.0f, 0.0f, 45.0f },
-			{  0.5f, 0.5f, 1.0f }
-		};
-		registry.emplace<Components::Transform>(entity1, t1); // static batched
-		registry.emplace<Components::MeshRenderer>(entity1, MeshManager::Get("Quad"), true, true);
+		unsigned int size_x = 50;
+		unsigned int size_y = 50;
+		for (unsigned int i = 0; i <= size_x; i++)
+		{
+			for (unsigned int j = 0; j <= size_y; j++)
+			{
+				auto entity = registry.create();
 
-		auto entity2 = registry.create();
-		Components::Transform t2 = {
-			{  0.5f, 0.5f, 0.0f },
-			{  0.0f, 0.0f, 0.0f },
-			{  0.5f, 0.5f, 1.0f }
-		};
-		registry.emplace<Components::Transform>(entity2, t2); // static !batched
-		registry.emplace<Components::MeshRenderer>(entity2, MeshManager::Get("Quad"), true, false);
+				Components::Transform t = {
+					{ -1.0f ,-1.0f , 0.0f },
+					{  0.0f , 0.0f , 0.0f },
+					{  0.01f, 0.01f, 1.0f }
+				};
 
-		auto entity3 = registry.create();
-		Components::Transform t3 = {
-			{ -0.5f,-0.5f, 0.0f },
-			{  0.0f, 0.0f, 45.0f },
-			{  0.5f, 0.5f, 1.0f }
-		};
-		registry.emplace<Components::Transform>(entity3, t3); // dynamic !batched
-		registry.emplace<Components::MeshRenderer>(entity3, MeshManager::Get("Quad"), false, false);
+				float positionX = (float)i / size_x * 2;
+				float positionY = (float)j / size_y * 2;
+				float rotation = (float)j / size_x * 2 * 180.0f;
 
-		auto entity4 = registry.create();
-		Components::Transform t4 = {
-			{  0.5f,-0.5f, 0.0f },
-			{  0.0f, 0.0f, 0.0f },
-			{  0.5f, 0.5f, 1.0f }
-		};
-		registry.emplace<Components::Transform>(entity4, t4); // dynamic batched
-		registry.emplace<Components::MeshRenderer>(entity4, MeshManager::Get("Quad"), false, true);
+				t.Position += glm::vec3(positionX, positionY, 0.0f);
+				t.Rotation = glm::vec3(0.0f, 0.0f, rotation);
+
+				registry.emplace<Components::Transform>(entity, t);
+				registry.emplace<Components::MeshRenderer>(entity, MeshManager::Get("Quad"), true, false);
+			}
+		}
 
 		Time timeAtLastUpdate;
 		Time dt;
+
+		std::vector<Time> times(100);
+		size_t timeIndex = 0;
+		float average = 0.0f;
 
 		while (!m_window->shouldClose())
 		{
@@ -133,7 +127,10 @@ namespace OrbitalEngine
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			ImGui::Text("Hello, world %d", 123);
+
+			ImGui::Text("Time per frame %f ms", dt.milliseconds());
+			ImGui::Text("FPS %.2f", 1.0f / dt.seconds());
+			ImGui::Text("Average FPS %.2f", 1.0f / average);
 			ImGui::Render();
 
 			glad_glClearColor(0.1f, 0.0f, 0.0f, 1.0f);
@@ -141,6 +138,18 @@ namespace OrbitalEngine
 
 			dt = Time() - timeAtLastUpdate;
 			timeAtLastUpdate = Time();
+
+			times[timeIndex] = dt;
+			timeIndex += 1;
+			if (timeIndex == times.size())
+				timeIndex = 0;
+
+			average = 0;
+			for (auto& t : times)
+				average += t.seconds();
+			average = average / times.size();
+
+
 			for (auto& layer: *m_layerStack)
 			{
 				layer.get()->update(dt);
@@ -155,9 +164,6 @@ namespace OrbitalEngine
 				auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
 				
 				BatchManager::RegisterMesh(meshRenderer, transform);
-
-				if (meshRenderer.staticDraw and meshRenderer.batchedDraw)
-					meshRenderer.Batch->requestFlush();
 			}
 
 			BatchManager::RenderBatches();

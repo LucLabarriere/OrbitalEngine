@@ -20,7 +20,7 @@ target_include_directories(${PROJECT_NAME}
 		${CMAKE_SOURCE_DIR}/vendor/glm
 		${CMAKE_SOURCE_DIR}/vendor/glad/include
 		${CMAKE_SOURCE_DIR}/vendor/glfw/include
-		${CMAKE_SOURCE_DIR}/vendor/imgui/include
+		${CMAKE_SOURCE_DIR}/vendor/imgui/
 		${CMAKE_SOURCE_DIR}/vendor/entt/single_include
 	PRIVATE
 		src

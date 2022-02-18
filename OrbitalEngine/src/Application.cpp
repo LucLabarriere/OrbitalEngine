@@ -7,9 +7,11 @@
 #include "OrbitalEngine/MeshManager.h"
 #include "OrbitalEngine/Batch.h"
 #include "OrbitalEngine/BatchManager.h"
+#include "OrbitalEngine/Renderer.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"
+
 
 #define OE_DISPATCH_LAYER(x) \
 	for (auto& layer : *m_layerStack) \
@@ -30,6 +32,7 @@ namespace OrbitalEngine
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		m_layerStack = CreateScope<LayerStack>();
 
+		Renderer::Initialize();
 		MeshManager::Initialize();
 		BatchManager::Initialize();
 	}
@@ -41,7 +44,7 @@ namespace OrbitalEngine
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
-		glfwTerminate();
+		Renderer::Terminate();
 	}
 
 	void Application::onEvent(Event& e)
@@ -88,8 +91,8 @@ namespace OrbitalEngine
 
 		entt::registry registry;
 
-		unsigned int size_x = 50;
-		unsigned int size_y = 50;
+		unsigned int size_x = 30;
+		unsigned int size_y = 30;
 		for (unsigned int i = 0; i <= size_x; i++)
 		{
 			for (unsigned int j = 0; j <= size_y; j++)
@@ -99,7 +102,7 @@ namespace OrbitalEngine
 				Components::Transform t = {
 					{ -1.0f ,-1.0f , 0.0f },
 					{  0.0f , 0.0f , 0.0f },
-					{  0.01f, 0.01f, 1.0f }
+					{  0.03f, 0.03f, 1.0f }
 				};
 
 				float positionX = (float)i / size_x * 2;
@@ -133,8 +136,7 @@ namespace OrbitalEngine
 			ImGui::Text("Average FPS %.2f", 1.0f / average);
 			ImGui::Render();
 
-			glad_glClearColor(0.1f, 0.0f, 0.0f, 1.0f);
-			glad_glClear(GL_COLOR_BUFFER_BIT);
+			Renderer::Get()->newFrame();
 
 			dt = Time() - timeAtLastUpdate;
 			timeAtLastUpdate = Time();
@@ -165,7 +167,6 @@ namespace OrbitalEngine
 				
 				BatchManager::RegisterMesh(meshRenderer, transform);
 			}
-
 			BatchManager::RenderBatches();
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -40,6 +40,7 @@ namespace OrbitalEngine
 		size_t getIndexContainerSize() const;
 		size_t getAvailableVertexCount() const;
 		size_t getAvailableIndexCount() const;
+		unsigned int getDrawType() { return m_drawType; }
 		bool isDrawRequested() const { return m_requestDraw; }
 		bool isFlushRequested() const { return m_requestFlush; }
 
@@ -51,6 +52,7 @@ namespace OrbitalEngine
 		size_t m_maxIndexContainerCount;
 		size_t m_maxVertexContainerSize;
 		size_t m_maxIndexContainerSize;
+		unsigned int m_drawType = OE_TRIANGLES;
 
 		BasicVertexContainer m_vertices;
 		IndexContainer m_indices;

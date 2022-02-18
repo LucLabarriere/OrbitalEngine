@@ -1,6 +1,7 @@
 #include "OrbitalEngine/BatchManager.h"
 #include "OrbitalEngine/MeshManager.h"
 #include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Renderer.h"
 
 namespace OrbitalEngine
 {
@@ -9,33 +10,19 @@ namespace OrbitalEngine
 		const Components::Transform& transform)
 	{
 		if (meshRenderer.staticDraw && meshRenderer.batchedDraw)
-		{
 			RegisterStaticBatchedMesh(meshRenderer, transform);
-		}
-
 		else if (meshRenderer.staticDraw && !meshRenderer.batchedDraw)
-		{
 			RegisterStaticMesh(meshRenderer, transform);
-		}
-
 		else if (!meshRenderer.staticDraw && !meshRenderer.batchedDraw)
-		{
 			RegisterDynamicMesh(meshRenderer, transform);
-		}
-
 		else
-		{
 			RegisterDynamicBatchedMesh(meshRenderer, transform);
-		}
 	}
 
 	void BatchManager::RegisterStaticMesh(
 		Components::MeshRenderer& meshRenderer,
 		const Components::Transform& transform)
 	{
-		// TODO
-		// Upon removal of entity, reset the Ref<Batch>.
-		// On render test if Batch == nullptr, if so delete the entry from the vector
 		if (!meshRenderer.Batch)
 		{
 			const auto& vertices = meshRenderer.Mesh->getVertices();
@@ -130,7 +117,7 @@ namespace OrbitalEngine
 		{
 			s_dynamicBatched->bind();
 			s_dynamicBatched->submitData();
-			glad_glDrawElements(GL_TRIANGLES, s_dynamicBatched->getIndexContainerCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(s_dynamicBatched);
 			s_dynamicBatched->flush();
 		}
 
@@ -149,22 +136,14 @@ namespace OrbitalEngine
 			if (s_static[i] == nullptr)
 				s_static.erase(s_static.begin() + i);
 			else if (s_static[i]->isDrawRequested())
-			{
-				s_static[i]->bind();
-				glad_glDrawElements(GL_TRIANGLES, s_static[i]->getIndexContainerCount(), GL_UNSIGNED_INT, nullptr);
-				s_static[i]->requestDraw(false);
-			}
+				Renderer::Submit(s_static[i]);
 		}
 
 		// Static Batched
 		for (int i = s_staticBatched.size() - 1; i >= 0; i--)
 		{
 			if (s_staticBatched[i]->isDrawRequested())
-			{
-				s_staticBatched[i]->bind();
-				glad_glDrawElements(GL_TRIANGLES, s_staticBatched[i]->getIndexContainerCount(), GL_UNSIGNED_INT, nullptr);
-				s_staticBatched[i]->requestDraw(false);
-			}
+				Renderer::Submit(s_staticBatched[i]);
 		}
 
 		// Dynamic Not Batched
@@ -173,17 +152,13 @@ namespace OrbitalEngine
 			if (s_dynamic[i] == nullptr)
 				s_dynamic.erase(s_dynamic.begin() + i);
 			else if (s_dynamic[i]->isDrawRequested())
-			{
-				s_dynamic[i]->bind();
-				glad_glDrawElements(GL_TRIANGLES, s_dynamic[i]->getIndexContainerCount(), GL_UNSIGNED_INT, nullptr);
-				s_dynamic[i]->requestDraw(false);
-			}
+				Renderer::Submit(s_dynamic[i]);
 		}
 
 		// Dynamic Batched
 		s_dynamicBatched->bind();
 		s_dynamicBatched->submitData();
-		glad_glDrawElements(GL_TRIANGLES, s_dynamicBatched->getIndexContainerCount(), GL_UNSIGNED_INT, nullptr);
+		Renderer::Submit(s_dynamicBatched);
 		s_dynamicBatched->flush();
 	}
 

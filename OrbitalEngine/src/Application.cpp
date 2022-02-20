@@ -1,17 +1,6 @@
-#include "OrbitalEngine/Application.h"
-#include "OrbitalEngine/Shader.h"
-#include "OrbitalEngine/Vertices.h"
-#include "OrbitalEngine/IndexContainer.h"
-#include "OrbitalEngine/Logger.h"
+#include "OrbitalEngine/Logic.h"
+#include "OrbitalEngine/Graphics.h"
 #include "OrbitalEngine/Components.h"
-#include "OrbitalEngine/MeshManager.h"
-#include "OrbitalEngine/Batch.h"
-#include "OrbitalEngine/BatchManager.h"
-#include "OrbitalEngine/Renderer.h"
-#include "VertexBuffer.h"
-#include "VertexArray.h"
-#include "IndexBuffer.h"
-
 
 #define OE_DISPATCH_LAYER(x) \
 	for (auto& layer : *m_layerStack) \
@@ -35,6 +24,7 @@ namespace OrbitalEngine
 		Renderer::Initialize();
 		MeshManager::Initialize();
 		BatchManager::Initialize();
+		TextureManager::Initialize();
 	}
 
 	Application::~Application()
@@ -45,6 +35,7 @@ namespace OrbitalEngine
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 		Renderer::Terminate();
+		TextureManager::Terminate();
 	}
 
 	void Application::onEvent(Event& e)
@@ -91,8 +82,8 @@ namespace OrbitalEngine
 
 		entt::registry registry;
 
-		unsigned int size_x = 30;
-		unsigned int size_y = 30;
+		unsigned int size_x = 5;
+		unsigned int size_y = 5;
 		for (unsigned int i = 0; i <= size_x; i++)
 		{
 			for (unsigned int j = 0; j <= size_y; j++)
@@ -102,7 +93,7 @@ namespace OrbitalEngine
 				Components::Transform t = {
 					{ -1.0f ,-1.0f , 0.0f },
 					{  0.0f , 0.0f , 0.0f },
-					{  0.03f, 0.03f, 1.0f }
+					{  0.2f, 0.2f, 1.0f }
 				};
 
 				float positionX = (float)i / size_x * 2;
@@ -123,6 +114,8 @@ namespace OrbitalEngine
 		std::vector<Time> times(100);
 		size_t timeIndex = 0;
 		float average = 0.0f;
+		shader->bind();
+		shader->setUniform1i("u_TexId", 0);
 
 		while (!m_window->shouldClose())
 		{

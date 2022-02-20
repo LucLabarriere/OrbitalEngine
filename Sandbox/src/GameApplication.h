@@ -1,6 +1,5 @@
 #pragma once
 
-#include "OrbitalEngine/Core.h"
 #include "GameLayer.h"
 
 using namespace OrbitalEngine;

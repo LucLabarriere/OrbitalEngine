@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OrbitalEngine/Shader.h"
+#include "OrbitalEngine/Graphics/Shader.h"
 
 namespace OrbitalEngine
 {

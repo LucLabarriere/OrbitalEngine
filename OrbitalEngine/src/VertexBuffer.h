@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OrbitalEngine/Vertices.h"
+#include "OrbitalEngine/Graphics/Vertices.h"
 
 namespace OrbitalEngine
 {

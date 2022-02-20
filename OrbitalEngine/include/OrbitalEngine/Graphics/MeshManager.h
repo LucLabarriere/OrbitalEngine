@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OrbitalEngine/Tools.h"
-#include "OrbitalEngine/Mesh.h"
+#include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Graphics/Mesh.h"
 
 namespace OrbitalEngine
 {

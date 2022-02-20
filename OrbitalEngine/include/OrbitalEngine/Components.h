@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BatchManager.h"
+#include "OrbitalEngine/Graphics/Batch.h"
 
 namespace OrbitalEngine
 {

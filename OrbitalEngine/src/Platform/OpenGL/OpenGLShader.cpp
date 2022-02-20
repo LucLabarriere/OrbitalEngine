@@ -1,5 +1,4 @@
 #include "OpenGLShader.h"
-#include "OrbitalEngine/Logger.h"
 
 namespace OrbitalEngine
 {

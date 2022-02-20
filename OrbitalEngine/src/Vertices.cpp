@@ -1,4 +1,4 @@
-#include "OrbitalEngine/Vertices.h"
+#include "OrbitalEngine/Graphics/Vertices.h"
 #include "VertexBuffer.h"
 
 namespace OrbitalEngine

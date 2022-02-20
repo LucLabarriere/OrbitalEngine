@@ -1,8 +1,7 @@
 #pragma once
 
-#include "OrbitalEngine/Tools.h"
-#include "OrbitalEngine/Logger.h"
-#include "OrbitalEngine/RenderCommands.h"
+#include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Graphics/RenderCommands.h"
 
 namespace OrbitalEngine
 {

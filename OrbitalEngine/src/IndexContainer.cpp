@@ -1,4 +1,4 @@
-#include "OrbitalEngine/IndexContainer.h"
+#include "OrbitalEngine/Graphics/IndexContainer.h"
 #include "IndexBuffer.h"
 
 namespace OrbitalEngine

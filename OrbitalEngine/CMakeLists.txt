@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 project(OrbitalEngine VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
 file(GLOB_RECURSE SOURCES
@@ -11,6 +12,8 @@ file(GLOB_RECURSE SOURCES
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE "/wd6011")
+
+
 target_compile_definitions(${PROJECT_NAME} PUBLIC ORBITAL_OPENGL)
 target_compile_definitions(${PROJECT_NAME} PUBLIC ORBITAL_DEBUG)
 
@@ -26,11 +29,11 @@ target_include_directories(${PROJECT_NAME}
 		src
 )
 
-target_precompile_headers(${PROJECT_NAME} PUBLIC include/OrbitalEngine/Context.h)
+target_precompile_headers(${PROJECT_NAME} PUBLIC include/OrbitalEngine/Utils/Context.h)
 
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
-		glad
+		glad2
 		glfw
 		imgui
 )

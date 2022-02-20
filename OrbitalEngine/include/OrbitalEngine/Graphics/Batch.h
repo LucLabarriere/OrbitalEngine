@@ -2,10 +2,10 @@
 #pragma warning(push)
 #pragma warning(disable : 4661)
 
-#include "OrbitalEngine/Tools.h"
-#include "OrbitalEngine/IndexContainer.h"
-#include "OrbitalEngine/MeshManager.h"
-#include "OrbitalEngine/Vertices.h"
+#include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Graphics/IndexContainer.h"
+#include "OrbitalEngine/Graphics/MeshManager.h"
+#include "OrbitalEngine/Graphics/Vertices.h"
 
 namespace OrbitalEngine
 {

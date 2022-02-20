@@ -1,6 +1,5 @@
 #include "W_Window.h"
-#include "OrbitalEngine/Application.h"
-#include "OrbitalEngine/Logger.h"
+#include "OrbitalEngine/Logic/Application.h"
 #include "backends/imgui_impl_glfw.h"
 
 namespace OrbitalEngine
@@ -20,6 +19,26 @@ namespace OrbitalEngine
 			case GL_DEBUG_SEVERITY_MEDIUM:       Logger::Error("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
 			case GL_DEBUG_SEVERITY_LOW:          Logger::Warn("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
 			case GL_DEBUG_SEVERITY_NOTIFICATION: Logger::Debug("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
+		}
+	}
+
+	void _post_call_callback(const char* name, void* funcptr, int len_args, ...) {
+		GLenum error_code;
+		error_code = glad_glGetError();
+
+		if (error_code != GL_NO_ERROR)
+		{
+			Logger::Error("GLAD: ERROR %d in %s\n", error_code, name);
+		}
+	}
+
+	void _pre_call_callback(const char* name, void* funcptr, int len_args, ...) {
+		GLenum error_code;
+		error_code = glad_glGetError();
+
+		if (error_code != GL_NO_ERROR)
+		{
+			Logger::Error("GLAD: ERROR %d in %s\n", error_code, name);
 		}
 	}
 
@@ -54,7 +73,7 @@ namespace OrbitalEngine
 		m_glfwWindow = createWindow();
 
 		glfwMakeContextCurrent(m_glfwWindow);
-		bool gladSuccess = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		bool gladSuccess = gladLoadGL(glfwGetProcAddress);
 		OE_ASSERT(gladSuccess, "W_Window: Could not initialize GLAD (OpenGL Error)");
 		Logger::Info("W_Window: OpenGL {} context created.", (const char*)glad_glGetString(GL_VERSION));
 
@@ -62,8 +81,9 @@ namespace OrbitalEngine
 		glad_glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glad_glDebugMessageCallback(OpenGLMessageCallback, nullptr);
 		glad_glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
-
-		glfwSwapInterval(0);
+		gladSetGLPreCallback((GLADprecallback)_pre_call_callback);
+		gladSetGLPostCallback((GLADpostcallback)_post_call_callback);
+		glfwSwapInterval(1);
 
 		ImGui_ImplGlfw_InitForOpenGL(m_glfwWindow, true);
 		ImGui_ImplOpenGL3_Init("#version 430");

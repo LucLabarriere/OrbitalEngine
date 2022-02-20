@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OrbitalEngine/Window.h"
+#include "OrbitalEngine/Logic/Window.h"
 
 namespace OrbitalEngine
 {

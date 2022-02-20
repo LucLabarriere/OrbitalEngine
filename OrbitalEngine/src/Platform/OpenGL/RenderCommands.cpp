@@ -1,4 +1,4 @@
-#include "OrbitalEngine/RenderCommands.h"
+#include "OrbitalEngine/Graphics/RenderCommands.h"
 
 namespace OrbitalEngine
 {
@@ -14,7 +14,7 @@ namespace OrbitalEngine
 
 	void RenderCommands::NewFrame()
 	{
-		glad_glClearColor(0.1f, 0.0f, 0.0f, 1.0f);
+		glad_glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glad_glClear(GL_COLOR_BUFFER_BIT);
 	}
 

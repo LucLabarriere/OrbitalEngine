@@ -1,5 +1,4 @@
-#include "OrbitalEngine/Batch.h"
-#include "OrbitalEngine/Logger.h"
+#include "OrbitalEngine/Graphics/Batch.h"
 #include "OrbitalEngine/Components.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"

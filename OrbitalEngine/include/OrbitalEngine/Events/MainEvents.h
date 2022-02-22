@@ -2,9 +2,9 @@
 
 #define OE_EVENT_DEFINITION(type, categories, repr) \
 	static EventType GetType() { return EventType::type; } \
-	static unsigned int GetCategoryFlags() { return EventCategory::##categories; } \
+	static unsigned int GetCategoryFlags() { return EventCategory::categories; } \
 	virtual EventType getType() const override { return EventType::type; } \
-	virtual unsigned int getCategoryFlags() const override { return EventCategory::##categories; } \
+	virtual unsigned int getCategoryFlags() const override { return EventCategory::categories; } \
 	virtual std::string toString() const override \
 	{ \
 		return "<" + std::string(#type) + ": " + repr + ">"; \

@@ -3,6 +3,13 @@
 #include "OrbitalEngine/Logic.h"
 #include "OrbitalEngine/Graphics.h"
 #include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/MeshManager.h"
+#include "OrbitalEngine/Batch.h"
+#include "OrbitalEngine/BatchManager.h"
+#include "OrbitalEngine/Renderer.h"
+#include "VertexBuffer.h"
+#include "VertexArray.h"
+#include "IndexBuffer.h"
 
 #define OE_DISPATCH_LAYER(x) \
 	for (auto& layer : *m_layerStack) \
@@ -85,7 +92,7 @@ namespace OrbitalEngine
 		Ref<Shader> shader = Scope<Shader>(Shader::Create(
 			0,
 			"Base",
-			"c:/Users/lucla/Work/Programmes/Orbital/OrbitalEngine/assets/shaders/Base.glsl"
+			"/assets/shaders/Base.glsl"
 		));
 
 		entt::registry registry;

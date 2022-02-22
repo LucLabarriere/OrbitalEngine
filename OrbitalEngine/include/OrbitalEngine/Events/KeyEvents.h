@@ -14,7 +14,7 @@ namespace OrbitalEngine
 		OE_EVENT_DEFINITION(
 			KeyPressed,
 			InputEventCategory | KeyEventCategory,
-			std::format("{}", m_keyCode)
+			fmt::format("{}", m_keyCode)
 		)
 
 	private:
@@ -31,7 +31,7 @@ namespace OrbitalEngine
 		OE_EVENT_DEFINITION(
 			KeyReleased,
 			InputEventCategory | KeyEventCategory,
-			std::format("{}", m_keyCode)
+			fmt::format("{}", m_keyCode)
 		)
 
 	private:

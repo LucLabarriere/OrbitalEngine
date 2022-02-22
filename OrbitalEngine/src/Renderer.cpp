@@ -1,4 +1,3 @@
-#pragma once
 #include "OrbitalEngine/Renderer.h"
 #include "OrbitalEngine/Batch.h"
 

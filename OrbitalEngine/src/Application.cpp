@@ -12,7 +12,6 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 
-
 #define OE_DISPATCH_LAYER(x) \
 	for (auto& layer : *m_layerStack) \
 	{ \
@@ -86,7 +85,7 @@ namespace OrbitalEngine
 		Ref<Shader> shader = Scope<Shader>(Shader::Create(
 			0,
 			"Base",
-			"c:/Users/lucla/Work/Programmes/Orbital/OrbitalEngine/assets/shaders/Base.glsl"
+			"/assets/shaders/Base.glsl"
 		));
 
 		entt::registry registry;

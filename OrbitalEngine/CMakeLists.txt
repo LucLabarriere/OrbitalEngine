@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16.0)
 project(OrbitalEngine VERSION 0.1.0)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED 23)
 
 
 file(GLOB_RECURSE SOURCES
@@ -10,7 +10,9 @@ file(GLOB_RECURSE SOURCES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
+if (MSVC)
 target_compile_options(${PROJECT_NAME} PRIVATE "/wd6011")
+endif()
 target_compile_definitions(${PROJECT_NAME} PUBLIC ORBITAL_OPENGL)
 target_compile_definitions(${PROJECT_NAME} PUBLIC ORBITAL_DEBUG)
 
@@ -22,6 +24,7 @@ target_include_directories(${PROJECT_NAME}
 		${CMAKE_SOURCE_DIR}/vendor/glfw/include
 		${CMAKE_SOURCE_DIR}/vendor/imgui/
 		${CMAKE_SOURCE_DIR}/vendor/entt/single_include
+		${CMAKE_SOURCE_DIR}/vendor/fmt/include
 	PRIVATE
 		src
 )
@@ -33,4 +36,5 @@ target_link_libraries(${PROJECT_NAME}
 		glad
 		glfw
 		imgui
+		fmt::fmt
 )

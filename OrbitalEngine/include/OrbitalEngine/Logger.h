@@ -1,6 +1,5 @@
 #pragma once
 
-#include <format>
 #include "OrbitalEngine/Time.h"
 
 namespace OrbitalEngine
@@ -103,7 +102,7 @@ namespace OrbitalEngine
 		}
 		
 		template <typename ...Args>
-		static void Echo(const std::string& msg, Args... args) { std::cout << std::format(msg, args...); }
+		static void Echo(const std::string& msg, Args... args) { std::cout << fmt::format(msg, args...); }
 
 		static inline Level s_level = Level::Info;
 	};

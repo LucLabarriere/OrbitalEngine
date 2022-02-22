@@ -27,7 +27,7 @@ namespace OrbitalEngine
 		OE_EVENT_DEFINITION(
 			MouseMoved,
 			InputEventCategory | MouseEventCategory,
-			std::format("{}, {}", m_xPos, m_yPos)
+			fmt::format("{}, {}", m_xPos, m_yPos)
 		)
 	};
 
@@ -52,7 +52,7 @@ namespace OrbitalEngine
 		OE_EVENT_DEFINITION(
 			MouseButtonPressed,
 			InputEventCategory | MouseEventCategory,
-			std::format("{}, {}, {}", m_xPos, m_yPos, m_button)
+			fmt::format("{}, {}, {}", m_xPos, m_yPos, m_button)
 		)
 	};
 
@@ -65,7 +65,7 @@ namespace OrbitalEngine
 		OE_EVENT_DEFINITION(
 			MouseButtonReleased,
 			InputEventCategory | MouseEventCategory,
-			std::format("{}, {}, {}", m_xPos, m_yPos, m_button)
+			fmt::format("{}, {}, {}", m_xPos, m_yPos, m_button)
 		)
 	};
 
@@ -78,7 +78,7 @@ namespace OrbitalEngine
 		OE_EVENT_DEFINITION(
 			MouseScrolled,
 			InputEventCategory | MouseEventCategory,
-			std::format("{}, {}, {}, {}", m_xPos, m_yPos, m_xOffset, m_yOffset)
+			fmt::format("{}, {}, {}, {}", m_xPos, m_yPos, m_xOffset, m_yOffset)
 		)
 
 	private:

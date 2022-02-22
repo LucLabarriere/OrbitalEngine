@@ -75,6 +75,9 @@ namespace OrbitalEngine
 		MouseScrolledEvent(float x, float y, float xOffset, float yOffset)
 			: MouseEvent(x, y), m_xOffset(xOffset), m_yOffset(yOffset) { }
 
+		float getXOffset() const { return m_xOffset; }
+		float getYOffset() const { return m_yOffset; }
+
 		OE_EVENT_DEFINITION(
 			MouseScrolled,
 			InputEventCategory | MouseEventCategory,

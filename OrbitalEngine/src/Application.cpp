@@ -1,3 +1,5 @@
+#include "OrbitalEngine/Events.h"
+#include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Logic.h"
 #include "OrbitalEngine/Graphics.h"
 #include "OrbitalEngine/Components.h"
@@ -25,6 +27,10 @@ namespace OrbitalEngine
 		MeshManager::Initialize();
 		BatchManager::Initialize();
 		TextureManager::Initialize();
+		Inputs::Initialize(m_window);
+
+		m_camera = CreateRef<Camera>();
+		m_cameraController = CreateScope<CameraController>(m_camera);
 	}
 
 	Application::~Application()
@@ -57,6 +63,8 @@ namespace OrbitalEngine
 		});
 
 		dispatcher.dispatch<MouseScrolledEvent>([this](MouseScrolledEvent& e) -> bool {
+			//m_cameraController->onMouseScrolled(e);
+
 			OE_DISPATCH_LAYER(onMouseScrolled)
 			return false;
 		});
@@ -114,8 +122,6 @@ namespace OrbitalEngine
 		std::vector<Time> times(100);
 		size_t timeIndex = 0;
 		float average = 0.0f;
-		shader->bind();
-		shader->setUniform1i("u_TexId", 0);
 
 		while (!m_window->shouldClose())
 		{
@@ -123,11 +129,11 @@ namespace OrbitalEngine
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-
 			ImGui::Text("Time per frame %f ms", dt.milliseconds());
 			ImGui::Text("FPS %.2f", 1.0f / dt.seconds());
 			ImGui::Text("Average FPS %.2f", 1.0f / average);
 			ImGui::Render();
+
 
 			Renderer::Get()->newFrame();
 
@@ -144,6 +150,11 @@ namespace OrbitalEngine
 				average += t.seconds();
 			average = average / times.size();
 
+			m_cameraController->onUpdate(dt);
+
+			shader->bind();
+			shader->setUniform1i("u_TexId", 0);
+			shader->setUniformMat4f("u_VPMatrix", m_camera->getVPMatrix());
 
 			for (auto& layer: *m_layerStack)
 			{
@@ -160,6 +171,7 @@ namespace OrbitalEngine
 				
 				BatchManager::RegisterMesh(meshRenderer, transform);
 			}
+
 			BatchManager::RenderBatches();
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

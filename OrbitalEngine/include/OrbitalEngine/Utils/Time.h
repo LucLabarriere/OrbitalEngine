@@ -8,10 +8,10 @@ namespace OrbitalEngine
 		Time(): m_nanoseconds(Time::Now()) { }
 		Time(float t): m_nanoseconds(t) { }
 
-		float seconds() { return m_nanoseconds / 1000000000.0f; }
-		float milliseconds() { return m_nanoseconds / 1000000.0f; }
-		float microseconds() { return m_nanoseconds / 1000.0f; }
-		float nanoseconds() { return m_nanoseconds; }
+		float seconds() const { return m_nanoseconds / 1000000000.0f; }
+		float milliseconds() const { return m_nanoseconds / 1000000.0f; }
+		float microseconds() const { return m_nanoseconds / 1000.0f; }
+		float nanoseconds() const { return m_nanoseconds; }
 
 		inline static float Now()
 		{

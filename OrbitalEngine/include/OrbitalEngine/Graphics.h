@@ -11,3 +11,6 @@
 #include "OrbitalEngine/Graphics/Batch.h"
 #include "OrbitalEngine/Graphics/BatchManager.h"
 #include "OrbitalEngine/Graphics/IndexContainer.h"
+#include "OrbitalEngine/Graphics/Window.h"
+#include "OrbitalEngine/Graphics/Camera.h"
+#include "OrbitalEngine/Graphics/CameraController.h"

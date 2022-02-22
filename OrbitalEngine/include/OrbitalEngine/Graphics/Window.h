@@ -18,17 +18,10 @@ namespace OrbitalEngine
 
 		unsigned int getWidth() { return m_width; }
 		unsigned int getHeight() { return m_height; }
+		virtual void* getNativeWindow() const = 0;
 
-
-		void applicationCallback(Event& e)
-		{
-			m_eventCallback(e);
-		}
-		
-		void setApplicationCallBack(std::function<void(Event& e)> callback)
-		{
-			m_eventCallback = callback;
-		};
+		void applicationCallback(Event& e) { m_eventCallback(e); }
+		void setApplicationCallBack(std::function<void(Event& e)> callback) { m_eventCallback = callback; };
 
 		static Window* Create(unsigned int width, unsigned int height, const std::string& title);
 

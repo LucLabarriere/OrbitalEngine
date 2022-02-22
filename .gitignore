@@ -35,6 +35,7 @@
 *.exe
 *.out
 *.app
+build
 
 ### CMake ###
 CMakeLists.txt.user

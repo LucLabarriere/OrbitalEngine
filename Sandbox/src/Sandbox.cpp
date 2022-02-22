@@ -7,6 +7,7 @@
 int main()
 {
 	GameApplication app;
+	Logger::Trace("{}", 2);
 	app.run();
 
 	return 0;

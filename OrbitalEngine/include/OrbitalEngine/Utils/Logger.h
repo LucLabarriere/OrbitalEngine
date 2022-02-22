@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OrbitalEngine/Time.h"
+#include "OrbitalEngine/Utils/Time.h"
 
 namespace OrbitalEngine
 {
@@ -24,7 +24,7 @@ namespace OrbitalEngine
 		}
 
 		template <typename ...Args>
-		static void Trace(std::string msg, Args... args)
+		static void Trace(std::string msg, Args&&... args)
 		{
 			if (s_level <= Level::Trace)
 			{
@@ -34,7 +34,7 @@ namespace OrbitalEngine
 		}
 
 		template <typename ...Args>
-		static void Debug(std::string msg, Args... args)
+		static void Debug(std::string msg, Args&&... args)
 		{
 			if (s_level <= Level::Debug)
 			{
@@ -44,7 +44,7 @@ namespace OrbitalEngine
 		}
 
 		template <typename ...Args>
-		static void Info(std::string msg, Args... args)
+		static void Info(std::string msg, Args&&... args)
 		{
 			if (s_level <= Level::Info)
 			{
@@ -54,7 +54,7 @@ namespace OrbitalEngine
 		}
 
 		template <typename ...Args>
-		static void Warn(std::string msg, Args... args)
+		static void Warn(std::string msg, Args&&... args)
 		{
 			if (s_level <= Level::Warn)
 			{
@@ -64,7 +64,7 @@ namespace OrbitalEngine
 		}
 
 		template <typename ...Args>
-		static void Error(std::string msg, Args... args)
+		static void Error(std::string msg, Args&&... args)
 		{
 			if (s_level <= Level::Error)
 			{
@@ -74,7 +74,7 @@ namespace OrbitalEngine
 		}
 
 		template <typename ...Args>
-		static void Critical(std::string msg, Args... args)
+		static void Critical(std::string msg, Args&&... args)
 		{
 			Echo(Now() + " " + Bright() + Red() + "Orbital" + " [CRITICAL] "
 				+ msg + EOL(), args...);
@@ -102,7 +102,11 @@ namespace OrbitalEngine
 		}
 		
 		template <typename ...Args>
-		static void Echo(const std::string& msg, Args... args) { std::cout << fmt::format(msg, args...); }
+		static void Echo(std::string&& msg, Args&&... args) 
+		{ 
+			std::cout << fmt::vformat(msg,
+				fmt::make_format_args(std::forward<Args>(args)...));
+		}
 
 		static inline Level s_level = Level::Info;
 	};

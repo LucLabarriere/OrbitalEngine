@@ -1,5 +1,5 @@
-#include "OrbitalEngine/Renderer.h"
-#include "OrbitalEngine/Batch.h"
+#include "OrbitalEngine/Graphics/Renderer.h"
+#include "OrbitalEngine/Graphics/Batch.h"
 
 namespace OrbitalEngine
 {

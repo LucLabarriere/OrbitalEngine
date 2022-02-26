@@ -1,13 +1,11 @@
 #include "OpenGLShader.h"
-#include <filesystem>
 
 namespace OrbitalEngine
 {
 	Shader* Shader::Create(unsigned int shaderId, const std::string& name, const std::string& filepath)
 	{
-		std::string basepath = std::filesystem::path(__FILE__).parent_path().parent_path().parent_path().parent_path().string();
 		Logger::Debug("OpenGLShader: Creating shader: {}", name);
-		return new OpenGLShader(shaderId, name, basepath + filepath);
+		return new OpenGLShader(shaderId, name, filepath);
 	}
 
 	OpenGLShader::~OpenGLShader()

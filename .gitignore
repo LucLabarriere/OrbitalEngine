@@ -38,6 +38,7 @@
 build
 
 ### CMake ###
+CMakeSettings.json
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

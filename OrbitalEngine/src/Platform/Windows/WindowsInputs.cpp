@@ -19,5 +19,6 @@ namespace OrbitalEngine
 		if (OE_EVENT_PRESS == glfwGetKey(m_glfwWindow, keyCode)
 			|| OE_EVENT_REPEAT == glfwGetKey(m_glfwWindow, keyCode))
 			return true;
+		return false;
 	}
 }

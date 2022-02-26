@@ -22,7 +22,14 @@ namespace OrbitalEngine
 			Logger::SetLevel(Logger::Level::Trace);
 		#endif
 	
-		m_window = Scope<Window>(Window::Create(800, 600, "Application"));
+		Settings::Initialize();
+
+		m_window = Scope<Window>(Window::Create(
+			Settings::Get(Settings::UIntSetting::WindowWidth),
+			Settings::Get(Settings::UIntSetting::WindowHeight),
+			"Application")
+		);
+
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		m_layerStack = CreateScope<LayerStack>();
 
@@ -88,7 +95,7 @@ namespace OrbitalEngine
 		Ref<Shader> shader = Scope<Shader>(Shader::Create(
 			0,
 			"Base",
-			"/assets/shaders/Base.glsl"
+			Settings::GetAssetPath("shaders/Base.glsl")
 		));
 
 		entt::registry registry;

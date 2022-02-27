@@ -8,7 +8,9 @@ namespace OrbitalEngine
 	{
 	private:
 		WindowsInputs(GLFWwindow* glfwWindow);
-		virtual bool isKeyPressed(int keyCode) const override;
+		virtual bool isKeyDown(int keyCode) const override;
+		virtual bool isMouseButtonDown(int buttonCode) const override;
+		virtual const glm::vec2 getMousePosition() const override;
 	
 	private:
 		friend Inputs;

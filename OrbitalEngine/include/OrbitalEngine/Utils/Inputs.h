@@ -11,13 +11,17 @@ namespace OrbitalEngine
 	public:
 		static void Initialize(Scope<Window>& window);
 		static void Terminate() { delete s_instance;  }
-		static bool IsKeyPressed(int keyCode) { return s_instance->isKeyPressed(keyCode); };
+		static bool IsKeyDown(int keyCode) { return s_instance->isKeyDown(keyCode); };
+		static bool IsMouseButtonDown(int buttonCode) { return s_instance->isMouseButtonDown(buttonCode); };
+		static const glm::vec2 GetMousePosition() { return s_instance->getMousePosition(); }
 
 	protected:
 		Inputs() { };
 
 	private:
-		virtual bool isKeyPressed(int keyCode) const = 0;
+		virtual bool isKeyDown(int keyCode) const = 0;
+		virtual bool isMouseButtonDown(int buttonCode) const = 0;
+		virtual const glm::vec2 getMousePosition() const = 0;
 
 	private:
 		inline static Inputs* s_instance = nullptr;

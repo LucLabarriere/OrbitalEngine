@@ -158,6 +158,31 @@ namespace OrbitalEngine
 			}
 		);
 
+		glfwSetMouseButtonCallback(
+			m_glfwWindow,
+			[](GLFWwindow* window, int button, int action, int mods) {
+				auto& self = *static_cast<OpenGLWindow*>(glfwGetWindowUserPointer(window));
+				double xPos, yPos;
+				glfwGetCursorPos(window, &xPos, &yPos);
+
+				switch (action)
+				{
+					case GLFW_PRESS:
+					{
+						MouseButtonPressedEvent e(static_cast<float>(xPos), static_cast<float>(yPos), button);
+						self.applicationCallback(e);
+						break;
+					}
+
+					case GLFW_RELEASE:
+					{
+						MouseButtonReleasedEvent e(static_cast<float>(xPos), static_cast<float>(yPos), button);
+						self.applicationCallback(e);
+						break;
+					}
+				}
+			});
+
 		glfwSetScrollCallback(
 			m_glfwWindow,
 			[](GLFWwindow* window, double xOffset, double yOffset) {

@@ -15,9 +15,15 @@ namespace OrbitalEngine
 		const glm::mat4& getVPMatrix() { return m_VPMatrix; }
 
 		void move(const glm::vec3& translation);
+		void rotate(const glm::vec2& rotation);
 		void zoom(float zoomModification);
 
+		bool isOrthographic() { return m_orthographic; }
+		void setOrthographic() { m_orthographic = true; updateMatrices(); }
+		void setPerspective() { m_orthographic = false; updateMatrices(); }
+
 	private:
+		bool m_orthographic = false;
 		glm::vec3 m_position;
 		glm::vec3 m_up;
 		glm::vec3 m_front;

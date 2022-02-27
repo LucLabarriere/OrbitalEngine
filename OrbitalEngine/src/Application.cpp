@@ -58,6 +58,8 @@ namespace OrbitalEngine
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<KeyPressedEvent>([this](KeyPressedEvent& e) -> bool {
+			m_cameraController->onKeyPressed(e); // TODO Move into Editor
+
 			OE_DISPATCH_LAYER(onKeyPressed)
 			return false;
 		});
@@ -73,7 +75,7 @@ namespace OrbitalEngine
 		});
 
 		dispatcher.dispatch<MouseScrolledEvent>([this](MouseScrolledEvent& e) -> bool {
-			//m_cameraController->onMouseScrolled(e);
+			m_cameraController->onMouseScrolled(e); // TODO Move into Editor
 
 			OE_DISPATCH_LAYER(onMouseScrolled)
 			return false;
@@ -109,9 +111,9 @@ namespace OrbitalEngine
 				auto entity = registry.create();
 
 				Components::Transform t = {
-					{ -1.0f ,-1.0f , 0.0f },
-					{  0.0f , 0.0f , 0.0f },
-					{  0.2f, 0.2f, 1.0f }
+					{ -1.0f, -1.0f, 0.0f },
+					{  0.0f,  0.0f, 0.0f },
+					{  0.2f,  0.2f, 0.2f }
 				};
 
 				float positionX = (float)i / size_x * 2;
@@ -119,10 +121,10 @@ namespace OrbitalEngine
 				float rotation = (float)j / size_x * 2 * 180.0f;
 
 				t.Position += glm::vec3(positionX, positionY, 0.0f);
-				t.Rotation = glm::vec3(0.0f, 0.0f, rotation);
+				t.Rotation = glm::vec3(rotation, rotation, rotation);
 
 				registry.emplace<Components::Transform>(entity, t);
-				registry.emplace<Components::MeshRenderer>(entity, MeshManager::Get("Quad"), true, false);
+				registry.emplace<Components::MeshRenderer>(entity, MeshManager::Get("Cube"), false, true);
 			}
 		}
 
@@ -178,6 +180,7 @@ namespace OrbitalEngine
 			{
 				auto& transform = view.get<Components::Transform>(entity);
 				auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
+				transform.Rotation += 10.0f * dt.seconds();
 				
 				BatchManager::RegisterMesh(meshRenderer, transform);
 			}
@@ -188,6 +191,7 @@ namespace OrbitalEngine
 
 			m_window->onUpdate();
 		}
+		Logger::Trace("Leaving Application");
 	}
 
 

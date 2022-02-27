@@ -5,27 +5,53 @@ namespace OrbitalEngine
 {
 	void CameraController::onUpdate(Time dt)
 	{
-		if (Inputs::IsKeyPressed(OE_KEY_A))
+		const glm::vec2 mousePosition = Inputs::GetMousePosition();
+
+		if (Inputs::IsKeyDown(OE_KEY_A))
 		{
 			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(-1.0f, 0.0f, 0.0f));
 		}
-		if (Inputs::IsKeyPressed(OE_KEY_D))
+		if (Inputs::IsKeyDown(OE_KEY_D))
 		{
 			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(1.0f, 0.0f, 0.0f));
 		}
-		if (Inputs::IsKeyPressed(OE_KEY_W))
+		if (Inputs::IsKeyDown(OE_KEY_W))
+		{
+			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		if (Inputs::IsKeyDown(OE_KEY_S))
 		{
 			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(0.0f, -1.0f, 0.0f));
 		}
-		if (Inputs::IsKeyPressed(OE_KEY_S))
+
+		if (Inputs::IsMouseButtonDown(OE_MOUSE_BUTTON_2))
 		{
-			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(0.0f, 1.0f, 0.0f));
+			float deltaX = m_formerMousePosition.x - mousePosition.x;
+			float deltaY = m_formerMousePosition.y - mousePosition.y;
+
+			glm::vec2 rotation(deltaY, -deltaX);
+			rotation *= m_rotationSpeed * dt.seconds();
+
+			m_camera->rotate(rotation);
+		}
+
+		m_formerMousePosition.x = mousePosition.x;
+		m_formerMousePosition.y = mousePosition.y;
+	}
+
+	void CameraController::onKeyPressed(const KeyPressedEvent& e)
+	{
+		if (e.getKeyCode() == OE_KEY_KP_0)
+		{
+			if (m_camera->isOrthographic())
+				m_camera->setPerspective();
+			else
+				m_camera->setOrthographic();
 		}
 	}
 
 	void CameraController::onMouseScrolled(const MouseScrolledEvent& e)
 	{
-		/*Logger::Trace("{}, {}", m_zoomSpeed, e.getYOffset());
-		m_camera->zoom(m_zoomSpeed * e.getYOffset());*/
+		m_camera->zoom(m_zoomSpeed * e.getYOffset());
 	}
 }

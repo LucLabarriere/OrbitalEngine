@@ -11,6 +11,7 @@ namespace OrbitalEngine
 		inline static void Initialize()
 		{
 			m_meshes.push_back(Ref<Mesh>(Mesh::Quad()));
+			m_meshes.push_back(Ref<Mesh>(Mesh::Cube()));
 		}
 
 		inline static const Ref<Mesh>& Get(const std::string& tag)

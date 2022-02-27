@@ -27,7 +27,7 @@ namespace OrbitalEngine
 
 
 	private:
-		Renderer() { };
+		Renderer() { RenderCommands::Initialize(); }
 
 	private:
 		static inline Renderer* s_instance = nullptr;

@@ -4,7 +4,7 @@
 
 namespace OrbitalEngine
 {
-	class Application;
+	class ShaderManager;
 
 	class Shader
 	{
@@ -24,13 +24,15 @@ namespace OrbitalEngine
 		virtual void setUniform4f(const std::string& name, float v1, float v2, float v3, float v4) const = 0;
 		virtual void setUniformMat4f(const std::string& name, const glm::mat4& value) const = 0;
 
+		const std::string& getName() const { return m_name; }
+
 	protected:
 		Shader(unsigned int shaderId, const std::string& name, const std::string& filepath)
 			: m_rendererId(0), m_shaderId(shaderId), m_name(name), m_filepath(filepath) { };
 		static Shader* Create(unsigned int shaderId, const std::string& name, const std::string& filepath);
 
 	protected:
-		friend Application;
+		friend ShaderManager;
 
 		unsigned int m_rendererId;
 		unsigned int m_shaderId;

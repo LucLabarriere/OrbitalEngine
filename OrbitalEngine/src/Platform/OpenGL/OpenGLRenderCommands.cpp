@@ -17,6 +17,7 @@ namespace OrbitalEngine
 	{
 		glad_glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glad_glEnable(GL_DEPTH_TEST);
 	}
 
 	void RenderCommands::DrawIndexed(unsigned int drawType, size_t indexCount)

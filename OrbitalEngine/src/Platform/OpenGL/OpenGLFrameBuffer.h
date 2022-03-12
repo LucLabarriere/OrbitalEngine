@@ -14,6 +14,9 @@ namespace OrbitalEngine
 	private:
 		OpenGLFrameBuffer();
 
+		unsigned int m_renderBufferId;
+		unsigned int m_textureId;
+
 		friend FrameBuffer;
 	};
 }

@@ -27,8 +27,8 @@ namespace OrbitalEngine
 		m_window = Scope<Window>(Window::Create(
 			Settings::Get(Settings::UIntSetting::WindowWidth),
 			Settings::Get(Settings::UIntSetting::WindowHeight),
-			"Application")
-		);
+			"Application"
+		));
 
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		m_layerStack = CreateScope<LayerStack>();
@@ -38,6 +38,7 @@ namespace OrbitalEngine
 		BatchManager::Initialize();
 		TextureManager::Initialize();
 		Inputs::Initialize(m_window);
+		ShaderManager::Initialize();
 
 		m_camera = CreateRef<Camera>();
 		m_cameraController = CreateScope<CameraController>(m_camera);
@@ -52,6 +53,7 @@ namespace OrbitalEngine
 		ImGui::DestroyContext();
 		Renderer::Terminate();
 		TextureManager::Terminate();
+		ShaderManager::Terminate();
 	}
 
 	void Application::onEvent(Event& e)
@@ -94,11 +96,6 @@ namespace OrbitalEngine
 
 	void Application::run()
 	{
-		Ref<Shader> shader = Scope<Shader>(Shader::Create(
-			0,
-			"Base",
-			Settings::GetAssetPath("shaders/Base.glsl")
-		));
 
 		entt::registry registry;
 
@@ -146,7 +143,6 @@ namespace OrbitalEngine
 			ImGui::Text("Average FPS %.2f", 1.0f / average);
 			ImGui::Render();
 
-
 			Renderer::Get()->newFrame();
 
 			dt = Time() - timeAtLastUpdate;
@@ -164,6 +160,7 @@ namespace OrbitalEngine
 
 			m_cameraController->onUpdate(dt);
 
+			const auto& shader = ShaderManager::GetShader("Base");
 			shader->bind();
 			shader->setUniform1i("u_TexId", 0);
 			shader->setUniformMat4f("u_VPMatrix", m_camera->getVPMatrix());
@@ -172,8 +169,6 @@ namespace OrbitalEngine
 			{
 				layer.get()->update(dt);
 			}
-
-			shader->bind();
 
 			auto view = registry.view<Components::Transform, Components::MeshRenderer>();
 			for (auto entity : view)

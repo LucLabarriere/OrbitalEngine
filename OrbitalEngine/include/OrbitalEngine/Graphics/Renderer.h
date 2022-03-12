@@ -6,6 +6,7 @@
 namespace OrbitalEngine
 {
 	class Batch;
+	class FrameBuffer;
 
 	class Renderer
 	{
@@ -22,14 +23,15 @@ namespace OrbitalEngine
 
 		static void Submit(Ref<Batch>& batch);
 
-		void newFrame() { RenderCommands::NewFrame(); }
-
+		void newFrame();
+		void displayFrame();
 
 
 	private:
-		Renderer() { RenderCommands::Initialize(); }
+		Renderer();
 
 	private:
 		static inline Renderer* s_instance = nullptr;
+		Scope<FrameBuffer> m_frameBuffer;
 	};
 }

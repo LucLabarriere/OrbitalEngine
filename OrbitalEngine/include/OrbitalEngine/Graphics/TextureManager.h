@@ -7,18 +7,17 @@ namespace OrbitalEngine
 	class TextureManager
 	{
 	public:
-		static inline void Initialize()
+		inline static void Initialize()
 		{
 			if (s_instance == nullptr)
 			{
 				s_instance = new TextureManager();
-				s_instance->load("C:/Users/lucla/Work/Programmes/Orbital/OrbitalEngine/assets/textures/damier.jpeg");
 			}
 			else
 				OE_RAISE_SIGSEGV("TextureManager: You're trying to initialize it again");
 		}
 
-		static inline void Terminate() { delete s_instance; }
+		inline static void Terminate() { delete s_instance; }
 		static TextureManager* Get() { return s_instance; }
 
 		bool load(const std::string filepath)
@@ -36,10 +35,10 @@ namespace OrbitalEngine
 		}
 
 	private:
-		TextureManager() { }
+		TextureManager() { load("C:/Users/lucla/Work/Programmes/Orbital/OrbitalEngine/assets/textures/damier.jpeg"); }
 
 	private:
-		static inline TextureManager* s_instance;
+		inline static TextureManager* s_instance;
 		std::vector<Ref<Texture>> m_textures;
 	};
 }

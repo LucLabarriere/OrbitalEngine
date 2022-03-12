@@ -20,6 +20,17 @@ namespace OrbitalEngine
 		glad_glEnable(GL_DEPTH_TEST);
 	}
 
+	void RenderCommands::ReadyFrame()
+	{
+		glad_glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glad_glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	void RenderCommands::DisableDepthTest()
+	{
+		glad_glDisable(GL_DEPTH_TEST);
+	}
+
 	void RenderCommands::DrawIndexed(unsigned int drawType, size_t indexCount)
 	{
 		glad_glDrawElements(drawType, indexCount, GL_UNSIGNED_INT, nullptr);

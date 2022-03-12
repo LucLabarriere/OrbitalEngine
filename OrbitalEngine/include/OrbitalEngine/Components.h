@@ -16,8 +16,8 @@ namespace OrbitalEngine
 		struct MeshRenderer
 		{
 			Ref<OrbitalEngine::Mesh> Mesh;
-			bool staticDraw = true;
-			bool batchedDraw = false;
+			bool StaticDraw = true;
+			bool BatchedDraw = false;
 			Ref<OrbitalEngine::Batch> Batch = nullptr;
 		};
 	}

@@ -16,17 +16,20 @@ namespace OrbitalEngine
 
 	void Renderer::newFrame()
 	{
+		m_frameBuffer->bind();
 		RenderCommands::NewFrame();
 	}
 
 	void Renderer::displayFrame()
 	{
-
+		m_frameBuffer->unbind();
+		RenderCommands::ReadyFrame();
+		m_frameBuffer->renderFrame();
 	}
 
 	Renderer::Renderer()
+		: m_frameBuffer(FrameBuffer::Create())
 	{
 		RenderCommands::Initialize();
-		m_frameBuffer = CreateScope<FrameBuffer>();
 	}
 }

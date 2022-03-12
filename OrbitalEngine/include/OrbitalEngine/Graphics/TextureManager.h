@@ -20,13 +20,13 @@ namespace OrbitalEngine
 		inline static void Terminate() { delete s_instance; }
 		static TextureManager* Get() { return s_instance; }
 
-		bool load(const std::string filepath)
+		bool load(const std::string& name, const std::string filepath)
 		{
 			TextureData texData = Texture::Load(filepath);
 			if (texData.data == nullptr)
 				return false;
 
-			Ref<Texture> texture(Texture::Create(texData));
+			Ref<Texture> texture(Texture::Create(name, texData));
 
 			m_textures.push_back(texture);
 			stbi_image_free(texData.data);
@@ -34,8 +34,26 @@ namespace OrbitalEngine
 			return true;
 		}
 
+		static void Bind(const std::string& tag)
+		{
+			for (const auto& texture : s_instance->m_textures)
+			{
+				if (texture->getName() == tag)
+				{
+					texture->bind();
+					return;
+				}
+			}
+
+			OE_RAISE_SIGSEGV("TextureManager: {} doesn't exists", tag);
+		}
+
 	private:
-		TextureManager() { load("C:/Users/lucla/Work/Programmes/Orbital/OrbitalEngine/assets/textures/damier.jpeg"); }
+		TextureManager()
+		{
+			load("Blank", Settings::GetAssetPath("textures/blank.png"));
+			load("Damier", Settings::GetAssetPath("textures/damier.jpeg"));
+		}
 
 	private:
 		inline static TextureManager* s_instance;

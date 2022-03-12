@@ -2,6 +2,8 @@
 
 namespace OrbitalEngine
 {
+	class Renderer;
+
 	class FrameBuffer
 	{
 	public:
@@ -10,12 +12,14 @@ namespace OrbitalEngine
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 
+		virtual void renderFrame() = 0;
+
 	protected:
-		FrameBuffer()
-			: m_rendererId(0) { }
+		FrameBuffer() : m_rendererId(0) { }
 		static FrameBuffer* Create();
 
 	protected:
+		friend Renderer;
 		unsigned int m_rendererId;
 	};
 }

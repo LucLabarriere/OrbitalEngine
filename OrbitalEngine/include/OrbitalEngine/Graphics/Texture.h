@@ -33,15 +33,20 @@ namespace OrbitalEngine
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 
+		const std::string& getName() const { return m_name;  }
+
 	protected:
-		Texture(unsigned int width, unsigned int height)
-			: m_rendererId(0), m_width(width), m_height(height) { }
-		static Texture* Create(unsigned int width, unsigned int height, unsigned char* data);
-		static Texture* Create(TextureData texXata);
+		Texture(const std::string& name, unsigned int width, unsigned int height)
+			: m_name(name), m_rendererId(0), m_width(width), m_height(height) { }
+		static Texture* Create(
+			const std::string& name, unsigned int width, unsigned int height, unsigned char* data);
+		static Texture* Create(
+			const std::string& name, TextureData texXata);
 
 	protected:
 		friend TextureManager;
 
+		std::string m_name;
 		unsigned int m_rendererId;
 		unsigned int m_width;
 		unsigned int m_height;

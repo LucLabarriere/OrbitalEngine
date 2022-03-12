@@ -33,12 +33,12 @@ namespace OrbitalEngine
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
 		m_layerStack = CreateScope<LayerStack>();
 
-		Renderer::Initialize();
 		MeshManager::Initialize();
 		BatchManager::Initialize();
+		ShaderManager::Initialize();
+		Renderer::Initialize();
 		TextureManager::Initialize();
 		Inputs::Initialize(m_window);
-		ShaderManager::Initialize();
 
 		m_camera = CreateRef<Camera>();
 		m_cameraController = CreateScope<CameraController>(m_camera);
@@ -160,6 +160,7 @@ namespace OrbitalEngine
 
 			m_cameraController->onUpdate(dt);
 
+			TextureManager::Bind("Damier");
 			const auto& shader = ShaderManager::GetShader("Base");
 			shader->bind();
 			shader->setUniform1i("u_TexId", 0);
@@ -181,6 +182,7 @@ namespace OrbitalEngine
 			}
 
 			BatchManager::RenderBatches();
+			Renderer::Get()->displayFrame();
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

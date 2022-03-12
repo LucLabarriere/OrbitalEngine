@@ -1,5 +1,6 @@
 #include "OpenGLFrameBuffer.h"
 #include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Graphics.h"
 
 namespace OrbitalEngine
 {
@@ -23,7 +24,19 @@ namespace OrbitalEngine
 		glad_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void OpenGLFrameBuffer::renderFrame()
+	{
+		const auto& shader = ShaderManager::GetShader("PostProcess");
+		shader->bind();
+		glad_glDisable(GL_DEPTH_TEST);
+		glad_glActiveTexture(GL_TEXTURE0);
+		glad_glBindTexture(GL_TEXTURE_2D, m_textureId);
+		shader->setUniform1i("u_ScreenTexture", 0);
+		Renderer::Submit(m_batch);
+	}
+
 	OpenGLFrameBuffer::OpenGLFrameBuffer()
+		: m_screenTransform({ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 2.0f, 2.0f, 0.0f } })
 	{
 		glad_glGenFramebuffers(1, &m_rendererId);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererId);
@@ -49,5 +62,12 @@ namespace OrbitalEngine
 		);
 
 		glad_glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		m_screenMesh = MeshManager::Get("Quad");
+		const auto& vertices = m_screenMesh->getVertices();
+		const auto& indices = m_screenMesh->getIndices();
+		m_batch = CreateRef<Batch>(vertices.getCount(), indices.getCount(), true);
+		m_batch->addMesh(m_screenMesh, m_screenTransform);
+		m_batch->allocateMemory();
 	}
 }

@@ -2,11 +2,11 @@
 
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/RenderCommands.h"
+#include "OrbitalEngine/Graphics/FrameBuffer.h"
 
 namespace OrbitalEngine
 {
 	class Batch;
-	class FrameBuffer;
 
 	class Renderer
 	{
@@ -25,7 +25,6 @@ namespace OrbitalEngine
 
 		void newFrame();
 		void displayFrame();
-
 
 	private:
 		Renderer();

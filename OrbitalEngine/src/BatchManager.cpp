@@ -9,11 +9,11 @@ namespace OrbitalEngine
 		Components::MeshRenderer& meshRenderer,
 		const Components::Transform& transform)
 	{
-		if (meshRenderer.staticDraw && meshRenderer.batchedDraw)
+		if (meshRenderer.StaticDraw && meshRenderer.BatchedDraw)
 			RegisterStaticBatchedMesh(meshRenderer, transform);
-		else if (meshRenderer.staticDraw && !meshRenderer.batchedDraw)
+		else if (meshRenderer.StaticDraw && !meshRenderer.BatchedDraw)
 			RegisterStaticMesh(meshRenderer, transform);
-		else if (!meshRenderer.staticDraw && !meshRenderer.batchedDraw)
+		else if (!meshRenderer.StaticDraw && !meshRenderer.BatchedDraw)
 			RegisterDynamicMesh(meshRenderer, transform);
 		else
 			RegisterDynamicBatchedMesh(meshRenderer, transform);

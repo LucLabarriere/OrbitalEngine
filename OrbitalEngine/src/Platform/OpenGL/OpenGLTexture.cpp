@@ -2,18 +2,19 @@
 
 namespace OrbitalEngine
 {
-	Texture* Texture::Create(unsigned int width, unsigned int height, unsigned char* data)
+	Texture* Texture::Create(
+		const std::string& name, unsigned int width, unsigned int height, unsigned char* data)
 	{
-		return new OpenGLTexture(width, height, data);
+		return new OpenGLTexture(name, width, height, data);
 	}
 
-	Texture* Texture::Create(TextureData texData)
+	Texture* Texture::Create(const std::string& name, TextureData texData)
 	{
-		return new OpenGLTexture(texData.width, texData.height, texData.data);
+		return new OpenGLTexture(name, texData.width, texData.height, texData.data);
 	}
 
-	OpenGLTexture::OpenGLTexture(unsigned int width, unsigned int height, unsigned char* data)
-		: Texture(width, height)
+	OpenGLTexture::OpenGLTexture(const std::string& name, unsigned int width, unsigned int height, unsigned char* data)
+		: Texture(name, width, height)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glad_glGenTextures(1, &m_rendererId);

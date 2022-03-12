@@ -12,7 +12,8 @@ namespace OrbitalEngine
 		virtual void unbind() const override;
 
 	private:
-		OpenGLTexture(unsigned int width, unsigned int height, unsigned char* data);
+		OpenGLTexture(
+			const std::string& name, unsigned int width, unsigned int height, unsigned char* data);
 
 	private:
 		friend Texture;

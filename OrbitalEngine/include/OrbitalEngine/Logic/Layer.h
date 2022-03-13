@@ -33,6 +33,7 @@ namespace OrbitalEngine
 		virtual bool onMouseScrolled(MouseScrolledEvent& e) { return false; }
 		virtual bool onMouseButtonPressed(MouseButtonPressedEvent& e) { return false; }
 		virtual bool onMouseButtonReleased(MouseButtonReleasedEvent& e) { return false; }
+		virtual bool onWindowResized(WindowResizedEvent& e) { return false; }
 
 	private:
 		void setLayerId(int layerId) { m_layerId = layerId;  }

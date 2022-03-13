@@ -22,12 +22,17 @@ namespace OrbitalEngine
 		static Renderer* Get() { return s_instance; }
 
 		static void Submit(Ref<Batch>& batch);
+		static void OnWindowResized();
+		static unsigned int GetFrame() { return s_instance->getFrame(); }
 
 		void newFrame();
 		void displayFrame();
 
 	private:
 		Renderer();
+
+		void onWindowResized();
+		unsigned int getFrame() const { return m_frameBuffer->getTextureId(); }
 
 	private:
 		static inline Renderer* s_instance = nullptr;

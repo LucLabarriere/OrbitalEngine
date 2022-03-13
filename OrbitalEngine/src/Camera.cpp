@@ -4,8 +4,9 @@
 namespace OrbitalEngine
 {
 	Camera::Camera() : m_position(0.0f, 0.0f, -0.5f), m_up(0.0f, 1.0f, 0.0f), m_front(0.0f, 0.0f, 1.0f)
-		, m_right(1.0f, 0.0f, 0.0f), m_rotation(0.0f, 90.0f, 0.0f), m_fov(60.0f) , m_viewMatrix(1.0f)
-		, m_projectionMatrix(1.0f), m_VPMatrix(1.0f)
+		, m_right(1.0f, 0.0f, 0.0f), m_rotation(0.0f, 90.0f, 0.0f), m_fov(60.0f)
+		, m_aspectRatio((float)Settings::Get(Settings::UIntSetting::WindowWidth) / (float)Settings::Get(Settings::UIntSetting::WindowHeight))
+		, m_viewMatrix(1.0f), m_projectionMatrix(1.0f), m_VPMatrix(1.0f)
 	{
 		updateMatrices();
 	}
@@ -18,11 +19,15 @@ namespace OrbitalEngine
 		m_front = glm::normalize(m_front);
 		m_right = glm::normalize(glm::cross(m_front, m_up));
 
-
 		if (m_orthographic)
-			m_projectionMatrix = glm::ortho(- m_zoomLevel, m_zoomLevel, - m_zoomLevel, m_zoomLevel, 0.1f, 100.0f);
+		{
+			m_projectionMatrix = glm::ortho(
+				-m_zoomLevel * m_aspectRatio, m_zoomLevel * m_aspectRatio,
+				-m_zoomLevel, m_zoomLevel,
+				0.1f, 100.0f);
+		}
 		else
-			m_projectionMatrix = glm::perspective(glm::radians(m_fov), 1.0f, 0.1f, 100.0f);
+			m_projectionMatrix = glm::perspective(glm::radians(m_fov), m_aspectRatio, 0.1f, 100.0f);
 
 		m_viewMatrix = glm::lookAt(m_position, m_position + m_front, m_up);
 		m_VPMatrix = m_projectionMatrix * m_viewMatrix;

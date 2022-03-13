@@ -14,6 +14,11 @@ namespace OrbitalEngine
 		batch->requestDraw(false);
 	}
 
+	void Renderer::OnWindowResized()
+	{
+		s_instance->onWindowResized();
+	}
+
 	void Renderer::newFrame()
 	{
 		m_frameBuffer->bind();
@@ -31,5 +36,10 @@ namespace OrbitalEngine
 		: m_frameBuffer(FrameBuffer::Create())
 	{
 		RenderCommands::Initialize();
+	}
+
+	void Renderer::onWindowResized()
+	{
+		m_frameBuffer.reset(FrameBuffer::Create());
 	}
 }

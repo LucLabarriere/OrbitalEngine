@@ -10,7 +10,6 @@ namespace OrbitalEngine
 
 	OpenGLShader::~OpenGLShader()
 	{
-		Logger::Debug("OpenGLShader: deleting shader: {}", m_rendererId);
 		unbind();
 		glad_glDeleteProgram(m_rendererId);
 	}

@@ -23,7 +23,6 @@ namespace OrbitalEngine
 		friend FrameBuffer;
 
 		unsigned int m_renderBufferId;
-		unsigned int m_textureId;
 		Ref<Mesh> m_screenMesh;
 		Ref<Batch> m_batch;
 		Components::Transform m_screenTransform;

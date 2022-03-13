@@ -20,19 +20,7 @@ namespace OrbitalEngine
 		inline static void Terminate() { delete s_instance; }
 		static TextureManager* Get() { return s_instance; }
 
-		bool load(const std::string& name, const std::string filepath)
-		{
-			TextureData texData = Texture::Load(filepath);
-			if (texData.data == nullptr)
-				return false;
-
-			Ref<Texture> texture(Texture::Create(name, texData));
-
-			m_textures.push_back(texture);
-			stbi_image_free(texData.data);
-
-			return true;
-		}
+		bool load(const std::string& name, const std::string& filepath);
 
 		static void Bind(const std::string& tag)
 		{

@@ -12,7 +12,8 @@
 	{ \
 		if (layer.get()->x(e)) \
 			return true; \
-	}
+	} \
+	return x(e)
 
 namespace OrbitalEngine
 {
@@ -39,18 +40,12 @@ namespace OrbitalEngine
 		Renderer::Initialize();
 		TextureManager::Initialize();
 		Inputs::Initialize(m_window);
-
-		m_camera = CreateRef<Camera>();
-		m_cameraController = CreateScope<CameraController>(m_camera);
 	}
 
 	Application::~Application()
 	{
 		Logger::Info("Application: Terminating");
 		m_window.reset();
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
 		Renderer::Terminate();
 		TextureManager::Terminate();
 		ShaderManager::Terminate();
@@ -60,93 +55,48 @@ namespace OrbitalEngine
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<KeyPressedEvent>([this](KeyPressedEvent& e) -> bool {
-			m_cameraController->onKeyPressed(e); // TODO Move into Editor
-
-			OE_DISPATCH_LAYER(onKeyPressed)
-			return false;
+			OE_DISPATCH_LAYER(onKeyPressed);
 		});
 
 		dispatcher.dispatch<KeyReleasedEvent>([this](KeyReleasedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onKeyReleased)
-			return false;
+			OE_DISPATCH_LAYER(onKeyReleased);
 		});
 
 		dispatcher.dispatch<MouseMovedEvent>([this](MouseMovedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onMouseMoved)
-			return false;
+			OE_DISPATCH_LAYER(onMouseMoved);
 		});
 
 		dispatcher.dispatch<MouseScrolledEvent>([this](MouseScrolledEvent& e) -> bool {
-			m_cameraController->onMouseScrolled(e); // TODO Move into Editor
-
-			OE_DISPATCH_LAYER(onMouseScrolled)
-			return false;
+			OE_DISPATCH_LAYER(onMouseScrolled);
 		});
 
 		dispatcher.dispatch<MouseButtonPressedEvent>([this](MouseButtonPressedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onMouseButtonPressed)
-			return false;
+			OE_DISPATCH_LAYER(onMouseButtonPressed);
 		});
 
 		dispatcher.dispatch<MouseButtonReleasedEvent>([this](MouseButtonReleasedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onMouseButtonReleased)
-			return false;
+			OE_DISPATCH_LAYER(onMouseButtonReleased);
+		});
+
+		dispatcher.dispatch<WindowResizedEvent>([this](WindowResizedEvent& e) -> bool {
+			OE_DISPATCH_LAYER(onWindowResized);
 		});
 	}
 
 	void Application::run()
 	{
-
-		entt::registry registry;
-
-		unsigned int size_x = 5;
-		unsigned int size_y = 5;
-		for (unsigned int i = 0; i <= size_x; i++)
-		{
-			for (unsigned int j = 0; j <= size_y; j++)
-			{
-				auto entity = registry.create();
-
-				Components::Transform t = {
-					{ -1.0f, -1.0f, 0.0f },
-					{  0.0f,  0.0f, 0.0f },
-					{  0.2f,  0.2f, 0.2f }
-				};
-
-				float positionX = (float)i / size_x * 2;
-				float positionY = (float)j / size_y * 2;
-				float rotation = (float)j / size_x * 2 * 180.0f;
-
-				t.Position += glm::vec3(positionX, positionY, 0.0f);
-				t.Rotation = glm::vec3(rotation, rotation, rotation);
-
-				registry.emplace<Components::Transform>(entity, t);
-				registry.emplace<Components::MeshRenderer>(entity, MeshManager::Get("Cube"), false, true);
-			}
-		}
-
-		Time timeAtLastUpdate;
 		Time dt;
 
 		std::vector<Time> times(100);
 		size_t timeIndex = 0;
 		float average = 0.0f;
 
+		onStart();
+
 		while (!m_window->shouldClose())
 		{
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
-
-			ImGui::Text("Time per frame %f ms", dt.milliseconds());
-			ImGui::Text("FPS %.2f", 1.0f / dt.seconds());
-			ImGui::Text("Average FPS %.2f", 1.0f / average);
-			ImGui::Render();
-
-			Renderer::Get()->newFrame();
-
-			dt = Time() - timeAtLastUpdate;
-			timeAtLastUpdate = Time();
+			dt = Time() - m_timeAtLastUpdate;
+			m_timeAtLastUpdate = Time();
 
 			times[timeIndex] = dt;
 			timeIndex += 1;
@@ -156,37 +106,15 @@ namespace OrbitalEngine
 			average = 0;
 			for (auto& t : times)
 				average += t.seconds();
-			average = average / times.size();
 
-			m_cameraController->onUpdate(dt);
+			m_averageTimePerFrame = average / times.size();
 
-			TextureManager::Bind("Damier");
-			const auto& shader = ShaderManager::GetShader("Base");
-			shader->bind();
-			shader->setUniform1i("u_TexId", 0);
-			shader->setUniformMat4f("u_VPMatrix", m_camera->getVPMatrix());
-
-			for (auto& layer: *m_layerStack)
+			for (auto& layer : *m_layerStack)
 			{
 				layer.get()->update(dt);
 			}
 
-			auto view = registry.view<Components::Transform, Components::MeshRenderer>();
-			for (auto entity : view)
-			{
-				auto& transform = view.get<Components::Transform>(entity);
-				auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
-				transform.Rotation += 10.0f * dt.seconds();
-				
-				BatchManager::RegisterMesh(meshRenderer, transform);
-			}
-
-			BatchManager::RenderBatches();
-			Renderer::Get()->displayFrame();
-
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-			m_window->onUpdate();
+			onUpdate(dt);
 		}
 		Logger::Trace("Leaving Application");
 	}

@@ -21,6 +21,7 @@ namespace OrbitalEngine
 		bool isOrthographic() { return m_orthographic; }
 		void setOrthographic() { m_orthographic = true; updateMatrices(); }
 		void setPerspective() { m_orthographic = false; updateMatrices(); }
+		void setAspectRatio(float value) { m_aspectRatio = value; updateMatrices(); }
 
 	private:
 		bool m_orthographic = false;
@@ -29,6 +30,7 @@ namespace OrbitalEngine
 		glm::vec3 m_front;
 		glm::vec3 m_right;
 		glm::vec3 m_rotation;
+		float m_aspectRatio;
 		float m_fov;
 		float m_zoomLevel = 1.0f;
 

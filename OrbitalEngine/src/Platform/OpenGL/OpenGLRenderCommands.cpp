@@ -15,7 +15,7 @@ namespace OrbitalEngine
 
 	void RenderCommands::NewFrame()
 	{
-		glad_glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+		glad_glClearColor(0.6f, 0.6f, 1.0f, 1.0f);
 		glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glad_glEnable(GL_DEPTH_TEST);
 	}

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
-#include "vendor/stb_image.h"
 
 namespace OrbitalEngine
 {
@@ -20,16 +19,7 @@ namespace OrbitalEngine
 	public:
 		virtual ~Texture() {};
 
-		static TextureData Load(const std::string& filename)
-		{
-			TextureData data;
-			OE_ASSERT(fileExists(filename), "Texture: '{}' does not exist.", filename);
-			data.data = stbi_load(
-				filename.c_str(), &data.width, &data.height, &data.nChannels, 0);
-
-			return data;
-		}
-
+		static TextureData Load(const std::string& filename);
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 

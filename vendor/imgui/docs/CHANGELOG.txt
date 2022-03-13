@@ -102,8 +102,40 @@ Other changes:
  VERSION 1.88 WIP (In Progress)
 -----------------------------------------------------------------------
 
+Breaking changes:
+
+Other Changes:
+
+- IO: Fixed backward-compatibility regression introduced in 1.87: (#4921, #4858)
+  - Direct accesses to io.KeysDown[] with legacy indices didn't work (with new backends).
+  - Direct accesses to io.KeysDown[GetKeyIndex(XXX)] would access invalid data (with old/new backends).
+  - Calling IsKeyDown() didn't have those problems, and is recommended as io.KeysDown[] is obsolete.
+- IO: Fixed input queue trickling of interleaved keys/chars events (which are frequent especially
+  when holding down a key as OS submits chars repeat events) delaying key presses and mouse movements.
+  In particular, using the input system for fast game-like actions (e.g. WASD camera move) would
+  typically have been impacted, as well as holding a key while dragging mouse. Constraints have
+  been lifted and are now only happening when e.g. an InputText() widget is active. (#4921, #4858)
+  Not that even thought you shouldn't need to disable io.ConfigInputTrickleEventQueue, you can
+  technically dynamically change its setting based on the context (e.g. disable only when hovering
+  or interacting with a game/3D view).
+- Clipper: Fixed a regression in 1.86 when not calling clipper.End() and late destructing the
+  clipper instance. High-level languages (Lua,Rust etc.) would typically be affected. (#4822)
+- IsItemHovered(): added ImGuiHoveredFlags_NoNavOverride to disable the behavior where the
+  return value is overriden by focus when gamepad/keyboard navigation is active.
+- Inputs: Fixed IsMouseClicked() repeat mode rate being half of keyboard repeat rate.
+- Stack Tool: Added option to copy item path to clipboard. (#4631)
+- Misc: Fixed IsAnyItemHovered() returning false when using navigation.
+- Misc: Added constexpr to ImVec2/ImVec4 inline constructors. (#4995) [@Myriachan]
+- Misc: binary_to_compressed_c tool: Added -nostatic option. (#5021) [@podsvirov]
+- ImVector: Fixed erase() with empty range. (#5009) [@thedmd]
+- Drawlist: Fixed PathArcTo() emitting terminating vertices too close to arc vertices. (#4993) [@thedmd]
+
 Docking+Viewports Branch:
 
+- Docking: Fixed floating docked nodes not being clamped into viewport workrect to stay reachable
+  when g.ConfigWindowsMoveFromTitleBarOnly is set and multi-viewports are disabled. (#5044)
+- Backends: SDL: Fixed dragging out main viewport broken on some SDL setups. (#5012) [@rokups]
+- Viewports: Fixed translating a host viewport from briefly altering the size of AlwaysAutoResize windows. (#5057)
 - Viewports: Fixed main viewport size not matching ImDrawData::DisplaySize for one frame during resize
   when multi-viewports are disabled. (#4900)
 

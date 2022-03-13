@@ -6,8 +6,7 @@
 namespace OrbitalEngine
 {
 	void BatchManager::RegisterMesh(
-		Components::MeshRenderer& meshRenderer,
-		const Components::Transform& transform)
+		Components::MeshRenderer& meshRenderer, Components::Transform& transform)
 	{
 		if (meshRenderer.StaticDraw && meshRenderer.BatchedDraw)
 			RegisterStaticBatchedMesh(meshRenderer, transform);
@@ -128,8 +127,6 @@ namespace OrbitalEngine
 
 	void BatchManager::RenderBatches()
 	{
-		// TODO replace by Renderer calls
-
 		// Static Not batched
 		for (int i = s_static.size() - 1; i >= 0; i--)
 		{

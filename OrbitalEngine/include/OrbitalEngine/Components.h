@@ -8,9 +8,9 @@ namespace OrbitalEngine
 	{
 		struct Transform
 		{
-			glm::vec3 Position;
-			glm::vec3 Rotation;
-			glm::vec3 Scale;
+			Vec3 Position;
+			Vec3 Rotation;
+			Vec3 Scale;
 		};
 
 		struct MeshRenderer

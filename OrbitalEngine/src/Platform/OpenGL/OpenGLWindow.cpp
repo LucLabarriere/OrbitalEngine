@@ -126,6 +126,20 @@ namespace OrbitalEngine
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwSetWindowUserPointer(m_glfwWindow, this);
 
+		glfwSetWindowSizeCallback(
+			m_glfwWindow,
+			[](GLFWwindow* window, int width, int height) {
+				auto& self = *static_cast<OpenGLWindow*>(glfwGetWindowUserPointer(window));
+				self.m_width = (unsigned int)width;
+				self.m_height = (unsigned int)height;
+				Settings::Get(Settings::UIntSetting::WindowWidth) = self.m_width;
+				Settings::Get(Settings::UIntSetting::WindowHeight) = self.m_height;
+
+				WindowResizedEvent e(self.m_width, self.m_height);
+				self.applicationCallback(e);
+			}
+		);
+
 		glfwSetKeyCallback(
 			m_glfwWindow,
 			[](GLFWwindow* window, int key, int scanCode, int action, int mods) {

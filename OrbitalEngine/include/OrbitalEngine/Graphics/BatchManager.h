@@ -16,7 +16,7 @@ namespace OrbitalEngine
 
 		static void RenderBatches();
 		static void RegisterMesh(
-			Components::MeshRenderer& meshRenderer, const Components::Transform& transform);
+			Components::MeshRenderer& meshRenderer, Components::Transform& transform);
 
 	private:
 

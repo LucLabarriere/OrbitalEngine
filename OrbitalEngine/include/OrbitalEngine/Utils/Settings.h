@@ -29,6 +29,7 @@ namespace OrbitalEngine
 		enum class FloatSetting
 		{
 			FOV = 0,
+			AspectRatio,
 			_Size
 		};
 
@@ -36,6 +37,8 @@ namespace OrbitalEngine
 		{
 			WindowWidth = 0 + (size_t)FloatSetting::_Size,
 			WindowHeight,
+			RenderingAreaWidth,
+			RenderingAreaHeight,
 			_Size
 		};
 
@@ -72,8 +75,10 @@ namespace OrbitalEngine
 			m_settings[(size_t)FloatSetting::FOV] = { SettingType::Float, { .Float = 80.0f} };
 
 			// UInt
-			m_settings[(size_t)UIntSetting::WindowWidth] = { SettingType::UInt, { .UInt = 800 } };
-			m_settings[(size_t)UIntSetting::WindowHeight] = { SettingType::UInt, { .UInt = 600 } };
+			m_settings[(size_t)UIntSetting::WindowWidth] = { SettingType::UInt, { .UInt = 1600 } };
+			m_settings[(size_t)UIntSetting::WindowHeight] = { SettingType::UInt, { .UInt = 900 } };
+			m_settings[(size_t)UIntSetting::RenderingAreaWidth] = { SettingType::UInt, {.UInt = 1600 } };
+			m_settings[(size_t)UIntSetting::RenderingAreaHeight] = { SettingType::UInt, {.UInt = 900 } };
 
 			// Bool
 			m_settings[(size_t)BoolSetting::VSyncEnabled] = { SettingType::Bool, { .Bool = true } };

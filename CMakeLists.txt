@@ -18,4 +18,4 @@ add_subdirectory(vendor/imgui)
 add_subdirectory(vendor/fmt)
 
 add_subdirectory(OrbitalEngine)
-add_subdirectory(Sandbox)
+add_subdirectory(OrbitalEditor)

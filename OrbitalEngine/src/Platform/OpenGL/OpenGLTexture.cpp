@@ -1,4 +1,5 @@
 #include "OpenGLTexture.h"
+#include "vendor/stb_image.h"
 
 namespace OrbitalEngine
 {
@@ -11,6 +12,16 @@ namespace OrbitalEngine
 	Texture* Texture::Create(const std::string& name, TextureData texData)
 	{
 		return new OpenGLTexture(name, texData.width, texData.height, texData.data);
+	}
+
+	TextureData Texture::Load(const std::string& filename)
+	{
+		TextureData data;
+		OE_ASSERT(fileExists(filename), "Texture: '{}' does not exist.", filename);
+		data.data = stbi_load(
+			filename.c_str(), &data.width, &data.height, &data.nChannels, 0);
+
+		return data;
 	}
 
 	OpenGLTexture::OpenGLTexture(const std::string& name, unsigned int width, unsigned int height, unsigned char* data)

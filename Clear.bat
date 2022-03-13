@@ -7,3 +7,17 @@ rm -rf **/CMakeFiles*
 rm -rf **/build
 rm -rf **/Release
 rm -rf **/Debug
+rm -rf **/*.dir
+rm -rf **/x64
+
+rm -rf *vcxproj*
+rm -rf *sln*
+rm -rf *CMakeCache*
+rm -rf out
+rm -rf cmake_install.cmake
+rm -rf CMakeFiles*
+rm -rf build
+rm -rf Release
+rm -rf Debug
+rm -rf *.dir
+rm -rf x64

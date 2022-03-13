@@ -12,6 +12,7 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 if (MSVC)
 target_compile_options(${PROJECT_NAME} PRIVATE "/wd6011")
+target_compile_options(${PROJECT_NAME} PRIVATE "/FIOrbitalEngine/Utils/Context.h")
 endif()
 target_compile_definitions(${PROJECT_NAME} PUBLIC ORBITAL_OPENGL)
 target_compile_definitions(${PROJECT_NAME} PUBLIC ORBITAL_DEBUG)

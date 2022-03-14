@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fmt/core.h>
+
 #define OE_EVENT_DEFINITION(type, categories, repr) \
 	static EventType GetType() { return EventType::type; } \
 	static unsigned int GetCategoryFlags() { return EventCategory::categories; } \

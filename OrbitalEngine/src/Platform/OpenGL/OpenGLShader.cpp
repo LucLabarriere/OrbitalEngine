@@ -91,7 +91,7 @@ namespace OrbitalEngine
 		int location = glad_glGetUniformLocation(m_rendererId, name.c_str());
 
 		if (location == -1)
-			Logger::Error("OpenGLShader: In shader '{}' Uniform {} doesn't exist", m_name, name);
+			Logger::Error("OpenGLShader: In shader '{}' Uniform '{}' doesn't exist", m_name, name);
 
 		return location;
 	}
@@ -122,9 +122,11 @@ namespace OrbitalEngine
 		glad_glCompileShader(shader);
 		glad_glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_ok);
 
+		const std::string typeName = (type == GL_VERTEX_SHADER) ? "Vertex shader" : "Fragment shader";
+
 		if (!compile_ok)
 		{
-			Logger::Error("OpenGLShader: Error in shader {}", m_name);
+			Logger::Error("OpenGLShader: Error in shader '{}' ({})", m_name, typeName);
 			return -1;
 		}
 		
@@ -134,7 +136,7 @@ namespace OrbitalEngine
 	OpenGLShader::Sources OpenGLShader::parseSourceCode(const std::string& filepath)
 	{
 		std::ifstream sourceFile;
-		OE_ASSERT(fileExists(filepath), "OpenGLShader: {}: no such file ", filepath);
+		OE_ASSERT(fileExists(filepath), "OpenGLShader: '{}': no such file", filepath);
 
 		sourceFile.open(filepath, std::ios::out);
 

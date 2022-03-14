@@ -53,10 +53,7 @@ namespace OrbitalEngine
 		static inline bool& Get(BoolSetting name) { return s_instance->m_settings[(size_t)name].Value.Bool; }
 		static inline std::string GetAssetsFolder()
 		{
-			std::filesystem::path assets("assets");
-			std::filesystem::path basepath = std::filesystem::path(__FILE__).parent_path().parent_path().parent_path().parent_path();
-			std::filesystem::path absolutePath = basepath / assets;
-			return absolutePath.string();
+			return "assets";
 		}
 
 		static inline std::string GetAssetPath(const std::string& relativePathString)

@@ -11,7 +11,6 @@
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
 #include <glm/gtx/transform.hpp>
-#include <fmt/format.h>
 #include <functional>
 #include <entt/entt.hpp>
 

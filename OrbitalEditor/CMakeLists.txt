@@ -6,11 +6,15 @@ file(GLOB SOURCES src/*.cpp src/*.h)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+if (MSVC)
 target_compile_options(${PROJECT_NAME} PRIVATE "/FIOrbitalEngine/Utils/Context.h")
+endif()
 
 target_include_directories(${PROJECT_NAME}
 	PUBLIC
 		${CMAKE_SOURCE_DIR}/OrbitalEngine/include
+                ${CMAKE_SOURCE_DIR}/vendor/imgui/
+                ${CMAKE_SOURCE_DIR}/vendor/entt/single_include
 	PRIVATE
 		include
 )

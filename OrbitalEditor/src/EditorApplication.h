@@ -23,15 +23,15 @@ public:
 
 	void checkRenderAreaSize(unsigned int width, unsigned int height)
 	{
-		if (width != m_renderAreaWidth && height != m_renderAreaHeight)
+		if (width != m_renderAreaWidth || height != m_renderAreaHeight)
 		{
 			m_renderAreaWidth = width;
 			m_renderAreaHeight = height;
 			Settings::Get(Settings::UIntSetting::RenderingAreaWidth) = width;
 			Settings::Get(Settings::UIntSetting::RenderingAreaHeight) = height;
 			Settings::Get(Settings::FloatSetting::AspectRatio) = (float)width / height;
-			Renderer::OnWindowResized();
 			m_camera->setAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
+			Renderer::OnWindowResized();
 		}
 	}
 

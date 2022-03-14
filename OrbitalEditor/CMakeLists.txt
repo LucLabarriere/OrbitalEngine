@@ -6,6 +6,8 @@ file(GLOB SOURCES src/*.cpp src/*.h)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+file(COPY ${CMAKE_SOURCE_DIR}/OrbitalEngine/assets DESTINATION ${CMAKE_BINARY_DIR}/OrbitalEditor)
+
 if (MSVC)
 target_compile_options(${PROJECT_NAME} PRIVATE "/FIOrbitalEngine/Utils/Context.h")
 endif()

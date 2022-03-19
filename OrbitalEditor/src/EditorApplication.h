@@ -30,15 +30,16 @@ public:
 			Settings::Get(Settings::UIntSetting::RenderingAreaWidth) = width;
 			Settings::Get(Settings::UIntSetting::RenderingAreaHeight) = height;
 			Settings::Get(Settings::FloatSetting::AspectRatio) = (float)width / height;
-			m_camera->setAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
+			m_scene->getCamera()->setAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
 			Renderer::OnWindowResized();
 		}
 	}
 
 private:
-	Ref<Camera> m_camera;
+	//Ref<Camera> m_camera;
+	//entt::registry m_registry;
+	Ref<Scene> m_scene;
 	Scope<CameraController> m_cameraController;
-	entt::registry m_registry;
 
 	unsigned int m_renderAreaWidth;
 	unsigned int m_renderAreaHeight;

@@ -1,11 +1,12 @@
 #include "EditorApplication.h"
 #include "OrbitalEngine/Components.h"
 #include "OrbitalEngine/Graphics.h"
+#include "OrbitalEngine/Logic.h"
 
 EditorApplication::EditorApplication() : Application()
 {
-	m_camera = CreateRef<Camera>();
-	m_cameraController = CreateScope<CameraController>(m_camera);
+	m_scene = CreateRef<Scene>();
+	m_cameraController = CreateScope<CameraController>(m_scene->getCamera());
 
 	m_layerStack->push(CreateRef<GuiLayer>());
 }
@@ -26,7 +27,7 @@ void EditorApplication::onStart()
 	{
 		for (unsigned int j = 0; j <= size_y; j++)
 		{
-			auto entity = m_registry.create();
+			auto entity = m_scene->createEntity();
 
 			Components::Transform t = {
 				{ -1.0f, -1.0f, 2.0f },
@@ -41,12 +42,12 @@ void EditorApplication::onStart()
 			t.Position += Vec3(positionX, positionY, 0.0f);
 			t.Rotation = Vec3(rotation, rotation, rotation);
 
-			m_registry.emplace<Components::Transform>(entity, t);
-			m_registry.emplace<Components::MeshRenderer>(entity, MeshManager::Get("Cube"), false, true);
+			entity.add<Components::Transform>(t);
+			entity.add<Components::MeshRenderer>(MeshManager::Get("Cube"), false, true);
 		}
 	}
 
-	auto entity = m_registry.create();
+	auto entity = m_scene->createEntity();
 
 	Components::Transform t = {
 		{ 0.0f, 0.0f, 0.0f },
@@ -54,9 +55,8 @@ void EditorApplication::onStart()
 		{ 0.2f, 0.2f, 0.2f }
 	};
 
-	m_registry.emplace<Components::Transform>(entity, t);
-	m_registry.emplace<Components::MeshRenderer>(entity, MeshManager::Get("Quad"), false, true);
-
+	entity.add<Components::Transform>(t);
+	entity.add<Components::MeshRenderer>(MeshManager::Get("Quad"), false, true);
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().Fonts->AddFontFromFileTTF(Settings::GetAssetPath("fonts/NotoSans-Regular.ttf").c_str(), 32);
@@ -125,9 +125,9 @@ void EditorApplication::onUpdate(Time dt)
 	const auto& shader = ShaderManager::GetShader("Base");
 	shader->bind();
 	shader->setUniform1i("u_TexId", 0);
-	shader->setUniformMat4f("u_VPMatrix", m_camera->getVPMatrix());
+	shader->setUniformMat4f("u_VPMatrix", m_scene->getCamera()->getVPMatrix());
 
-	auto view = m_registry.view<Components::Transform, Components::MeshRenderer>();
+	auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer>();
 	for (auto entity : view)
 	{
 		auto& transform = view.get<Components::Transform>(entity);

@@ -12,6 +12,8 @@ namespace OrbitalEngine
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
 		glad_glDeleteFramebuffers(1, &m_rendererId);
+		glad_glDeleteTextures(1, &m_textureId);
+		glad_glDeleteRenderbuffers(1, &m_renderBufferId);
 	}
 
 	void OpenGLFrameBuffer::bind() const

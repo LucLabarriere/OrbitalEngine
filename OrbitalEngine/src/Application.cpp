@@ -40,6 +40,7 @@ namespace OrbitalEngine
 		Renderer::Initialize();
 		TextureManager::Initialize();
 		Inputs::Initialize(m_window);
+		Metrics::Initialize();
 	}
 
 	Application::~Application()
@@ -85,36 +86,22 @@ namespace OrbitalEngine
 
 	void Application::run()
 	{
-		Time dt;
-
-		std::vector<Time> times(100);
-		size_t timeIndex = 0;
-		float average = 0.0f;
-
 		onStart();
 
+		Time dt;
 		while (!m_window->shouldClose())
 		{
 			dt = Time() - m_timeAtLastUpdate;
 			m_timeAtLastUpdate = Time();
 
-			times[timeIndex] = dt;
-			timeIndex += 1;
-			if (timeIndex == times.size())
-				timeIndex = 0;
-
-			average = 0;
-			for (auto& t : times)
-				average += t.seconds();
-
-			m_averageTimePerFrame = average / times.size();
+			Metrics::OnUpdate(dt);
+			onUpdate(dt);
 
 			for (auto& layer : *m_layerStack)
 			{
 				layer.get()->update(dt);
 			}
 
-			onUpdate(dt);
 		}
 		Logger::Trace("Leaving Application");
 	}

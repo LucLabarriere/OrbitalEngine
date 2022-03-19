@@ -3,6 +3,7 @@
 #include <fmt/core.h>
 #include "OrbitalEngine/Utils/Time.h"
 
+#define OE_TRACE_VARIABLE(var) Logger::Trace(#var": {}", var)
 
 namespace OrbitalEngine
 {

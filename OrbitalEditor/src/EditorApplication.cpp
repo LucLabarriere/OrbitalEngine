@@ -105,9 +105,10 @@ void EditorApplication::onUpdate(Time dt)
 	ImGui::GetStyle().WindowPadding = ImVec2(12, 12);
 
 	ImGui::Begin("Debug informations");
-	ImGui::Text("Time per frame %f ms", dt.milliseconds());
-	ImGui::Text("FPS %.2f", 1.0f / dt.seconds());
-	ImGui::Text("Average FPS %.2f", 1.0f / m_averageTimePerFrame);
+	ImGui::Text("Time per frame %.2f ms",				Metrics::Get<Time>(Metric::TimePerFrame).milliseconds());
+	ImGui::Text("FPS %.2f",								Metrics::Get<float>(Metric::FrameRate));
+	ImGui::Text("Approximate time per frame %.2f ms",	Metrics::Get<Time>(Metric::ApproximateTimePerFrame).milliseconds());
+	ImGui::Text("Approximate FPS %.2f",					Metrics::Get<float>(Metric::ApproximateFrameRate));
 	ImGui::Checkbox("Show demo window", &m_isDemoShown);
 	ImGui::End();
 

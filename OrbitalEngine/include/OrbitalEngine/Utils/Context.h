@@ -6,6 +6,7 @@
 #include <vector>
 #include <chrono>
 #include <filesystem>
+#include <variant>
 #include <sstream>
 #include <signal.h>
 #include <glm/glm.hpp>

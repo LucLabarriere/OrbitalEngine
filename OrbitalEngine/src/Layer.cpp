@@ -5,7 +5,6 @@ namespace OrbitalEngine
 	Layer::Layer(const std::string& tag)
 		: m_tag(tag)
 	{
-
 	}
 
 	void Layer::play()

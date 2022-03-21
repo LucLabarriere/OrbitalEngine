@@ -38,7 +38,6 @@ namespace OrbitalEngine
 	}
 
 	OpenGLFrameBuffer::OpenGLFrameBuffer()
-		: m_screenTransform({ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 2.0f, 2.0f, 0.0f } })
 	{
 		unsigned int width = Settings::Get(Settings::UIntSetting::RenderingAreaWidth);
 		unsigned int height = Settings::Get(Settings::UIntSetting::RenderingAreaHeight);
@@ -80,11 +79,11 @@ namespace OrbitalEngine
 
 		glad_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		m_screenMesh = MeshManager::Get("Quad");
-		const auto& vertices = m_screenMesh->getVertices();
-		const auto& indices = m_screenMesh->getIndices();
+		const auto& screenMesh = MeshManager::Get("Quad");
+		const auto& vertices = screenMesh->getVertices();
+		const auto& indices = screenMesh->getIndices();
 		m_batch = CreateRef<Batch>(vertices.getCount(), indices.getCount(), true);
-		m_batch->addMesh(m_screenMesh, m_screenTransform);
+		//m_batch->addMesh(screenMesh, m_screenTransform);
 		m_batch->allocateMemory();
 
 		glad_glViewport(0, 0, width, height);

@@ -2,10 +2,12 @@
 #include "OrbitalEngine/Components.h"
 #include "OrbitalEngine/Graphics.h"
 #include "OrbitalEngine/Logic.h"
+#include "Widgets.h"
 
 EditorApplication::EditorApplication() : Application()
 {
 	m_scene = CreateRef<Scene>();
+	m_scene->initialize();
 	m_cameraController = CreateScope<CameraController>(m_scene->getCamera());
 
 	m_layerStack->push(CreateRef<GuiLayer>());
@@ -27,7 +29,11 @@ void EditorApplication::onStart()
 	{
 		for (unsigned int j = 0; j <= size_y; j++)
 		{
-			auto entity = m_scene->createEntity();
+			//std::cout << fmt::vformat(msg,
+				//fmt::make_format_args(std::forward<Args>(args)...));
+			
+			Components::Tag tag(fmt::format("Cube_{}_{}", i, j).c_str());
+			auto entity = m_scene->createEntity(tag);
 
 			Components::Transform t = {
 				{ -1.0f, -1.0f, 2.0f },
@@ -47,7 +53,9 @@ void EditorApplication::onStart()
 		}
 	}
 
-	auto entity = m_scene->createEntity();
+	m_scene->getEntity("Cube_1_1").get<Components::Hierarchy>().setParent(m_scene->getEntity("Cube_2_1"));
+
+	auto entity = m_scene->createEntity("Quad");
 
 	Components::Transform t = {
 		{ 0.0f, 0.0f, 0.0f },
@@ -111,6 +119,9 @@ void EditorApplication::onUpdate(Time dt)
 	ImGui::Text("Approximate FPS %.2f",					Metrics::Get<float>(Metric::ApproximateFrameRate));
 	ImGui::Checkbox("Show demo window", &m_isDemoShown);
 	ImGui::End();
+
+	HierarchyPanel hierarchyPanel(m_scene);
+	hierarchyPanel.render();
 
 	if (m_isDemoShown)
 		ImGui::ShowDemoWindow();

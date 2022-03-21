@@ -1,7 +1,8 @@
 #include "OrbitalEngine/Graphics/BatchManager.h"
 #include "OrbitalEngine/Graphics/MeshManager.h"
 #include "OrbitalEngine/Graphics/Renderer.h"
-#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Components/Transform.h"
+#include "OrbitalEngine/Components/MeshRenderer.h"
 
 namespace OrbitalEngine
 {

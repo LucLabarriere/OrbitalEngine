@@ -1,6 +1,7 @@
 #pragma once
 #include "OrbitalEngine/Graphics/FrameBuffer.h"
-#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Components/Transform.h"
+#include "OrbitalEngine/Components/MeshRenderer.h"
 
 namespace OrbitalEngine
 {
@@ -23,8 +24,11 @@ namespace OrbitalEngine
 		friend FrameBuffer;
 
 		unsigned int m_renderBufferId;
-		Ref<Mesh> m_screenMesh;
 		Ref<Batch> m_batch;
-		Components::Transform m_screenTransform;
+		const Components::Transform m_screenTransform = {
+			{ 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f },
+			{ 2.0f, 2.0f, 0.0f }
+		};
 	};
 }

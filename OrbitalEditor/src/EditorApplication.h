@@ -4,9 +4,9 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "imgui.h"
 #include "entt/entt.hpp"
-
 #include "GuiLayer.h"
 #include "OrbitalEngine/Graphics/Renderer.h"
+#include "Widgets.h"
 
 using namespace OrbitalEngine;
 
@@ -44,4 +44,5 @@ private:
 	unsigned int m_renderAreaWidth;
 	unsigned int m_renderAreaHeight;
 	bool m_isDemoShown = true;
+	Scope<HierarchyPanel> m_hierarchyPanel;
 };

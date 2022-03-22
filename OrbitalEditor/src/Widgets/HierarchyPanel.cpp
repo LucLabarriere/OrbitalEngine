@@ -7,9 +7,15 @@ HierarchyPanel::HierarchyPanel(Ref<Scene>& scene)
 	Entity entity = m_scene->getSceneEntity();
 	
 	auto& hierarchy = entity.get<Components::Hierarchy>();
-	const auto& children = hierarchy.getChildren();
+	m_sceneChildren = &hierarchy.getChildren();
 
-	for (auto& child : children)
+	update();
+}
+
+void HierarchyPanel::update()
+{
+	m_treeNodes.clear();
+	for (auto& child : *m_sceneChildren)
 	{
 		m_treeNodes.push_back(child);
 	}

@@ -2,7 +2,6 @@
 #include "OrbitalEngine/Components.h"
 #include "OrbitalEngine/Graphics.h"
 #include "OrbitalEngine/Logic.h"
-#include "Widgets.h"
 
 EditorApplication::EditorApplication() : Application()
 {
@@ -91,6 +90,8 @@ void EditorApplication::onStart()
 	ImGui::GetStyle() = mainStyle;
 
 	ImGui::GetIO().FontGlobalScale = 0.55;
+
+	m_hierarchyPanel = CreateScope<HierarchyPanel>(m_scene);
 }
 
 void EditorApplication::onUpdate(Time dt)
@@ -120,8 +121,8 @@ void EditorApplication::onUpdate(Time dt)
 	ImGui::Checkbox("Show demo window", &m_isDemoShown);
 	ImGui::End();
 
-	HierarchyPanel hierarchyPanel(m_scene);
-	hierarchyPanel.render();
+	m_hierarchyPanel->update();
+	m_hierarchyPanel->render();
 
 	if (m_isDemoShown)
 		ImGui::ShowDemoWindow();

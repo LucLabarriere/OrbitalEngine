@@ -36,13 +36,13 @@ public:
 	}
 
 private:
-	//Ref<Camera> m_camera;
-	//entt::registry m_registry;
 	Ref<Scene> m_scene;
 	Scope<CameraController> m_cameraController;
 
 	unsigned int m_renderAreaWidth;
 	unsigned int m_renderAreaHeight;
 	bool m_isDemoShown = true;
-	Scope<HierarchyPanel> m_hierarchyPanel;
+	Ref<HierarchyPanel> m_hierarchyPanel;
+	Scope<Inspector> m_inspector;
+	Scope<MetricsWindow> m_metricsWindow;
 };

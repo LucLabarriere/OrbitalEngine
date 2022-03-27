@@ -14,7 +14,8 @@ namespace OrbitalEngine
 		ApproximateFrameRate,
 		TimePerFrame,
 		ApproximateTimePerFrame,
-		UpdateCount
+		BatchCount
+
 	};
 
 	static inline std::map<Metric, std::string> MetricNames = {
@@ -22,7 +23,7 @@ namespace OrbitalEngine
 		{ Metric::ApproximateFrameRate,			"ApproximateFrameRate" },
 		{ Metric::TimePerFrame,					"TimePerFrame" },
 		{ Metric::ApproximateTimePerFrame,		"ApproximateTimePerFrame" },
-		{ Metric::UpdateCount,					"UpdateCount" },
+		{ Metric::BatchCount,					"BatchCount" }
 	};
 
 	static inline std::map<Metric, std::string> MetricTypes = {
@@ -30,7 +31,7 @@ namespace OrbitalEngine
 		{ Metric::ApproximateFrameRate,			"float" },
 		{ Metric::TimePerFrame,					"Time" },
 		{ Metric::ApproximateTimePerFrame,		"Time" },
-		{ Metric::UpdateCount,					"unsigned int" },
+		{ Metric::BatchCount,					"unsigned int" },
 	};
 
 	class Metrics
@@ -39,7 +40,7 @@ namespace OrbitalEngine
 		static void Initialize() { s_instance = new Metrics; };
 		static void OnUpdate(Time dt) { s_instance->onUpdate(dt); };
 		template<typename T>
-		static const T& Get(Metric metric)
+		static T& Get(Metric metric)
 		{
 			try
 			{
@@ -52,7 +53,9 @@ namespace OrbitalEngine
 					MetricNames[metric], MetricTypes[metric], MetricNames[metric]
 				);
 			}
+			OE_RAISE_SIGSEGV("Error, trying to access a non existing metric");
 		}
+
 
 
 	private:
@@ -62,7 +65,7 @@ namespace OrbitalEngine
 	private:
 		static inline Metrics* s_instance = nullptr;
 		std::vector<Time> m_timePerFrameContainer;
-		std::map<Metric, std::variant<Time, int, float>> m_metrics;
+		std::map<Metric, std::variant<Time, unsigned int, float>> m_metrics;
 		size_t m_timeIndex = 0;
 
 		Time m_lastUpdatedFrameRate;

@@ -82,7 +82,7 @@ namespace OrbitalEngine
 		const auto& screenMesh = MeshManager::Get("Quad");
 		const auto& vertices = screenMesh->getVertices();
 		const auto& indices = screenMesh->getIndices();
-		m_batch = CreateRef<Batch>(vertices.getCount(), indices.getCount(), true);
+		m_batch = CreateRef<Batch>(RenderMode::STATIC_NOT_BATCHED, vertices.getCount(), indices.getCount());
 		//m_batch->addMesh(screenMesh, m_screenTransform);
 		m_batch->allocateMemory();
 

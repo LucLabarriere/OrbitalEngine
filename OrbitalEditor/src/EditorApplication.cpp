@@ -91,7 +91,10 @@ void EditorApplication::onStart()
 
 	ImGui::GetIO().FontGlobalScale = 0.55;
 
-	m_hierarchyPanel = CreateScope<HierarchyPanel>(m_scene);
+	m_hierarchyPanel = CreateRef<HierarchyPanel>(m_scene);
+	m_inspector = CreateScope<Inspector>(m_scene);
+	m_hierarchyPanel->initialize();
+	m_metricsWindow = CreateScope<MetricsWindow>();
 }
 
 void EditorApplication::onUpdate(Time dt)
@@ -123,6 +126,9 @@ void EditorApplication::onUpdate(Time dt)
 
 	m_hierarchyPanel->update();
 	m_hierarchyPanel->render();
+	m_inspector->setEntity(m_hierarchyPanel->getSelectedEntity());
+	m_inspector->render();
+	m_metricsWindow->render();
 
 	if (m_isDemoShown)
 		ImGui::ShowDemoWindow();
@@ -144,11 +150,9 @@ void EditorApplication::onUpdate(Time dt)
 	{
 		auto& transform = view.get<Components::Transform>(entity);
 		auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
-
-		if (meshRenderer.Mesh->getTag() == "Cube")
-			transform.Rotation += 10.0f * dt.seconds();
 		
-		BatchManager::RegisterMesh(meshRenderer, transform);
+		if (!meshRenderer.Hidden)
+			BatchManager::RegisterMesh(meshRenderer, transform);
 	}
 
 	BatchManager::RenderBatches();

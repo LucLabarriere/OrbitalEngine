@@ -3,6 +3,11 @@
 
 namespace OrbitalEngine
 {
+	Entity::Entity()
+	{
+
+	}
+
 	Entity::~Entity()
 	{
 		m_registry.reset();
@@ -10,7 +15,7 @@ namespace OrbitalEngine
 	}
 
 	Entity::Entity(entt::entity handle, Ref<Scene> scene)
-		: m_handle(handle), m_scene(scene), m_registry(scene->getRegistry())
+		: m_valid(true), m_handle(handle), m_scene(scene), m_registry(scene->getRegistry())
 	{
 
 	}

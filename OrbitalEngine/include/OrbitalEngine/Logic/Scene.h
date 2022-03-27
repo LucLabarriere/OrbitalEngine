@@ -14,8 +14,11 @@ namespace OrbitalEngine
 
 		void initialize();
 		Entity createEntity(const Components::Tag& tag);
-		Entity getEntity(const Components::Tag& tag);
+		std::string getUniqueTag(const std::string& tag, Entity* entity = nullptr);
+		void renameEntity(Entity& e, const char* buffer, size_t bufferSize);
 
+		Entity getEntity(const Components::Tag& tag);
+		Entity getEntity(const entt::entity& handle);
 		Ref<Camera>& getCamera() { return m_camera; }
 		Ref<entt::registry>& getRegistry() { return m_registry; }
 		Entity getSceneEntity();

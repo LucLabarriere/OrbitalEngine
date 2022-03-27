@@ -77,7 +77,7 @@ namespace OrbitalEngine
 		}
 
 		template <typename ...Args>
-		static void Critical(std::string msg, Args&&... args)
+		[[ noreturn ]] static void Critical(std::string msg, Args&&... args)
 		{
 			Echo(Now() + " " + Bright() + Red() + "Orbital" + " [CRITICAL] "
 				+ msg + EOL(), args...);

@@ -23,13 +23,13 @@ namespace OrbitalEngine
 		Components::MeshRenderer& meshRenderer,
 		const Components::Transform& transform)
 	{
-		if (!meshRenderer.Batch)
+		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::STATIC_NOT_BATCHED)
 		{
 			const auto& vertices = meshRenderer.Mesh->getVertices();
 			const auto& indices = meshRenderer.Mesh->getIndices();
 
 			size_t index = s_static.size();
-			s_static.push_back(CreateRef<Batch>(vertices.getCount(), indices.getCount(), true));
+			s_static.push_back(CreateRef<Batch>(RenderMode::STATIC_BATCHED, vertices.getCount(), indices.getCount()));
 			meshRenderer.Batch = s_static[index];
 			meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
 			meshRenderer.Batch->allocateMemory();
@@ -43,7 +43,7 @@ namespace OrbitalEngine
 		const Components::Transform& transform)
 	{
 		// TODO: if transform modified, update vertices
-		if (!meshRenderer.Batch)
+		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::STATIC_BATCHED)
 		{
 			const auto& vertices = meshRenderer.Mesh->getVertices();
 			const auto& indices = meshRenderer.Mesh->getIndices();
@@ -60,7 +60,7 @@ namespace OrbitalEngine
 			{
 				Logger::Trace("BatchManager: Creating static Batch");
 				size_t index = s_staticBatched.size();
-				s_staticBatched.push_back(CreateRef<Batch>(s_batchMaxVertexCount, s_batchMaxVertexCount * 3, true));
+				s_staticBatched.push_back(CreateRef<Batch>(RenderMode::STATIC_BATCHED, s_batchMaxVertexCount, s_batchMaxVertexCount * 3));
 				meshRenderer.Batch = s_staticBatched[index];
 				meshRenderer.Batch->allocateMemory();
 			}
@@ -84,13 +84,13 @@ namespace OrbitalEngine
 		const Components::Transform& transform)
 	{
 
-		if (!meshRenderer.Batch)
+		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::DYNAMIC_NOT_BATCHED)
 		{
 			const auto& vertices = meshRenderer.Mesh->getVertices();
 			const auto& indices = meshRenderer.Mesh->getIndices();
 
 			size_t index = s_dynamic.size();
-			s_dynamic.push_back(CreateRef<Batch>(vertices.getCount(), indices.getCount(), false));
+			s_dynamic.push_back(CreateRef<Batch>(RenderMode::DYNAMIC_NOT_BATCHED, vertices.getCount(), indices.getCount()));
 			meshRenderer.Batch = s_dynamic[index];
 			meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
 			meshRenderer.Batch->allocateMemory();

@@ -10,7 +10,7 @@ namespace OrbitalEngine
 	public:
 		inline static void Initialize()
 		{
-			s_dynamicBatched = CreateRef<Batch>(s_batchMaxVertexCount, s_batchMaxVertexCount * 3, false);
+			s_dynamicBatched = CreateRef<Batch>(RenderMode::DYNAMIC_BATCHED, s_batchMaxVertexCount, s_batchMaxVertexCount * 3);
 			s_dynamicBatched->allocateMemory();
 		}
 

@@ -10,6 +10,7 @@ namespace OrbitalEngine
 			batch->getDrawType(),
 			batch->getIndexContainerCount()
 		);
+		Metrics::Get<unsigned int>(Metric::BatchCount) += 1;
 
 		batch->requestDraw(false);
 	}
@@ -21,6 +22,7 @@ namespace OrbitalEngine
 
 	void Renderer::newFrame()
 	{
+		Metrics::Get<unsigned int>(Metric::BatchCount) = -1;
 		m_frameBuffer->bind();
 		RenderCommands::NewFrame();
 	}

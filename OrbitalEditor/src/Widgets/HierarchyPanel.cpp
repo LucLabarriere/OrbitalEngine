@@ -8,7 +8,10 @@ HierarchyPanel::HierarchyPanel(Ref<Scene>& scene)
 	
 	auto& hierarchy = entity.get<Components::Hierarchy>();
 	m_sceneChildren = &hierarchy.getChildren();
+}
 
+void HierarchyPanel::initialize()
+{
 	update();
 }
 
@@ -17,14 +20,27 @@ void HierarchyPanel::update()
 	m_treeNodes.clear();
 	for (auto& child : *m_sceneChildren)
 	{
-		m_treeNodes.push_back(child);
+		m_treeNodes.push_back(TreeNode(child, shared_from_this()));
 	}
 }
 
 void HierarchyPanel::render()
 {
-	ImGui::Begin("Hierarchy Panel");
+	bool p_open = true;
+	ImGui::Begin("Hierarchy Panel", &p_open, ImGuiWindowFlags_MenuBar);
+
+
+    if (ImGui::BeginMenuBar())
+    {
+		if (ImGui::Button("+"))
+		{
+			m_scene->createEntity("Entity");
+		}
+        ImGui::EndMenuBar();
+    }
+
 	for (auto& node : m_treeNodes)
 		node.render();
+
 	ImGui::End();
 }

@@ -8,9 +8,9 @@ namespace OrbitalEngine
 	{
 		struct Transform
 		{
-			Vec3 Position;
-			Vec3 Rotation;
-			Vec3 Scale;
+			Vec3 Position = { 0.0f, 0.0f, 0.0f};
+			Vec3 Rotation = { 0.0f, 0.0f, 0.0f};
+			Vec3 Scale = { 1.0f, 1.0f, 1.0f};
 		};
 	}
 }

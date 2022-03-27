@@ -11,6 +11,7 @@ namespace OrbitalEngine
 			Ref<OrbitalEngine::Mesh> Mesh;
 			bool StaticDraw = true;
 			bool BatchedDraw = false;
+			bool Hidden = false;
 			Ref<OrbitalEngine::Batch> Batch = nullptr;
 		};
 	}

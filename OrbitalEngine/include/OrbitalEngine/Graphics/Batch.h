@@ -22,7 +22,7 @@ namespace OrbitalEngine
 	class Batch
 	{
 	public:
-		Batch(size_t count, size_t indexCount = 0, bool staticDraw = true);
+		Batch(RenderMode renderMode, size_t count, size_t indexCount = 0);
 
 		void bind() const;
 		void allocateMemory() const;
@@ -41,11 +41,11 @@ namespace OrbitalEngine
 		size_t getAvailableVertexCount() const;
 		size_t getAvailableIndexCount() const;
 		unsigned int getDrawType() { return m_drawType; }
+		RenderMode getRenderMode() { return m_renderMode; }
 		bool isDrawRequested() const { return m_requestDraw; }
 		bool isFlushRequested() const { return m_requestFlush; }
 
 	private:
-		bool m_staticDraw = true;
 		bool m_requestDraw = false;
 		bool m_requestFlush = false;
 		size_t m_maxVertexContainerCount;
@@ -53,6 +53,7 @@ namespace OrbitalEngine
 		size_t m_maxVertexContainerSize;
 		size_t m_maxIndexContainerSize;
 		unsigned int m_drawType = OE_TRIANGLES;
+		RenderMode m_renderMode;
 
 		BasicVertexContainer m_vertices;
 		IndexContainer m_indices;

@@ -6,17 +6,26 @@
 
 namespace OrbitalEngine
 {
-	Batch::Batch(size_t count, size_t indexCount, bool staticDraw)
+	Batch::Batch(RenderMode renderMode, size_t count, size_t indexCount)
 		: m_maxVertexContainerCount(count)
 		, m_maxIndexContainerCount(indexCount == 0 ? count * 3 : indexCount)
 		, m_maxVertexContainerSize(count * sizeof(BasicVertex))
 		, m_maxIndexContainerSize(count * sizeof(unsigned int) * 3)
+		, m_renderMode(renderMode)
 		, m_vertices(count)
 		, m_indices(m_maxIndexContainerCount)
 		, m_vao(nullptr) , m_vbo(nullptr), m_ibo(nullptr)
 	{
-		unsigned int drawMode = staticDraw ? OE_STATIC_DRAW : OE_DYNAMIC_DRAW;
-		drawMode = GL_STATIC_DRAW;
+		unsigned drawMode;
+		if (renderMode == RenderMode::STATIC_BATCHED || renderMode == RenderMode::STATIC_NOT_BATCHED)
+		{
+			drawMode = OE_STATIC_DRAW;
+		}
+		else if (renderMode == RenderMode::DYNAMIC_BATCHED || renderMode == RenderMode::DYNAMIC_NOT_BATCHED)
+		{
+			drawMode = OE_DYNAMIC_DRAW;
+		}
+
 		m_vao = Ref<VertexArray>(VertexArray::Create());
 		m_vbo = Ref<VertexBuffer>(VertexBuffer::Create(drawMode));
 		m_ibo = Ref<IndexBuffer>(IndexBuffer::Create(drawMode));
@@ -116,7 +125,7 @@ namespace OrbitalEngine
 
 	size_t Batch::getVertexContainerCount() const
 	{
-		return m_staticDraw ? m_maxVertexContainerCount : m_currentVertex;
+		return m_currentVertex;
 	}
 
 	size_t Batch::getVertexContainerSize() const
@@ -126,7 +135,7 @@ namespace OrbitalEngine
 
 	size_t Batch::getIndexContainerCount() const
 	{
-		return m_staticDraw ? m_maxIndexContainerCount : m_currentIndex;
+		return m_currentIndex;
 	}
 
 	size_t Batch::getIndexContainerSize() const

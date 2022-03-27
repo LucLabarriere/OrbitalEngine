@@ -35,6 +35,10 @@ namespace OrbitalEngine
 	Metrics::Metrics()
 		: m_timePerFrameContainer(10)
 	{
-
+		m_metrics[Metric::FrameRate] = (float)0.0f;
+		m_metrics[Metric::ApproximateFrameRate] = (float)0.0f;
+		m_metrics[Metric::TimePerFrame] = Time();
+		m_metrics[Metric::ApproximateTimePerFrame] = Time();
+		m_metrics[Metric::BatchCount] = (unsigned int)0;
 	}
 }

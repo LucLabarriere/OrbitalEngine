@@ -37,7 +37,7 @@ namespace OrbitalEngine
 		}
 
 		entt::entity getHandle() const { return m_handle; }
-		bool isValid() const { return m_valid; }
+		bool isValid() const { return m_handle != entt::null; }
 
 		bool operator==(const Entity& e) { return (e.getHandle() == m_handle) ? true : false; }
 	
@@ -45,7 +45,6 @@ namespace OrbitalEngine
 		Entity(entt::entity handle, Ref<Scene> scene);
 
 	private:
-		bool m_valid = false;
 		friend Scene;
 
 		entt::entity m_handle = entt::null;

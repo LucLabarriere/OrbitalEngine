@@ -1,7 +1,7 @@
 #include "OrbitalEngine/Graphics/Camera.h"
 #include "OrbitalEngine/Utils.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	Camera::Camera() : m_position(0.0f, 0.0f, -0.5f), m_up(0.0f, 1.0f, 0.0f), m_front(0.0f, 0.0f, 1.0f)
 		, m_right(1.0f, 0.0f, 0.0f), m_rotation(0.0f, 90.0f, 0.0f), m_fov(60.0f)

@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Graphics/Vertices.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Batch;
 

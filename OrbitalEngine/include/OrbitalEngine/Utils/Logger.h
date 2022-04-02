@@ -5,7 +5,7 @@
 
 #define OE_TRACE_VARIABLE(var) Logger::Trace(#var": {}", var)
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Logger
 	{

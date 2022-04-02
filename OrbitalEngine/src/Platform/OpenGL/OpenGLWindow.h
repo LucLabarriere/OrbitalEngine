@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Graphics/Window.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class OpenGLWindow : public Window
 	{

@@ -8,8 +8,6 @@ EditorApplication::EditorApplication() : Application()
 	m_scene = CreateRef<Scene>();
 	m_scene->initialize();
 	m_cameraController = CreateScope<CameraController>(m_scene->getCamera());
-
-	m_layerStack->push(CreateRef<GuiLayer>());
 }
 
 
@@ -28,9 +26,6 @@ void EditorApplication::onStart()
 	{
 		for (unsigned int j = 0; j <= size_y; j++)
 		{
-			//std::cout << fmt::vformat(msg,
-				//fmt::make_format_args(std::forward<Args>(args)...));
-			
 			Components::Tag tag(fmt::format("Cube_{}_{}", i, j).c_str());
 			auto entity = m_scene->createEntity(tag);
 
@@ -116,21 +111,13 @@ void EditorApplication::onUpdate(Time dt)
 	ImGui::End();
 	ImGui::GetStyle().WindowPadding = ImVec2(12, 12);
 
-	ImGui::Begin("Debug informations");
-	ImGui::Text("Time per frame %.2f ms",				Metrics::Get<Time>(Metric::TimePerFrame).milliseconds());
-	ImGui::Text("FPS %.2f",								Metrics::Get<float>(Metric::FrameRate));
-	ImGui::Text("Approximate time per frame %.2f ms",	Metrics::Get<Time>(Metric::ApproximateTimePerFrame).milliseconds());
-	ImGui::Text("Approximate FPS %.2f",					Metrics::Get<float>(Metric::ApproximateFrameRate));
-	ImGui::Checkbox("Show demo window", &m_isDemoShown);
-	ImGui::End();
-
 	m_hierarchyPanel->update();
 	m_hierarchyPanel->render();
 	m_inspector->setEntity(m_hierarchyPanel->getSelectedEntity());
 	m_inspector->render();
 	m_metricsWindow->render();
 
-	if (m_isDemoShown)
+	if (m_metricsWindow->isDemoShown())
 		ImGui::ShowDemoWindow();
 
 	ImGui::Render();
@@ -154,7 +141,6 @@ void EditorApplication::onUpdate(Time dt)
 		if (!meshRenderer.Hidden)
 			BatchManager::RegisterMesh(meshRenderer, transform);
 	}
-
 	BatchManager::RenderBatches();
 
 	Renderer::Get()->displayFrame();

@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Events/MainEvents.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class KeyPressedEvent : public Event
 	{

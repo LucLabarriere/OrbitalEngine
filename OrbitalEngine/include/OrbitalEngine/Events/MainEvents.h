@@ -12,7 +12,7 @@
 		return "<" + std::string(#type) + ": " + repr + ">"; \
 	}
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	enum EventCategory
 	{

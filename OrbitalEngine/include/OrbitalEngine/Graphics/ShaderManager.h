@@ -3,7 +3,7 @@
 #include "OrbitalEngine/Graphics/Shader.h"
 #include "OrbitalEngine/Utils.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class ShaderManager
 	{

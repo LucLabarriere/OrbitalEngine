@@ -1,7 +1,7 @@
 #include "OrbitalEngine/Graphics/Vertices.h"
 #include "VertexBuffer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	template<class ...Vertices>
 	void VertexContainer<Vertices...>::allocateMemory(const VertexBuffer& buffer) const

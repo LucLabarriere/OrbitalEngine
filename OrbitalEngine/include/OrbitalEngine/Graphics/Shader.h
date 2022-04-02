@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Utils.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class ShaderManager;
 

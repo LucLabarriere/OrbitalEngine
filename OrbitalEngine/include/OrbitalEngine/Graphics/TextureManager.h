@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Graphics/Texture.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class TextureManager
 	{

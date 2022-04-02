@@ -2,7 +2,7 @@
 
 #include "VertexArray.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class OpenGLVertexArray: public VertexArray
 	{

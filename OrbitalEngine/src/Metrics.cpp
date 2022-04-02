@@ -1,6 +1,6 @@
 #include "OrbitalEngine/Utils/Metrics.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	void Metrics::onUpdate(Time dt)
 	{

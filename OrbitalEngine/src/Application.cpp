@@ -7,15 +7,8 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 
-#define OE_DISPATCH_LAYER(x) \
-	for (auto& layer : *m_layerStack) \
-	{ \
-		if (layer.get()->x(e)) \
-			return true; \
-	} \
-	return x(e)
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	Application::Application()
 	{
@@ -32,7 +25,6 @@ namespace OrbitalEngine
 		));
 
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
-		m_layerStack = CreateScope<LayerStack>();
 
 		MeshManager::Initialize();
 		BatchManager::Initialize();
@@ -55,33 +47,6 @@ namespace OrbitalEngine
 	void Application::onEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.dispatch<KeyPressedEvent>([this](KeyPressedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onKeyPressed);
-		});
-
-		dispatcher.dispatch<KeyReleasedEvent>([this](KeyReleasedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onKeyReleased);
-		});
-
-		dispatcher.dispatch<MouseMovedEvent>([this](MouseMovedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onMouseMoved);
-		});
-
-		dispatcher.dispatch<MouseScrolledEvent>([this](MouseScrolledEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onMouseScrolled);
-		});
-
-		dispatcher.dispatch<MouseButtonPressedEvent>([this](MouseButtonPressedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onMouseButtonPressed);
-		});
-
-		dispatcher.dispatch<MouseButtonReleasedEvent>([this](MouseButtonReleasedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onMouseButtonReleased);
-		});
-
-		dispatcher.dispatch<WindowResizedEvent>([this](WindowResizedEvent& e) -> bool {
-			OE_DISPATCH_LAYER(onWindowResized);
-		});
 	}
 
 	void Application::run()
@@ -96,12 +61,6 @@ namespace OrbitalEngine
 
 			Metrics::OnUpdate(dt);
 			onUpdate(dt);
-
-			for (auto& layer : *m_layerStack)
-			{
-				layer.get()->update(dt);
-			}
-
 		}
 		Logger::Trace("Leaving Application");
 	}

@@ -5,7 +5,7 @@
 
 
 
-namespace OrbitalEngine
+namespace Orbital
 {
 
 	enum class Metric

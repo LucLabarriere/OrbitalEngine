@@ -2,17 +2,17 @@
 
 #include "OrbitalEngine/Graphics/Batch.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	namespace Components
 	{
 		struct MeshRenderer
 		{
-			Ref<OrbitalEngine::Mesh> Mesh;
+			Ref<Orbital::Mesh> Mesh;
 			bool StaticDraw = true;
 			bool BatchedDraw = false;
 			bool Hidden = false;
-			Ref<OrbitalEngine::Batch> Batch = nullptr;
+			Ref<Orbital::Batch> Batch = nullptr;
 		};
 	}
 }

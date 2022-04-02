@@ -3,7 +3,7 @@
 #include "OrbitalEngine/Components/Transform.h"
 #include "OrbitalEngine/Components/MeshRenderer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Batch;
 

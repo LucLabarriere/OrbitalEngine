@@ -4,7 +4,7 @@
 #include "OrbitalEngine/Components/Transform.h"
 #include "OrbitalEngine/Components/MeshRenderer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	void BatchManager::RegisterMesh(
 		Components::MeshRenderer& meshRenderer, Components::Transform& transform)

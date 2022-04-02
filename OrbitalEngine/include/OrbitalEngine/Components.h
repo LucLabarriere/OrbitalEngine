@@ -4,7 +4,7 @@
 #include "OrbitalEngine/Components/Hierarchy.h"
 #include "OrbitalEngine/Components/MeshRenderer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	namespace Components
 	{

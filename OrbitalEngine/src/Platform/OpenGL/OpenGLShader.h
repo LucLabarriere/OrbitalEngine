@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Graphics/Shader.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class OpenGLShader : public Shader
 	{

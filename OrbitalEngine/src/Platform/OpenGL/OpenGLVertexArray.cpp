@@ -1,6 +1,6 @@
 #include "OpenGLVertexArray.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	VertexArray* VertexArray::Create()
 	{

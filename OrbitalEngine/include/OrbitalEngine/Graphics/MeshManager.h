@@ -3,7 +3,7 @@
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/Mesh.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class MeshManager
 	{

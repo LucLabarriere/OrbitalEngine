@@ -4,7 +4,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	Batch::Batch(RenderMode renderMode, size_t count, size_t indexCount)
 		: m_maxVertexContainerCount(count)

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Batch;
 

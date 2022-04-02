@@ -4,7 +4,7 @@
 #include "OrbitalEngine/Logic/Scene.h"
 #include "TreeNode.h"
 
-using namespace OrbitalEngine;
+using namespace Orbital;
 
 class HierarchyPanel : public std::enable_shared_from_this<HierarchyPanel>
 {
@@ -15,9 +15,9 @@ public:
 	void update();
 	void render();
 
-	Entity getSelectedEntity() { return m_selectedEntity; };
+	Entity& getSelectedEntity() { return m_selectedEntity; };
 	entt::entity getSelectedEntityHandle() { return m_selectedEntity.getHandle(); };
-	void setSelectedEntity(const entt::entity& selected) { m_selectedEntity = m_scene->getEntity(selected); }
+	void setSelectedEntity(const Entity& entity) { m_selectedEntity = entity; }
 
 private:
 	Ref<Scene> m_scene;

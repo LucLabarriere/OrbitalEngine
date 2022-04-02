@@ -1,7 +1,7 @@
 #include "OrbitalEngine/Graphics/TextureManager.h"
 #include "vendor/stb_image.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	bool TextureManager::load(const std::string& name, const std::string& filepath)
 	{

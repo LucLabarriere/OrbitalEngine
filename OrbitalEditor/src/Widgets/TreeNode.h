@@ -4,7 +4,7 @@
 #include "OrbitalEngine/Logic/Entity.h"
 #include "OrbitalEngine/Components.h"
 
-using namespace OrbitalEngine;
+using namespace Orbital;
 
 class HierarchyPanel;
 

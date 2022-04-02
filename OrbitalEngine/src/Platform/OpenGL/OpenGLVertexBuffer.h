@@ -2,7 +2,7 @@
 
 #include "VertexBuffer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class OpenGLVertexBuffer : public VertexBuffer
 	{

@@ -2,7 +2,7 @@
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	FrameBuffer* FrameBuffer::Create()
 	{

@@ -1,6 +1,6 @@
 #include "OpenGLShader.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	Shader* Shader::Create(unsigned int shaderId, const std::string& name, const std::string& filepath)
 	{

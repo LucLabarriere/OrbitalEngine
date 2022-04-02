@@ -1,6 +1,6 @@
 #include "OrbitalEngine/Graphics.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	void Renderer::Submit(Ref<Batch>& batch)
 	{

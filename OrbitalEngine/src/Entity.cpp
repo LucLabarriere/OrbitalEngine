@@ -1,21 +1,31 @@
 #include "OrbitalEngine/Logic/Entity.h"
 #include "OrbitalEngine/Logic/Scene.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	Entity::Entity()
 	{
 
 	}
 
-	Entity::~Entity()
+	void Entity::changeLayer(LayerID layerId)
 	{
-		m_registry.reset();
-		m_scene.reset();
+		OE_NOT_IMPLEMENTED();
 	}
 
-	Entity::Entity(entt::entity handle, Ref<Scene> scene)
-		: m_handle(handle), m_scene(scene), m_registry(scene->getRegistry())
+	Entity::Entity(Ref<entt::registry>& registry)
+		: m_registry(registry), m_handle(registry->create())
+	{
+
+	}
+
+	Entity::Entity(entt::entity handle, Ref<entt::registry>& registry)
+		: m_registry(registry), m_handle(handle)
+	{
+
+	}
+
+	Entity::~Entity()
 	{
 
 	}

@@ -15,7 +15,7 @@
 	private: \
 		static inline const std::string& s_name = name;
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class VertexBuffer;
 

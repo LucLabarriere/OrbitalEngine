@@ -2,7 +2,7 @@
 #include "OrbitalEngine/Events.h"
 #include "OrbitalEngine/Logic/Application.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	void Inputs::Initialize(Scope<Window>& window)
 	{

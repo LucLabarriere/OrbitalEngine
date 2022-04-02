@@ -1,7 +1,7 @@
 #pragma once
 #include "OrbitalEngine/Graphics/Texture.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class OpenGLTexture: public Texture
 	{

@@ -1,7 +1,7 @@
 #include "OrbitalEngine/Graphics/ShaderManager.h"
 #include "OrbitalEngine/Graphics/Shader.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	ShaderManager::ShaderManager()
 	{

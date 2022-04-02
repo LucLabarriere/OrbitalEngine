@@ -2,36 +2,41 @@
 #include "OrbitalEngine/Graphics/Camera.h"
 #include "OrbitalEngine/Logic/Entity.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	Scene::Scene()
 		: m_camera(CreateRef<Camera>())
-		, m_registry(CreateRef<entt::registry>())
 	{
 
 	}
 
 	void Scene::initialize()
 	{
-		m_entityHandle = createEntity("Scene").getHandle();
+		for (auto& layer : m_layers)
+		{
+			layer = CreateRef<entt::registry>();
+		}
+
+		m_entityHandle = createEntity("Scene", OE_LAST_LAYER).getHandle();
 	}
 
-	Entity Scene::createEntity(const Components::Tag& tag)
+	Entity Scene::createEntity(const Components::Tag& tag, LayerID layerId)
 	{
-		Entity e(m_registry->create(), shared_from_this());
+		Entity e(m_layers[layerId]);
+
 		e.add<Components::Tag>(getUniqueTag(tag));
 		auto& hierarchy = e.add<Components::Hierarchy>(shared_from_this(), e);
 
-		
-		if (m_registry->valid(m_entityHandle))
+		if (m_layers[layerId]->valid(m_entityHandle))
 			hierarchy.setParent(getSceneEntity());
+
+		e.add<LayerID>(layerId);
 		
 		return e;
 	}
 
 	std::string Scene::getUniqueTag(const std::string& tag, Entity* entity)
 	{
-		auto view = m_registry->view<Components::Tag>();
 		size_t count = 0;
 
 		std::string newTag(tag);
@@ -45,14 +50,19 @@ namespace OrbitalEngine
 		while (changedName)
 		{
 			changedName = false;
-			for (auto e : view)
+
+			for (auto& registry : m_layers)
 			{
-				auto& otherTag = view.get<Components::Tag>(e);
-				if (newTag == otherTag && e != handle)
+				auto view = registry->view<Components::Tag>();
+				for (auto e : view)
 				{
-					count += 1;
-					newTag = tag + "_" + std::to_string(count);
-					changedName = true;
+					auto& otherTag = view.get<Components::Tag>(e);
+					if (newTag == otherTag && e != handle)
+					{
+						count += 1;
+						newTag = tag + "_" + std::to_string(count);
+						changedName = true;
+					}
 				}
 			}
 		}
@@ -60,50 +70,29 @@ namespace OrbitalEngine
 		return newTag;
 	}
 
-	void Scene::renameEntity(Entity& e, const char* buffer, size_t bufferSize)
+	void Scene::renameEntity(Entity& e, const Components::Tag& newTag)
 	{
-		auto view = m_registry->view<Components::Tag>();
-		size_t count = 0;
-
-		std::string newTag(buffer);
-
-
-		for (auto entity : view)
-		{
-			auto& otherTag = view.get<Components::Tag>(entity);
-			if (newTag == otherTag && entity != e.getHandle())
-			{
-				while (newTag == otherTag)
-				{
-					count += 1;
-					newTag = std::string(buffer) + "_";
-					newTag += std::to_string(count);
-				}
-			}
-		}
-		e.get<Components::Tag>() = newTag;
+		e.get<Components::Tag>() = getUniqueTag(newTag, &e);
 	}
 
 	Entity Scene::getEntity(const Components::Tag& tag)
 	{
-		auto view = m_registry->view<Components::Tag>();
-
-		for (auto entity : view)
+		for (auto& registry : m_layers)
 		{
-			auto& otherTag = view.get<Components::Tag>(entity);
-			if (tag == otherTag)
-				return Entity(entity, shared_from_this());
+			auto view = registry->view<Components::Tag>();
+
+			for (auto entity : view)
+			{
+				auto& otherTag = view.get<Components::Tag>(entity);
+				if (tag == otherTag)
+					return Entity(entity, registry);
+			}
 		}
 		OE_RAISE_SIGSEGV("Error, the entity {} does not exist", tag);
 	}
 
-	Entity Scene::getEntity(const entt::entity& handle)
-	{
-		return Entity(handle, shared_from_this());
-	}
-
 	Entity Scene::getSceneEntity()
 	{
-		return Entity(m_entityHandle, shared_from_this());
+		return Entity(m_entityHandle, m_layers[OE_LAST_LAYER]);
 	}
 }

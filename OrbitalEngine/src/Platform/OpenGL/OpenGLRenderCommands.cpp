@@ -1,6 +1,6 @@
 #include "OrbitalEngine/Graphics/RenderCommands.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	void RenderCommands::Initialize()
 	{

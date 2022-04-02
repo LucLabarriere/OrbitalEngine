@@ -1,6 +1,6 @@
 #include "OpenGLIndexBuffer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	IndexBuffer* IndexBuffer::Create(unsigned int drawMode)
 	{

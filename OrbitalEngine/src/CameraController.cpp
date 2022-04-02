@@ -1,7 +1,7 @@
 #include "OrbitalEngine/Utils/Time.h"
 #include "OrbitalEngine/Graphics/CameraController.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	void CameraController::onUpdate(Time dt)
 	{

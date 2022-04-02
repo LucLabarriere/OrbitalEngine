@@ -2,7 +2,7 @@
 
 #include "IndexBuffer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class OpenGLIndexBuffer : public IndexBuffer
 	{

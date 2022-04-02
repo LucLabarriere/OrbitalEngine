@@ -1,7 +1,7 @@
 #include "OpenGLVertexBuffer.h"
 
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	VertexBuffer* VertexBuffer::Create(unsigned int drawMode)
 	{

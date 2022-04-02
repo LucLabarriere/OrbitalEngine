@@ -2,10 +2,9 @@
 
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/Window.h"
-#include "OrbitalEngine/Logic/LayerStack.h"
 #include "OrbitalEngine/Graphics/CameraController.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Camera;
 
@@ -31,7 +30,6 @@ namespace OrbitalEngine
 
 	protected:
 		Scope<Window> m_window;
-		Scope<LayerStack> m_layerStack;
 
 		Time m_averageTimePerFrame;
 		Time m_timeAtLastUpdate;

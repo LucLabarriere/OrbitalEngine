@@ -4,7 +4,7 @@
 #include "OrbitalEngine/Graphics/RenderCommands.h"
 #include "OrbitalEngine/Graphics/FrameBuffer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Batch;
 

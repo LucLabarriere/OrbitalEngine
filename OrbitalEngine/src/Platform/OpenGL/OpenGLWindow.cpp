@@ -2,7 +2,7 @@
 #include "OrbitalEngine/Logic/Application.h"
 #include "backends/imgui_impl_glfw.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	void OpenGLMessageCallback(
 		unsigned source,

@@ -7,7 +7,7 @@
 #include "OrbitalEngine/Graphics/MeshManager.h"
 #include "OrbitalEngine/Graphics/Vertices.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class VertexArray;
 	class VertexBuffer;

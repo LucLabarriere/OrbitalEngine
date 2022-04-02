@@ -58,7 +58,7 @@ void TreeNode::render()
 
 	if (ImGui::IsItemClicked())
 	{
-		m_panel->setSelectedEntity(m_entity.getHandle());
+		m_panel->setSelectedEntity(m_entity);
 	}
 
 	if (nodeOpen)

@@ -11,17 +11,30 @@ void Inspector::render()
 	ImGui::Begin("Inspector");
 	if (m_entity.isValid())
 	{
-		auto* tag = m_entity.tryGet<Components::Tag>();
+		auto& tag = m_entity.get<Components::Tag>();
+		auto& layerId= m_entity.get<LayerID>();
 		auto* transform = m_entity.tryGet<Components::Transform>();
 		auto* meshRenderer = m_entity.tryGet<Components::MeshRenderer>();
 
-		if (tag)
+		if (ImGui::CollapsingHeader("General"))
 		{
+			// Tag
 			char buffer[64];
-			strcpy(buffer, tag->c_str());
+			strcpy(buffer, tag.c_str());
 			ImGui::InputText("Tag", buffer, 64);
+			Components::Tag tag(buffer);
+
 			if (buffer[0] != 0)
-				m_scene->renameEntity(m_entity, buffer, 64);
+				m_scene->renameEntity(m_entity, tag);
+			
+			//LayerID
+			int bufferLayerId = (int)layerId;
+			ImGui::Combo("LayerID", &bufferLayerId, m_layerRange, OE_LAST_LAYER + 1);
+
+			if ((LayerID)bufferLayerId != layerId)
+			{
+				m_entity.changeLayer(bufferLayerId);
+			}
 		}
 
 		if (transform)

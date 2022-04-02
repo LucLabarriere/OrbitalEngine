@@ -2,7 +2,7 @@
 #include "OrbitalEngine/Logic/Scene.h"
 #include "OrbitalEngine/Logic/Entity.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	namespace Components
 	{

@@ -16,9 +16,10 @@
 #define OE_MIRRORED_REPEAT GL_MIRRORED_REPEAT;
 #define OE_CLAMP_TO_EDGE GL_CLAMP_TO_EDGE;
 #define OE_CLAMP_TO_BORDER GL_CLAMP_TO_BORDER;
+#define OE_LAST_LAYER 31
 #endif
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	enum class RenderMode
 	{

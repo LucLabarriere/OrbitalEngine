@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Utils/Misc.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Scene;
 
@@ -36,19 +36,21 @@ namespace OrbitalEngine
 			return m_registry->try_get<T>(m_handle);
 		}
 
+		void changeLayer(LayerID layerId);
+
 		entt::entity getHandle() const { return m_handle; }
 		bool isValid() const { return m_handle != entt::null; }
 
 		bool operator==(const Entity& e) { return (e.getHandle() == m_handle) ? true : false; }
-	
-	private:
-		Entity(entt::entity handle, Ref<Scene> scene);
 
+	private:
+		Entity(Ref<entt::registry>& registry);
+		Entity(entt::entity handle, Ref<entt::registry>& registry);
+		
 	private:
 		friend Scene;
 
-		entt::entity m_handle = entt::null;
-		WeakRef<Scene> m_scene;
 		Ref<entt::registry> m_registry;
+		entt::entity m_handle = entt::null;
 	};
 }

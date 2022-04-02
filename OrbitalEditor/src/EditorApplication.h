@@ -4,11 +4,11 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "imgui.h"
 #include "entt/entt.hpp"
-#include "GuiLayer.h"
 #include "OrbitalEngine/Graphics/Renderer.h"
+#include "OrbitalEngine/Logic/Application.h"
 #include "Widgets.h"
 
-using namespace OrbitalEngine;
+using namespace Orbital;
 
 class EditorApplication : public Application
 {
@@ -41,7 +41,6 @@ private:
 
 	unsigned int m_renderAreaWidth;
 	unsigned int m_renderAreaHeight;
-	bool m_isDemoShown = true;
 	Ref<HierarchyPanel> m_hierarchyPanel;
 	Scope<Inspector> m_inspector;
 	Scope<MetricsWindow> m_metricsWindow;

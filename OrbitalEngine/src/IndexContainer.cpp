@@ -1,7 +1,7 @@
 #include "OrbitalEngine/Graphics/IndexContainer.h"
 #include "IndexBuffer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	void IndexContainer::allocateMemory(const IndexBuffer& buffer) const
 	{

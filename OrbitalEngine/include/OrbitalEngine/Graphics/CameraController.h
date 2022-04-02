@@ -4,7 +4,7 @@
 #include "OrbitalEngine/Graphics/Camera.h"
 #include "OrbitalEngine/Events.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class CameraController
 	{

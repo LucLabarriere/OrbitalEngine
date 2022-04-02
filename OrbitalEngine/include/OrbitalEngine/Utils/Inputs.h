@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Events.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Window;
 

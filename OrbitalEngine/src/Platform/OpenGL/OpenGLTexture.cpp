@@ -1,7 +1,7 @@
 #include "OpenGLTexture.h"
 #include "vendor/stb_image.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	Texture* Texture::Create(
 		const std::string& name, unsigned int width, unsigned int height, unsigned char* data)

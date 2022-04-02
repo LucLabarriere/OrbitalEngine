@@ -3,7 +3,7 @@
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/Batch.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class BatchManager
 	{

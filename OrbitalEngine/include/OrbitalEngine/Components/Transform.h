@@ -2,7 +2,7 @@
 
 #include "OrbitalEngine/Utils/Misc.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	namespace Components
 	{

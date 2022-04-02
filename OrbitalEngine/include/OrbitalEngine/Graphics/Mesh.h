@@ -3,7 +3,7 @@
 #include "OrbitalEngine/Graphics/Vertices.h"
 #include "OrbitalEngine/Graphics/IndexContainer.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class MeshManager;
 

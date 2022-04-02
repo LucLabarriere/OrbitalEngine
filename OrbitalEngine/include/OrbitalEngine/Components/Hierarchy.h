@@ -3,7 +3,7 @@
 #include "OrbitalEngine/Utils/Misc.h"
 #include "OrbitalEngine/Logic/Entity.h"
 
-namespace OrbitalEngine
+namespace Orbital
 {
 	class Scene;
 

@@ -82,6 +82,7 @@ namespace Orbital
 		: Shader(shaderId, name, filepath)
 	{
 		Sources sources = parseSourceCode(m_filepath);
+		m_content = "#Vertex Shader\n" + sources.vs + "\n#Fragment Shader\n" + sources.fs;
 
 		createShader(sources.vs, sources.fs);
 	}
@@ -126,8 +127,14 @@ namespace Orbital
 
 		if (!compile_ok)
 		{
-			Logger::Error("OpenGLShader: Error in shader '{}' ({})", m_name, typeName);
-			return -1;
+			GLint maxLength = 0;
+			glad_glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+			std::vector<GLchar> errorLog(maxLength);
+			glad_glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
+			glad_glDeleteShader(shader);
+
+			Logger::Error("OpenGLShader: Error in shader '{}' ({}) : {}", m_name, typeName, errorLog);
+			return 0;
 		}
 		
 		return shader;

@@ -17,6 +17,12 @@
 #define OE_CLAMP_TO_EDGE GL_CLAMP_TO_EDGE;
 #define OE_CLAMP_TO_BORDER GL_CLAMP_TO_BORDER;
 #define OE_LAST_LAYER 31
+
+#define OE_RGB8 GL_RGB8
+#define OE_RGBA8 GL_RGBA8
+#define OE_RGB GL_RGB
+#define OE_RGBA GL_RGBA
+
 #endif
 
 namespace Orbital

@@ -25,6 +25,7 @@ namespace Orbital
 		virtual void setUniformMat4f(const std::string& name, const glm::mat4& value) const = 0;
 
 		const std::string& getName() const { return m_name; }
+		const std::string& getContent() const { return m_content; }
 
 	protected:
 		Shader(unsigned int shaderId, const std::string& name, const std::string& filepath)
@@ -38,5 +39,6 @@ namespace Orbital
 		unsigned int m_shaderId;
 		std::string m_name;
 		std::string m_filepath;
+		std::string m_content = "";
 	};
 }

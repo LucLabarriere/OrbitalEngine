@@ -42,6 +42,18 @@ private:
 	unsigned int m_renderAreaWidth;
 	unsigned int m_renderAreaHeight;
 	Ref<HierarchyPanel> m_hierarchyPanel;
-	Scope<Inspector> m_inspector;
-	Scope<MetricsWindow> m_metricsWindow;
+	Scope<MetricsPanel> m_metricsPanel;
+	Scope<AssetManagerPanel> m_assetManagerPanel;
+	Scope<FileExplorerPanel> m_fileExplorerPanel;
+
+	Vec3 m_direction = { 0.1f, -1.0f, 0.1f };
+	Vec3 m_position2 = { 0.1f, -1.0f, 0.1f };
+	Vec3 m_ambient2 = { 0.2f, 0.2f, 0.2f };
+	Vec3 m_diffuse2 = { 1.0f, 1.0f, 1.0f };
+	Vec3 m_specular2 = { 1.0f, 1.0f, 1.0f };
+	float m_constant2 = 1.0f;
+	float m_linear2 = 0.1f;
+	float m_quadratic2 = 2.0f;
+	float m_cutOff = 0.3f;
+	float m_edge = 0.01f;
 };

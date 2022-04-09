@@ -26,7 +26,15 @@ namespace Orbital
 		Position3() : position(0.0f, 0.0f, 0.0f) { }
 		Position3(float x, float y, float z) : position(x, y, z) { }
 		OE_ATTRIBUTE("a_Position", 3, float, OE_FLOAT, OE_FALSE)
+	};
 
+	struct Normal
+	{
+		glm::vec3 normal;
+
+		Normal() : normal(0.0f, 0.0f, 0.0f) { }
+		Normal(float x, float y, float z) : normal(x, y, z) { }
+		OE_ATTRIBUTE("a_Normal", 3, float, OE_FLOAT, OE_FALSE)
 	};
 
 	struct Position2
@@ -113,12 +121,12 @@ namespace Orbital
 	};
 
 	// Vertices
-	template struct Vertex<Position3, Color4, TexCoords>;
-	using BasicVertex = Vertex<Position3, Color4, TexCoords>;
+	template struct Vertex<Position3, Color4, Normal, TexCoords>;
+	using BasicVertex = Vertex<Position3, Color4, Normal, TexCoords>;
 
 	// Containers
-	template class VertexContainer<Position3, Color4, TexCoords>;
-	using BasicVertexContainer = VertexContainer<Position3, Color4, TexCoords>;
+	template class VertexContainer<Position3, Color4, Normal, TexCoords>;
+	using BasicVertexContainer = VertexContainer<Position3, Color4, Normal, TexCoords>;
 
 }
 #pragma warning(pop)

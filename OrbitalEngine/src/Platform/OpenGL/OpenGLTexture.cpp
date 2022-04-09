@@ -11,7 +11,7 @@ namespace Orbital
 
 	Texture* Texture::Create(const std::string& name, TextureData texData)
 	{
-		return new OpenGLTexture(name, texData.width, texData.height, texData.data);
+		return new OpenGLTexture(name, texData.width, texData.height, texData.data, texData.internalFormat, texData.format);
 	}
 
 	TextureData Texture::Load(const std::string& filename)
@@ -24,7 +24,9 @@ namespace Orbital
 		return data;
 	}
 
-	OpenGLTexture::OpenGLTexture(const std::string& name, unsigned int width, unsigned int height, unsigned char* data)
+	OpenGLTexture::OpenGLTexture(
+		const std::string& name, unsigned int width, unsigned int height,
+		unsigned char* data, unsigned int internalFormat, unsigned int format)
 		: Texture(name, width, height)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -36,7 +38,7 @@ namespace Orbital
 		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glad_glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
 		glad_glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
@@ -48,6 +50,12 @@ namespace Orbital
 	void OpenGLTexture::bind() const
 	{
 		glActiveTexture(GL_TEXTURE0);
+		glad_glBindTexture(GL_TEXTURE_2D, m_rendererId);
+	}
+
+	void OpenGLTexture::bind(unsigned int slot) const
+	{
+		glActiveTexture(GL_TEXTURE0 + slot);
 		glad_glBindTexture(GL_TEXTURE_2D, m_rendererId);
 	}
 

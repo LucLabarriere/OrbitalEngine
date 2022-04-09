@@ -1,5 +1,6 @@
 #include "TreeNode.h"
 #include "HierarchyPanel.h"
+#include "Inspector.h"
 
 TreeNode::TreeNode(const Entity& entity, Ref<HierarchyPanel> panel)
 	: m_entity(entity), m_panel(panel)
@@ -59,6 +60,7 @@ void TreeNode::render()
 	if (ImGui::IsItemClicked())
 	{
 		m_panel->setSelectedEntity(m_entity);
+		Inspector::SetEntity(m_entity);
 	}
 
 	if (nodeOpen)

@@ -18,8 +18,13 @@ namespace Orbital
 			delete s_instance;
 		}
 
+		inline static ShaderManager* GetInstance() { return s_instance; }
+
 		inline static const Ref<Shader>& GetShader(size_t id) { return s_instance->getShader(id); }
 		inline static const Ref<Shader>& GetShader(const std::string& shaderName) { return s_instance->getShader(shaderName); };
+
+		std::vector<Ref<Shader>>::iterator begin() { return m_shaders.begin(); }
+		std::vector<Ref<Shader>>::iterator end() { return m_shaders.end(); }
 
 	private:
 		ShaderManager();

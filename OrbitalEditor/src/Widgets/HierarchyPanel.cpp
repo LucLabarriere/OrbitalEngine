@@ -29,7 +29,6 @@ void HierarchyPanel::render()
 	bool p_open = true;
 	ImGui::Begin("Hierarchy Panel", &p_open, ImGuiWindowFlags_MenuBar);
 
-
     if (ImGui::BeginMenuBar())
     {
 		if (ImGui::Button("+"))

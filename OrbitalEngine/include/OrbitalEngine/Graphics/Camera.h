@@ -10,9 +10,10 @@ namespace Orbital
 		Camera();
 
 		void updateMatrices();
-		const glm::mat4& getViewMatrix() { return m_viewMatrix;  }
-		const glm::mat4& getProjectionMatrix() { return m_projectionMatrix; }
-		const glm::mat4& getVPMatrix() { return m_VPMatrix; }
+		const Mat4& getViewMatrix() { return m_viewMatrix;  }
+		const Mat4& getProjectionMatrix() { return m_projectionMatrix; }
+		const Mat4& getVPMatrix() { return m_VPMatrix; }
+		const Vec3& getPosition() { return m_position; }
 
 		void move(const glm::vec3& translation);
 		void rotate(const glm::vec2& rotation);
@@ -25,17 +26,17 @@ namespace Orbital
 
 	private:
 		bool m_orthographic = false;
-		glm::vec3 m_position;
-		glm::vec3 m_up;
-		glm::vec3 m_front;
-		glm::vec3 m_right;
-		glm::vec3 m_rotation;
+		Vec3 m_position;
+		Vec3 m_up;
+		Vec3 m_front;
+		Vec3 m_right;
+		Vec3 m_rotation;
 		float m_aspectRatio;
 		float m_fov;
 		float m_zoomLevel = 1.0f;
 
-		glm::mat4 m_projectionMatrix;
-		glm::mat4 m_viewMatrix;
-		glm::mat4 m_VPMatrix;
+		Mat4 m_projectionMatrix;
+		Mat4 m_viewMatrix;
+		Mat4 m_VPMatrix;
 	};
 }

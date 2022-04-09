@@ -87,9 +87,11 @@ void EditorApplication::onStart()
 	ImGui::GetIO().FontGlobalScale = 0.55;
 
 	m_hierarchyPanel = CreateRef<HierarchyPanel>(m_scene);
-	m_inspector = CreateScope<Inspector>(m_scene);
 	m_hierarchyPanel->initialize();
-	m_metricsWindow = CreateScope<MetricsWindow>();
+	m_metricsPanel = CreateScope<MetricsPanel>();
+	m_assetManagerPanel = CreateScope<AssetManagerPanel>();
+	m_fileExplorerPanel = CreateScope<FileExplorerPanel>();
+	Inspector::Initialize(m_scene);
 }
 
 void EditorApplication::onUpdate(Time dt)
@@ -113,12 +115,27 @@ void EditorApplication::onUpdate(Time dt)
 
 	m_hierarchyPanel->update();
 	m_hierarchyPanel->render();
-	m_inspector->setEntity(m_hierarchyPanel->getSelectedEntity());
-	m_inspector->render();
-	m_metricsWindow->render();
+	m_metricsPanel->render();
+	m_assetManagerPanel->render();
+	m_fileExplorerPanel->render();
 
-	if (m_metricsWindow->isDemoShown())
+	Inspector::Render();
+
+	if (m_metricsPanel->isDemoShown())
 		ImGui::ShowDemoWindow();
+
+	ImGui::Begin("Lights");
+	ImGui::DragFloat3("Direction", &m_direction[0], 0.02f, -1.0f, 1.0f);
+	ImGui::DragFloat3("Position", &m_position2[0], 0.02f, -3.0f, 3.0f);
+	ImGui::DragFloat3("Ambient", &m_ambient2[0], 0.02f,  0.0f, 1.0f);
+	ImGui::DragFloat3("Diffuse", &m_diffuse2[0], 0.02f,  0.0f, 1.0f);
+	ImGui::DragFloat3("Specular", &m_specular2[0], 0.02f,  0.0f, 1.0f);
+	ImGui::DragFloat("Constant", &m_constant2, 0.02f, 0.0f, 1.0f);
+	ImGui::DragFloat("Linear", &m_linear2, 0.002f, 0.0f, 1.0f);
+	ImGui::DragFloat("Quadratic", &m_quadratic2, 0.001f, 0.0f, 2.0f);
+	ImGui::DragFloat("Cutoff", &m_cutOff, 0.002f, 0.0f, 4.0f);
+	ImGui::DragFloat("Edge %", &m_edge, 0.5f, 0.0f, 100.0f);
+	ImGui::End();
 
 	ImGui::Render();
 
@@ -131,6 +148,22 @@ void EditorApplication::onUpdate(Time dt)
 	shader->bind();
 	shader->setUniform1i("u_TexId", 0);
 	shader->setUniformMat4f("u_VPMatrix", m_scene->getCamera()->getVPMatrix());
+
+	// Setting up lights, to do in beginScene()
+	shader->setUniform1i("u_nDirectionalLights", 0);
+	shader->setUniform1i("u_nPointLights", 0);
+	shader->setUniform1i("u_nSpotLights", 1);
+	shader->setUniform3f("u_SpotLights[0].Direction", - glm::normalize(m_direction));
+	shader->setUniform3f("u_SpotLights[0].Position", m_position2);
+	shader->setUniform3f("u_SpotLights[0].Ambient", m_ambient2);
+	shader->setUniform3f("u_SpotLights[0].Diffuse", m_diffuse2);
+	shader->setUniform3f("u_SpotLights[0].Specular", m_specular2);
+	shader->setUniform1f("u_SpotLights[0].Constant", m_constant2);
+	shader->setUniform1f("u_SpotLights[0].Linear", m_linear2);
+	shader->setUniform1f("u_SpotLights[0].Quadratic", m_quadratic2);
+	shader->setUniform1f("u_SpotLights[0].CutOff", m_cutOff);
+	shader->setUniform1f("u_SpotLights[0].OuterCutOff", m_cutOff - m_cutOff * m_edge / 100.0f);
+	shader->setUniform3f("u_ViewPosition", m_scene->getCamera()->getPosition());
 
 	auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer>();
 	for (auto entity : view)

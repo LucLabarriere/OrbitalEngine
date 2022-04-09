@@ -1,7 +1,7 @@
 #include "Inspector.h"
 
 Inspector::Inspector(Ref<Scene>& scene)
-	: m_scene(scene), m_entity()
+	: m_scene(scene), m_object()
 {
 
 }
@@ -9,12 +9,37 @@ Inspector::Inspector(Ref<Scene>& scene)
 void Inspector::render()
 {
 	ImGui::Begin("Inspector");
-	if (m_entity.isValid())
+	switch (m_object.Tag)
 	{
-		auto& tag = m_entity.get<Components::Tag>();
-		auto& layerId= m_entity.get<LayerID>();
-		auto* transform = m_entity.tryGet<Components::Transform>();
-		auto* meshRenderer = m_entity.tryGet<Components::MeshRenderer>();
+		case InspectedObjectTag::Entity:
+		{
+			renderEntity();
+			break;
+		}
+		case InspectedObjectTag::Texture:
+		{
+			renderTexture();
+			break;
+		}
+		case InspectedObjectTag::Text:
+		{
+			renderText();
+			break;
+		}
+	}
+	ImGui::End();
+}
+
+void Inspector::renderEntity()
+{
+	auto& entity = std::get<Entity>(m_object.Value);
+
+	if (entity.isValid())
+	{
+		auto& tag = entity.get<Components::Tag>();
+		auto& layerId = entity.get<LayerID>();
+		auto* transform = entity.tryGet<Components::Transform>();
+		auto* meshRenderer = entity.tryGet<Components::MeshRenderer>();
 
 		if (ImGui::CollapsingHeader("General"))
 		{
@@ -25,15 +50,15 @@ void Inspector::render()
 			Components::Tag tag(buffer);
 
 			if (buffer[0] != 0)
-				m_scene->renameEntity(m_entity, tag);
-			
+				m_scene->renameEntity(entity, tag);
+
 			//LayerID
 			int bufferLayerId = (int)layerId;
 			ImGui::Combo("LayerID", &bufferLayerId, m_layerRange, OE_LAST_LAYER + 1);
 
 			if ((LayerID)bufferLayerId != layerId)
 			{
-				m_entity.changeLayer(bufferLayerId);
+				entity.changeLayer(bufferLayerId);
 			}
 		}
 
@@ -83,20 +108,59 @@ void Inspector::render()
 			{
 				if (ImGui::Selectable("MeshRenderer"))
 				{
-					m_entity.add<Components::MeshRenderer>(MeshManager::Get("Cube"), false, true);
+					entity.add<Components::MeshRenderer>(MeshManager::Get("Cube"), false, true);
 					if (!transform)
-						m_entity.add<Components::Transform>();
+						entity.add<Components::Transform>();
 				}
 			}
 			if (!transform)
 			{
 				if (ImGui::Selectable("Transform"))
 				{
-					m_entity.add<Components::Transform>();
+					entity.add<Components::Transform>();
 				}
 			}
 			ImGui::EndPopup();
 		}
 	}
-	ImGui::End();
+}
+
+void Inspector::renderTexture()
+{
+	auto& texture = std::get<Ref<Texture>>(m_object.Value);
+
+	float maxSize = 256.0f;
+	float width = (float)texture->getWidth();
+	float height = (float)texture->getHeight();
+
+
+	if (width > height)
+	{
+		float scaling = width / maxSize;
+		width = maxSize;
+		height /= scaling;
+	}
+	else
+	{
+		float scaling = height / maxSize;
+		height = maxSize;
+		width /= scaling;
+	}
+
+	ImGui::Text("Texture");
+	ImGui::Text("name: %s", texture->getName().c_str());
+	ImGui::Text("width: %u", texture->getWidth());
+	ImGui::Text("height: %u", texture->getHeight());
+	ImGui::Image(
+		(void*)(intptr_t)texture->getRendererId(),
+		ImVec2(width, height),
+		ImVec2(0, 0),
+		ImVec2(1, 1)
+	);
+}
+
+void Inspector::renderText()
+{
+	auto& text = std::get<std::string>(m_object.Value);
+	ImGui::Text(text.c_str());
 }

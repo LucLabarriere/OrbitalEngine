@@ -35,7 +35,7 @@ void TreeNode::render()
 	}
 	else
 	{
-		nodeOpen = ImGui::TreeNode(m_title.c_str());
+		nodeOpen = ImGui::TreeNodeEx(m_title.c_str(), nodeFlags);
 	}
 
 	// Source

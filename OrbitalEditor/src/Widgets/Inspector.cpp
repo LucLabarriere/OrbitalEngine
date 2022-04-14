@@ -38,8 +38,12 @@ void Inspector::renderEntity()
 	{
 		auto& tag = entity.get<Components::Tag>();
 		auto& layerId = entity.get<LayerID>();
+		auto& hiearchy = entity.get<Components::Hierarchy>();
 		auto* transform = entity.tryGet<Components::Transform>();
 		auto* meshRenderer = entity.tryGet<Components::MeshRenderer>();
+		auto* directionalLight = entity.tryGet<Components::DirectionalLight>();
+		auto* pointLight = entity.tryGet<Components::PointLight>();
+		auto* spotLight = entity.tryGet<Components::SpotLight>();
 
 		if (ImGui::CollapsingHeader("General"))
 		{
@@ -69,6 +73,10 @@ void Inspector::renderEntity()
 				ImGui::DragFloat3("Position", &transform->Position[0], 0.001f);
 				ImGui::DragFloat3("Rotation", &transform->Rotation[0], 1.0f);
 				ImGui::DragFloat3("Scale", &transform->Scale[0], 0.01f);
+				if (ImGui::Button("X"))
+				{
+					entity.remove<Components::Transform>();
+				}
 			}
 		}
 
@@ -81,6 +89,11 @@ void Inspector::renderEntity()
 				ImGui::Checkbox("Batched", &meshRenderer->BatchedDraw);
 				ImGui::Checkbox("Hidden", &meshRenderer->Hidden);
 
+				for (auto child : hiearchy)
+				{
+					child.get<Components::MeshRenderer>().Hidden = meshRenderer->Hidden;
+				}
+
 				int currentItem = 0;
 				auto meshTags = MeshManager::GetAvailableMeshes();
 
@@ -90,9 +103,69 @@ void Inspector::renderEntity()
 						currentItem = i;
 				}
 
-
 				ImGui::Combo("Mesh", &currentItem, meshTags.data(), meshTags.size());
 				meshRenderer->Mesh = MeshManager::Get(meshTags[currentItem]);
+				if (ImGui::Button("X"))
+				{
+					entity.remove<Components::MeshRenderer>();
+				}
+			}
+		}
+
+		if (directionalLight)
+		{
+			if (ImGui::CollapsingHeader("DirectionalLight"))
+			{
+				ImGui::DragFloat3("Direction", &directionalLight->Direction[0], 0.05f, -1.0f, 1.0f);
+				ImGui::ColorEdit3("Ambient", &directionalLight->Ambient[0]);
+				ImGui::ColorEdit3("Diffuse", &directionalLight->Diffuse[0]);
+				ImGui::ColorEdit3("Specular", &directionalLight->Specular[0]);
+				if (ImGui::Button("X"))
+				{
+					entity.remove<Components::DirectionalLight>();
+				}
+			}
+		}
+
+		if (pointLight)
+		{
+			if (ImGui::CollapsingHeader("PointLight"))
+			{
+				ImGui::DragFloat3("Position", &(*pointLight->Position)[0], 0.05f);
+				ImGui::ColorEdit3("Ambient", &pointLight->Ambient[0]);
+				ImGui::ColorEdit3("Diffuse", &pointLight->Diffuse[0]);
+				ImGui::ColorEdit3("Specular", &pointLight->Specular[0]);
+				ImGui::Text("Attenuation");
+				ImGui::DragFloat("Constant", &pointLight->ConstantAttenuation, 0.01f);
+				ImGui::DragFloat("Linear", &pointLight->LinearAttenuation, 0.01f);
+				ImGui::DragFloat("Quadratic", &pointLight->QuadraticAttenuation, 0.001f);
+				if (ImGui::Button("X"))
+				{
+					entity.remove<Components::PointLight>();
+				}
+			}
+		}
+
+		if (spotLight)
+		{
+			if (ImGui::CollapsingHeader("SpotLight"))
+			{
+				ImGui::DragFloat3("Position", &(*spotLight->Position)[0], 0.05f);
+				ImGui::DragFloat3("Direction", &spotLight->Direction[0], 0.05f, -1.0f, 1.0f);
+				ImGui::ColorEdit3("Ambient", &spotLight->Ambient[0]);
+				ImGui::ColorEdit3("Diffuse", &spotLight->Diffuse[0]);
+				ImGui::ColorEdit3("Specular", &spotLight->Specular[0]);
+				ImGui::Text("Attenuation");
+				ImGui::DragFloat("Constant", &spotLight->ConstantAttenuation, 0.01f);
+				ImGui::DragFloat("Linear", &spotLight->LinearAttenuation, 0.01f);
+				ImGui::DragFloat("Quadratic", &spotLight->QuadraticAttenuation, 0.001f);
+				ImGui::Text("Size");
+				ImGui::DragFloat("Cutoff", &spotLight->Cutoff, 0.01f);
+				ImGui::DragFloat("Edge %", &spotLight->Edge, 0.01f);
+				if (ImGui::Button("X"))
+				{
+					entity.remove<Components::SpotLight>();
+				}
 			}
 		}
 
@@ -120,8 +193,46 @@ void Inspector::renderEntity()
 					entity.add<Components::Transform>();
 				}
 			}
+			if (!directionalLight)
+			{
+				if (ImGui::Selectable("DirectionalLight"))
+				{
+					entity.add<Components::DirectionalLight>();
+				}
+			}
+			if (!pointLight)
+			{
+				if (ImGui::Selectable("PointLight"))
+				{
+					if (!transform)
+					{
+						entity.add<Components::Transform>();
+						transform = entity.tryGet<Components::Transform>();
+					}
+					entity.add<Components::PointLight>(&transform->Position);
+				}
+			}
+			if (!spotLight)
+			{
+				if (ImGui::Selectable("SpotLight"))
+				{
+					if (!transform)
+					{
+						entity.add<Components::Transform>();
+						transform = entity.tryGet<Components::Transform>();
+					}
+					entity.add<Components::SpotLight>(&transform->Position);
+				}
+			}
 			ImGui::EndPopup();
 		}
+
+		ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f, 0.1f, 0.1f, 1.0f });
+		if (ImGui::Button("Delete entity"))
+		{
+			m_scene->requireDelete(entity);
+		}
+		ImGui::PopStyleColor();
 	}
 }
 

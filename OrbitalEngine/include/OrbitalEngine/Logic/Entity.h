@@ -36,17 +36,24 @@ namespace Orbital
 			return m_registry->try_get<T>(m_handle);
 		}
 
+		template <class T>
+		void remove()
+		{
+			m_registry->remove<T>(m_handle);
+		}
 		void changeLayer(LayerID layerId);
 
+		void destroy();
+
 		entt::entity getHandle() const { return m_handle; }
-		bool isValid() const { return m_handle != entt::null; }
+		bool isValid() const { return m_handle != entt::null and m_registry->valid(m_handle); }
 
 		bool operator==(const Entity& e) { return (e.getHandle() == m_handle) ? true : false; }
 
 	private:
 		Entity(Ref<entt::registry>& registry);
 		Entity(entt::entity handle, Ref<entt::registry>& registry);
-		
+
 	private:
 		friend Scene;
 

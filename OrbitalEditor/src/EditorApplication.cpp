@@ -60,6 +60,9 @@ void EditorApplication::onStart()
 	entity.add<Components::Transform>(t);
 	entity.add<Components::MeshRenderer>(MeshManager::Get("Quad"), false, true);
 
+	auto sun = m_scene->createEntity("Sun");
+	sun.add<Components::DirectionalLight>();
+
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().Fonts->AddFontFromFileTTF(Settings::GetAssetPath("fonts/NotoSans-Regular.ttf").c_str(), 32);
 	ImGui::GetIO().Fonts->Build();
@@ -113,6 +116,7 @@ void EditorApplication::onUpdate(Time dt)
 	ImGui::End();
 	ImGui::GetStyle().WindowPadding = ImVec2(12, 12);
 
+	m_hierarchyPanel->initialize();
 	m_hierarchyPanel->update();
 	m_hierarchyPanel->render();
 	m_metricsPanel->render();
@@ -123,19 +127,6 @@ void EditorApplication::onUpdate(Time dt)
 
 	if (m_metricsPanel->isDemoShown())
 		ImGui::ShowDemoWindow();
-
-	ImGui::Begin("Lights");
-	ImGui::DragFloat3("Direction", &m_direction[0], 0.02f, -1.0f, 1.0f);
-	ImGui::DragFloat3("Position", &m_position2[0], 0.02f, -3.0f, 3.0f);
-	ImGui::DragFloat3("Ambient", &m_ambient2[0], 0.02f,  0.0f, 1.0f);
-	ImGui::DragFloat3("Diffuse", &m_diffuse2[0], 0.02f,  0.0f, 1.0f);
-	ImGui::DragFloat3("Specular", &m_specular2[0], 0.02f,  0.0f, 1.0f);
-	ImGui::DragFloat("Constant", &m_constant2, 0.02f, 0.0f, 1.0f);
-	ImGui::DragFloat("Linear", &m_linear2, 0.002f, 0.0f, 1.0f);
-	ImGui::DragFloat("Quadratic", &m_quadratic2, 0.001f, 0.0f, 2.0f);
-	ImGui::DragFloat("Cutoff", &m_cutOff, 0.002f, 0.0f, 4.0f);
-	ImGui::DragFloat("Edge %", &m_edge, 0.5f, 0.0f, 100.0f);
-	ImGui::End();
 
 	ImGui::Render();
 
@@ -150,29 +141,59 @@ void EditorApplication::onUpdate(Time dt)
 	shader->setUniformMat4f("u_VPMatrix", m_scene->getCamera()->getVPMatrix());
 
 	// Setting up lights, to do in beginScene()
-	shader->setUniform1i("u_nDirectionalLights", 0);
-	shader->setUniform1i("u_nPointLights", 0);
-	shader->setUniform1i("u_nSpotLights", 1);
-	shader->setUniform3f("u_SpotLights[0].Direction", - glm::normalize(m_direction));
-	shader->setUniform3f("u_SpotLights[0].Position", m_position2);
-	shader->setUniform3f("u_SpotLights[0].Ambient", m_ambient2);
-	shader->setUniform3f("u_SpotLights[0].Diffuse", m_diffuse2);
-	shader->setUniform3f("u_SpotLights[0].Specular", m_specular2);
-	shader->setUniform1f("u_SpotLights[0].Constant", m_constant2);
-	shader->setUniform1f("u_SpotLights[0].Linear", m_linear2);
-	shader->setUniform1f("u_SpotLights[0].Quadratic", m_quadratic2);
-	shader->setUniform1f("u_SpotLights[0].CutOff", m_cutOff);
-	shader->setUniform1f("u_SpotLights[0].OuterCutOff", m_cutOff - m_cutOff * m_edge / 100.0f);
+	{
+		auto view = m_scene->getRegistry()->view<Components::DirectionalLight>();
+		unsigned int i = 0;
+		shader->setUniform1i("u_nDirectionalLights", view.size());
+
+		for (auto entity : view)
+		{
+			auto& light = view.get<Components::DirectionalLight>(entity);
+			light.bind(shader, i);
+			i++;
+		}
+	}
+
+	{
+		auto view = m_scene->getRegistry()->view<Components::PointLight>();
+		unsigned int i = 0;
+		shader->setUniform1i("u_nPointLights", view.size());
+
+		for (auto entity : view)
+		{
+			auto& light = view.get<Components::PointLight>(entity);
+
+			light.bind(shader, i);
+			i++;
+		}
+	}
+
+	{
+		auto view = m_scene->getRegistry()->view<Components::SpotLight>();
+		unsigned int i = 0;
+		shader->setUniform1i("u_nSpotLights", view.size());
+
+		for (auto entity : view)
+		{
+			auto& light = view.get<Components::SpotLight>(entity);
+
+			light.bind(shader, i);
+			i++;
+		}
+	}
+
 	shader->setUniform3f("u_ViewPosition", m_scene->getCamera()->getPosition());
 
-	auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer>();
-	for (auto entity : view)
 	{
-		auto& transform = view.get<Components::Transform>(entity);
-		auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
-		
-		if (!meshRenderer.Hidden)
-			BatchManager::RegisterMesh(meshRenderer, transform);
+		auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer>();
+		for (auto entity : view)
+		{
+			auto& transform = view.get<Components::Transform>(entity);
+			auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
+
+			if (!meshRenderer.Hidden)
+				BatchManager::RegisterMesh(meshRenderer, transform);
+		}
 	}
 	BatchManager::RenderBatches();
 
@@ -180,6 +201,7 @@ void EditorApplication::onUpdate(Time dt)
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+	m_scene->endScene();
 	m_window->onUpdate();
 }
 

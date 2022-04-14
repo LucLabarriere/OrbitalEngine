@@ -4,8 +4,7 @@
 
 namespace Orbital
 {
-	Scene::Scene()
-		: m_camera(CreateRef<Camera>())
+	Scene::Scene() : m_camera(CreateRef<Camera>())
 	{
 
 	}
@@ -17,7 +16,13 @@ namespace Orbital
 			layer = CreateRef<entt::registry>();
 		}
 
-		m_entityHandle = createEntity("Scene", OE_LAST_LAYER).getHandle();
+		Entity e = Entity(m_layers[OE_LAST_LAYER]);
+
+		e.add<Components::Tag>(getUniqueTag("Scene"));
+		auto& hierarchy = e.add<Components::Hierarchy>(shared_from_this(), e, Entity());
+
+		e.add<LayerID>(OE_LAST_LAYER);
+		m_entityHandle = e.getHandle();
 	}
 
 	Entity Scene::createEntity(const Components::Tag& tag, LayerID layerId)
@@ -25,14 +30,16 @@ namespace Orbital
 		Entity e(m_layers[layerId]);
 
 		e.add<Components::Tag>(getUniqueTag(tag));
-		auto& hierarchy = e.add<Components::Hierarchy>(shared_from_this(), e);
-
-		if (m_layers[layerId]->valid(m_entityHandle))
-			hierarchy.setParent(getSceneEntity());
+		auto& hierarchy = e.add<Components::Hierarchy>(shared_from_this(), e, getSceneEntity());
 
 		e.add<LayerID>(layerId);
 		
 		return e;
+	}
+
+	void Scene::requireDelete(const Entity& entity)
+	{
+		m_deleteRequired.push_back(entity);
 	}
 
 	std::string Scene::getUniqueTag(const std::string& tag, Entity* entity)
@@ -73,6 +80,15 @@ namespace Orbital
 	void Scene::renameEntity(Entity& e, const Components::Tag& newTag)
 	{
 		e.get<Components::Tag>() = getUniqueTag(newTag, &e);
+	}
+
+	void Scene::endScene()
+	{
+		for (auto& entity : m_deleteRequired)
+		{
+			entity.destroy();
+		}
+		m_deleteRequired.resize(0);
 	}
 
 	Entity Scene::getEntity(const Components::Tag& tag)

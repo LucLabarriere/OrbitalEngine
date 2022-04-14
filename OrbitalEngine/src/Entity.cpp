@@ -13,6 +13,20 @@ namespace Orbital
 		OE_NOT_IMPLEMENTED();
 	}
 
+	void Entity::destroy()
+	{
+		auto& hierarchy = this->get<Components::Hierarchy>();
+		auto& children = hierarchy.getChildren();
+
+		for (int i = children.size() - 1; i >= 0; i--)
+		{
+			children[i].destroy();
+		}
+		hierarchy.getParent().get<Components::Hierarchy>().removeChild(*this);
+
+		m_registry->destroy(m_handle);
+	}
+
 	Entity::Entity(Ref<entt::registry>& registry)
 		: m_registry(registry), m_handle(registry->create())
 	{

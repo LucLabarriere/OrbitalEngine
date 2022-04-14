@@ -4,14 +4,15 @@
 HierarchyPanel::HierarchyPanel(Ref<Scene>& scene)
 	: m_scene(scene)
 {
-	Entity entity = m_scene->getSceneEntity();
-	
-	auto& hierarchy = entity.get<Components::Hierarchy>();
-	m_sceneChildren = &hierarchy.getChildren();
+
 }
 
 void HierarchyPanel::initialize()
 {
+	Entity entity = m_scene->getSceneEntity();
+
+	auto& hierarchy = entity.get<Components::Hierarchy>();
+	m_sceneChildren = &hierarchy.getChildren();
 	update();
 }
 

@@ -6,33 +6,27 @@ namespace Orbital
 {
 	namespace Components
 	{
-		Hierarchy::Hierarchy(Ref<Scene>& scene, const Entity& entity)
-			: m_scene(scene), m_entity(entity), m_parent(nullptr)
+		Hierarchy::Hierarchy(Ref<Scene>& scene, const Entity& entity, const Entity& parent)
+			: m_scene(scene), m_entity(entity), m_parent(parent)
 		{
-
+			if (m_parent.isValid())
+				m_parent.get<Components::Hierarchy>().addChild(m_entity);
 		}
 
 		Hierarchy::~Hierarchy()
 		{
-			if (m_parent != nullptr)
-			{
-				delete m_parent;
-				m_parent = nullptr;
-			}
+
 		}
 
 		void Hierarchy::setParent(const Entity& parent)
 		{
 			// Removing former parent
-			if (m_parent != nullptr)
-			{
-				auto& parentHierarchy = m_parent->get<Components::Hierarchy>();
-				parentHierarchy.removeChild(m_entity);
-			}
+			auto& parentHierarchy = m_parent.get<Components::Hierarchy>();
+			parentHierarchy.removeChild(m_entity);
 
 			// Setting new parent
-			m_parent = new Entity(parent);
-			m_parent->get<Components::Hierarchy>().addChild(m_entity);
+			m_parent = Entity(parent);
+			m_parent.get<Components::Hierarchy>().addChild(m_entity);
 		}
 
 		void Hierarchy::removeChild(const Entity& entity)
@@ -42,12 +36,12 @@ namespace Orbital
 					m_children.erase(m_children.begin() + i);
 		}
 
-		const Entity& Hierarchy::getParent() const
+		Entity& Hierarchy::getParent()
 		{
-			return *m_parent;
+			return m_parent;
 		}
 
-		const std::vector<Entity>& Hierarchy::getChildren() const
+		std::vector<Entity>& Hierarchy::getChildren()
 		{
 			return m_children;
 		}

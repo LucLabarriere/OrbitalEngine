@@ -70,9 +70,9 @@ void Inspector::renderEntity()
 		{
 			if (ImGui::CollapsingHeader("Transform"))
 			{
-				ImGui::DragFloat3("Position", &transform->Position[0], 0.001f);
-				ImGui::DragFloat3("Rotation", &transform->Rotation[0], 1.0f);
-				ImGui::DragFloat3("Scale", &transform->Scale[0], 0.01f);
+				ImGui::DragFloat3("Position", &transform->Position()[0], 0.001f);
+				ImGui::DragFloat3("Rotation", &transform->Rotation()[0], 1.0f);
+				ImGui::DragFloat3("Scale", &transform->Scale()[0], 0.01f);
 				if (ImGui::Button("X"))
 				{
 					entity.remove<Components::Transform>();
@@ -99,7 +99,7 @@ void Inspector::renderEntity()
 
 				for (size_t i = 0; i < meshTags.size(); i++)
 				{
-					if (meshTags[i] == meshRenderer->Mesh->getTag().c_str())
+					if (meshTags[i] == meshRenderer->Mesh.lock()->getTag().c_str())
 						currentItem = i;
 				}
 
@@ -181,7 +181,7 @@ void Inspector::renderEntity()
 			{
 				if (ImGui::Selectable("MeshRenderer"))
 				{
-					entity.add<Components::MeshRenderer>(MeshManager::Get("Cube"), false, true);
+					entity.add<Components::MeshRenderer>("Cube");
 					if (!transform)
 						entity.add<Components::Transform>();
 				}
@@ -209,7 +209,7 @@ void Inspector::renderEntity()
 						entity.add<Components::Transform>();
 						transform = entity.tryGet<Components::Transform>();
 					}
-					entity.add<Components::PointLight>(&transform->Position);
+					entity.add<Components::PointLight>(&transform->Position());
 				}
 			}
 			if (!spotLight)
@@ -221,7 +221,7 @@ void Inspector::renderEntity()
 						entity.add<Components::Transform>();
 						transform = entity.tryGet<Components::Transform>();
 					}
-					entity.add<Components::SpotLight>(&transform->Position);
+					entity.add<Components::SpotLight>(&transform->Position());
 				}
 			}
 			ImGui::EndPopup();
@@ -259,7 +259,7 @@ void Inspector::renderTexture()
 	}
 
 	ImGui::Text("Texture");
-	ImGui::Text("name: %s", texture->getName().c_str());
+	ImGui::Text("name: %s", texture->getTag().c_str());
 	ImGui::Text("width: %u", texture->getWidth());
 	ImGui::Text("height: %u", texture->getHeight());
 	ImGui::Image(

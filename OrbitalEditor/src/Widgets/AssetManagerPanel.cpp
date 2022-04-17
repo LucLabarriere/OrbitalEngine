@@ -19,7 +19,7 @@ void AssetManagerPanel::render()
 	ImGuiSelectableFlags selectableFlags = ImGuiSelectableFlags_SpanAllColumns;
 	for (auto& texture : *TextureManager::GetInstance())
 	{
-		if (ImGui::Selectable(texture->getName().c_str(), m_selected == i, selectableFlags))
+		if (ImGui::Selectable(texture->getTag().c_str(), m_selected == i, selectableFlags))
 		{
 			m_selected = i;
 			Inspector::SetTexture(texture);
@@ -29,7 +29,7 @@ void AssetManagerPanel::render()
 
 	for (auto& shader : *ShaderManager::GetInstance())
 	{
-		if (ImGui::Selectable(shader->getName().c_str(), m_selected == i, selectableFlags))
+		if (ImGui::Selectable(shader->getTag().c_str(), m_selected == i, selectableFlags))
 		{
 			m_selected = i;
 			Inspector::SetText(shader->getContent());
@@ -37,9 +37,6 @@ void AssetManagerPanel::render()
 		i += 1;
 	}
 
-
-
 	ImGui::EndChild();
-
 	ImGui::End();
 }

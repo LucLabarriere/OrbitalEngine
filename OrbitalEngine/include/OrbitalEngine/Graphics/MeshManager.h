@@ -5,39 +5,37 @@
 
 namespace Orbital
 {
-	class MeshManager
+	class MeshManager : public AssetManager<Mesh>
 	{
 	public:
-		inline static void Initialize()
+		static void Initialize()
 		{
-			m_meshes.push_back(Ref<Mesh>(Mesh::Quad()));
-			m_meshes.push_back(Ref<Mesh>(Mesh::Cube()));
+			s_instance = new MeshManager();
 		}
 
-		inline static const Ref<Mesh>& Get(const std::string& tag)
+		static std::vector<const char*> GetAvailableMeshes()
 		{
-			for (const auto& mesh : m_meshes)
-			{
-				if (mesh->getTag() == tag)
-					return mesh;
-			}
-			OE_RAISE_SIGSEGV("Mesh: {} was not found", tag);
-			return m_meshes[0];
-		}
-
-		inline static std::vector<const char*> GetAvailableMeshes()
-		{
-			std::vector<const char*> meshNames;
-			meshNames.reserve(m_meshes.size());
-
-			for (size_t i = 0; i < m_meshes.size(); i++)
-			{
-				meshNames.push_back(m_meshes[i]->getTag().c_str());
-			}
-			return meshNames;
+			return static_cast<MeshManager*>(s_instance)->getAvailableMeshes();
 		}
 
 	private:
-		inline static std::vector<Ref<Mesh>> m_meshes;
+		MeshManager()
+		{
+			s_managerName = "MeshManager";
+			m_assets.push_back(Mesh::Quad());
+			m_assets.push_back(Mesh::Cube());
+		}
+
+		std::vector<const char*> getAvailableMeshes()
+		{
+			std::vector<const char*> meshNames;
+			meshNames.reserve(m_assets.size());
+
+			for (size_t i = 0; i < m_assets.size(); i++)
+			{
+				meshNames.push_back(m_assets[i]->getTag().c_str());
+			}
+			return meshNames;
+		}
 	};
 }

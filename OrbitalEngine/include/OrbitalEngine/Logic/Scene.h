@@ -17,6 +17,7 @@ namespace Orbital
 		void requireDelete(const Entity& entity);
 		std::string getUniqueTag(const std::string& tag, Entity* entity = nullptr);
 		void renameEntity(Entity& e, const Components::Tag& newTag);
+		void beginScene();
 		void endScene();
 
 		Entity getEntity(const Components::Tag& tag);

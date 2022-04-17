@@ -1,12 +1,12 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
-
-namespace Orbital
+namespace 
+	Orbital
 {
 	class ShaderManager;
 
-	class Shader
+	class Shader : public Asset
 	{
 	public:
 		virtual ~Shader() {};
@@ -24,20 +24,17 @@ namespace Orbital
 		virtual void setUniform4f(const std::string& name, float v1, float v2, float v3, float v4) const = 0;
 		virtual void setUniformMat4f(const std::string& name, const glm::mat4& value) const = 0;
 
-		const std::string& getName() const { return m_name; }
 		const std::string& getContent() const { return m_content; }
 
 	protected:
-		Shader(unsigned int shaderId, const std::string& name, const std::string& filepath)
-			: m_rendererId(0), m_shaderId(shaderId), m_name(name), m_filepath(filepath) { };
-		static Shader* Create(unsigned int shaderId, const std::string& name, const std::string& filepath);
+		Shader(const std::string& name, const std::string& filepath)
+			: Asset(name), m_rendererId(0), m_filepath(filepath) { };
+		static Shader* Create(const std::string& name, const std::string& filepath);
 
 	protected:
 		friend ShaderManager;
 
 		unsigned int m_rendererId;
-		unsigned int m_shaderId;
-		std::string m_name;
 		std::string m_filepath;
 		std::string m_content = "";
 	};

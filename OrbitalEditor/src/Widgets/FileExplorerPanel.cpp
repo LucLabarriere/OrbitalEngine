@@ -61,7 +61,7 @@ void FileExplorerPanel::render()
 	}
 	ImGui::Text(m_currentDirectory.parent_path().string().c_str());
 
-	const auto& texture = TextureManager::Get("Icons");
+	auto texture = TextureManager::Get("Icons").lock();
 	ImGuiTableFlags tableFlags = ImGuiTableFlags_SizingFixedFit | 
 		ImGuiTableFlags_ContextMenuInBody | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_RowBg;
 	
@@ -77,7 +77,7 @@ void FileExplorerPanel::render()
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 			ImGui::Image(
-				(void*)(intptr_t)texture.getRendererId(),
+				(void*)(intptr_t)texture->getRendererId(),
 				ImVec2(16, 16),
 				ImVec2(0.2f * (float)iconIndex, 0),
 				ImVec2(0.2f * ((float)iconIndex + 1), 1)

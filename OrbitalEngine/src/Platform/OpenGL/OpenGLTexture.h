@@ -14,7 +14,7 @@ namespace Orbital
 
 	private:
 		OpenGLTexture(
-			const std::string& name, unsigned int width,
+			const std::string& tag, unsigned int width,
 			unsigned int height, unsigned char* data,
 			unsigned int internalFormat = OE_RGB8,
 			unsigned int format = OE_RGB);

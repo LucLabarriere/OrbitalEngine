@@ -25,8 +25,8 @@ namespace Orbital
 	{
 		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::STATIC_NOT_BATCHED)
 		{
-			const auto& vertices = meshRenderer.Mesh->getVertices();
-			const auto& indices = meshRenderer.Mesh->getIndices();
+			const auto& vertices = meshRenderer.Mesh.lock()->getVertices();
+			const auto& indices = meshRenderer.Mesh.lock()->getIndices();
 
 			size_t index = s_static.size();
 			s_static.push_back(CreateRef<Batch>(RenderMode::STATIC_BATCHED, vertices.getCount(), indices.getCount()));
@@ -45,8 +45,8 @@ namespace Orbital
 		// TODO: if transform modified, update vertices
 		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::STATIC_BATCHED)
 		{
-			const auto& vertices = meshRenderer.Mesh->getVertices();
-			const auto& indices = meshRenderer.Mesh->getIndices();
+			const auto& vertices = meshRenderer.Mesh.lock()->getVertices();
+			const auto& indices = meshRenderer.Mesh.lock()->getIndices();
 			for (size_t i = 0; i < s_staticBatched.size(); i++)
 			{
 				if (s_staticBatched[i]->getAvailableVertexCount() >= vertices.getCount())
@@ -86,8 +86,8 @@ namespace Orbital
 
 		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::DYNAMIC_NOT_BATCHED)
 		{
-			const auto& vertices = meshRenderer.Mesh->getVertices();
-			const auto& indices = meshRenderer.Mesh->getIndices();
+			const auto& vertices = meshRenderer.Mesh.lock()->getVertices();
+			const auto& indices = meshRenderer.Mesh.lock()->getIndices();
 
 			size_t index = s_dynamic.size();
 			s_dynamic.push_back(CreateRef<Batch>(RenderMode::DYNAMIC_NOT_BATCHED, vertices.getCount(), indices.getCount()));
@@ -110,8 +110,8 @@ namespace Orbital
 		Components::MeshRenderer& meshRenderer,
 		const Components::Transform& transform)
 	{
-		const auto& vertices = meshRenderer.Mesh->getVertices();
-		const auto& indices = meshRenderer.Mesh->getIndices();
+		const auto& vertices = meshRenderer.Mesh.lock()->getVertices();
+		const auto& indices = meshRenderer.Mesh.lock()->getIndices();
 
 		if (s_dynamicBatched->getAvailableVertexCount() < vertices.getCount())
 		{

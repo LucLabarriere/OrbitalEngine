@@ -26,13 +26,14 @@ namespace Orbital
 
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
 
-		MeshManager::Initialize();
+		Inputs::Initialize(m_window);
 		BatchManager::Initialize();
 		ShaderManager::Initialize();
-		Renderer::Initialize();
 		TextureManager::Initialize();
-		Inputs::Initialize(m_window);
+		MaterialManager::Initialize();
+		MeshManager::Initialize();
 		Metrics::Initialize();
+		Renderer::Initialize();
 	}
 
 	Application::~Application()
@@ -40,8 +41,10 @@ namespace Orbital
 		Logger::Info("Application: Terminating");
 		m_window.reset();
 		Renderer::Terminate();
+		MeshManager::Terminate();
 		TextureManager::Terminate();
 		ShaderManager::Terminate();
+		MaterialManager::Terminate();
 	}
 
 	void Application::onEvent(Event& e)
@@ -60,10 +63,14 @@ namespace Orbital
 			m_timeAtLastUpdate = Time();
 
 			Metrics::OnUpdate(dt);
+
+			bool vsyncEnabled = Metrics::Get<bool>(Metric::VSyncEnabled);
+			if (vsyncEnabled != m_window->isVSyncEnabled())
+			{
+				m_window->setVSyncEnabled(vsyncEnabled);
+			}
 			onUpdate(dt);
 		}
 		Logger::Trace("Leaving Application");
 	}
-
-
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "OrbitalEngine/Graphics/Batch.h"
+#include "OrbitalEngine/Graphics/MaterialManager.h"
+#include "OrbitalEngine/Graphics/MeshManager.h"
 
 namespace Orbital
 {
@@ -8,11 +10,14 @@ namespace Orbital
 	{
 		struct MeshRenderer
 		{
-			Ref<Orbital::Mesh> Mesh;
-			bool StaticDraw = true;
-			bool BatchedDraw = false;
+			WeakRef<Mesh> Mesh;
+			WeakRef<Material> Material = MaterialManager::Get("Blank");
+			bool StaticDraw = false;
+			bool BatchedDraw = true;
 			bool Hidden = false;
-			Ref<Orbital::Batch> Batch = nullptr;
+			Ref<Batch> Batch = nullptr;
+
+			MeshRenderer(const std::string& meshTag) : Mesh(MeshManager::Get(meshTag)) { }
 		};
 	}
 }

@@ -15,6 +15,12 @@ namespace Orbital
 		virtual void shutdown() override;
 
 		virtual void* getNativeWindow() const override;
+		
+		virtual void setVSyncEnabled(bool value)
+		{
+			m_vsyncEnabled = value;
+			glfwSwapInterval((int)value);
+		}
 
 	private:
 		GLFWwindow* createWindow();

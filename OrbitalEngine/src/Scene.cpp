@@ -82,6 +82,57 @@ namespace Orbital
 		e.get<Components::Tag>() = getUniqueTag(newTag, &e);
 	}
 
+	void Scene::beginScene()
+	{
+		auto shader = ShaderManager::Get("Base").lock();
+		shader->bind();
+
+		shader->setUniform3f("u_ViewPosition", getCamera()->getPosition());
+		shader->setUniformMat4f("u_VPMatrix", getCamera()->getVPMatrix());
+
+		{
+			auto view = getRegistry()->view<Components::DirectionalLight>();
+			unsigned int i = 0;
+
+			shader->setUniform1i("u_nDirectionalLights", view.size());
+
+			for (auto entity : view)
+			{
+				auto& light = view.get<Components::DirectionalLight>(entity);
+				light.bind(shader, i);
+				i++;
+			}
+		}
+
+		{
+			auto view = getRegistry()->view<Components::PointLight>();
+			unsigned int i = 0;
+			shader->setUniform1i("u_nPointLights", view.size());
+
+			for (auto entity : view)
+			{
+				auto& light = view.get<Components::PointLight>(entity);
+
+				light.bind(shader, i);
+				i++;
+			}
+		}
+
+		{
+			auto view = getRegistry()->view<Components::SpotLight>();
+			unsigned int i = 0;
+			shader->setUniform1i("u_nSpotLights", view.size());
+
+			for (auto entity : view)
+			{
+				auto& light = view.get<Components::SpotLight>(entity);
+
+				light.bind(shader, i);
+				i++;
+			}
+		}
+	}
+
 	void Scene::endScene()
 	{
 		for (auto& entity : m_deleteRequired)

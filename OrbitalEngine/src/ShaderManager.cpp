@@ -3,39 +3,41 @@
 
 namespace Orbital
 {
-	ShaderManager::ShaderManager()
+	ShaderManager::ShaderManager() : AssetManager<Shader>()
 	{
+		s_managerName = "ShaderManager";
 		load("Base", "shaders/Base.glsl");
 		load("PostProcess", "shaders/PostProcess.glsl");
 	}
 
-	Ref<Shader>& ShaderManager::load(const std::string& shaderName, const std::string& shaderPath)
+	WeakRef<Shader> ShaderManager::load(const std::string& tag, const std::string& shaderPath)
     {
-		size_t id = m_shaders.size();
-		
-		for (const auto& shader : m_shaders)
-			OE_ASSERT(shader->getName() != shaderName, "ShaderManager: {} is already loaded", shaderName);
+		for (const auto& shader : m_assets)
+			OE_ASSERT(shader->getTag() != tag, "ShaderManager: {} is already loaded", tag);
 
-		Ref<Shader> shader(Shader::Create(id, shaderName, Settings::GetAssetPath(shaderPath)));
+		Ref<Shader> shader(Shader::Create(tag, Settings::GetAssetPath(shaderPath)));
+		m_assets.push_back(shader);
 
-		m_shaders.push_back(shader);
-
-		return m_shaders[id];
+		return shader;
     }
 
-	const Ref<Shader>& ShaderManager::getShader(size_t id) const
+	const WeakRef<Shader> ShaderManager::get(size_t id) const
 	{
-		return m_shaders[id];
-	}
-
-	const Ref<Shader>& ShaderManager::getShader(const std::string& shaderName) const
-	{
-		for (const auto& shader : m_shaders)
-			if (shader->getName() == shaderName)
+		for (const auto& shader : m_assets)
+			if (shader->getId() == id)
 				return shader;
 
-		OE_RAISE_SIGSEGV("ShaderManager: {} is not stored in the ShaderManager", shaderName);
-		return m_shaders[0];
+		OE_RAISE_SIGSEGV("ShaderManager: {} is not stored in the ShaderManager", id);
 	}
 
+	const WeakRef<Shader> ShaderManager::get(const std::string& tag) const
+	{
+		for (const auto& shader : m_assets)
+			if (shader->getTag() == tag)
+				return shader;
+
+		OE_RAISE_SIGSEGV("ShaderManager: {} is not stored in the ShaderManager", tag);
+	}
 }
+
+

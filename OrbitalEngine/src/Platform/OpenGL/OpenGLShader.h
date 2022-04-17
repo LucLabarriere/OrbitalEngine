@@ -30,7 +30,7 @@ namespace Orbital
 		void setUniformMat4f(const std::string& name, const glm::mat4& value) const override;
 
 	private:
-		OpenGLShader(unsigned int shaderId, const std::string& name, const std::string& filepath);
+		OpenGLShader(const std::string& tag, const std::string& filepath);
 
 		unsigned int getUniformLocation(const std::string& name) const;
 		void createShader(const std::string& vertexShader, const std::string& fragmentShader);

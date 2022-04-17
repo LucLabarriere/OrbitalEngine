@@ -2,6 +2,27 @@
 
 namespace Orbital
 {
+	void Metrics::IncrementBatchCount()
+	{
+		GetReference<unsigned int>(Metric::BatchCount) += 1;
+	}
+
+	void Metrics::ReinitializeBatchCount()
+	{
+		GetReference<unsigned int>(Metric::BatchCount) = -1;
+	}
+
+	Metrics::Metrics()
+		: m_timePerFrameContainer(10)
+	{
+		m_metrics[Metric::FrameRate] = (float)0.0f;
+		m_metrics[Metric::ApproximateFrameRate] = (float)0.0f;
+		m_metrics[Metric::TimePerFrame] = Time();
+		m_metrics[Metric::ApproximateTimePerFrame] = Time();
+		m_metrics[Metric::BatchCount] = (unsigned int)0;
+		m_metrics[Metric::VSyncEnabled] = (bool)true;
+	}
+
 	void Metrics::onUpdate(Time dt)
 	{
 		m_lastUpdatedFrameRate += dt;
@@ -30,15 +51,5 @@ namespace Orbital
 		}
 
 		m_timeIndex += 1;
-	}
-
-	Metrics::Metrics()
-		: m_timePerFrameContainer(10)
-	{
-		m_metrics[Metric::FrameRate] = (float)0.0f;
-		m_metrics[Metric::ApproximateFrameRate] = (float)0.0f;
-		m_metrics[Metric::TimePerFrame] = Time();
-		m_metrics[Metric::ApproximateTimePerFrame] = Time();
-		m_metrics[Metric::BatchCount] = (unsigned int)0;
 	}
 }

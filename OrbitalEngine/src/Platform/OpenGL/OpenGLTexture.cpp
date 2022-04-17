@@ -4,14 +4,14 @@
 namespace Orbital
 {
 	Texture* Texture::Create(
-		const std::string& name, unsigned int width, unsigned int height, unsigned char* data)
+		const std::string& tag, unsigned int width, unsigned int height, unsigned char* data)
 	{
-		return new OpenGLTexture(name, width, height, data);
+		return new OpenGLTexture(tag, width, height, data);
 	}
 
-	Texture* Texture::Create(const std::string& name, TextureData texData)
+	Texture* Texture::Create(const std::string& tag, TextureData texData)
 	{
-		return new OpenGLTexture(name, texData.width, texData.height, texData.data, texData.internalFormat, texData.format);
+		return new OpenGLTexture(tag, texData.width, texData.height, texData.data, texData.internalFormat, texData.format);
 	}
 
 	TextureData Texture::Load(const std::string& filename)
@@ -25,9 +25,9 @@ namespace Orbital
 	}
 
 	OpenGLTexture::OpenGLTexture(
-		const std::string& name, unsigned int width, unsigned int height,
+		const std::string& tag, unsigned int width, unsigned int height,
 		unsigned char* data, unsigned int internalFormat, unsigned int format)
-		: Texture(name, width, height)
+		: Texture(tag, width, height)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glad_glGenTextures(1, &m_rendererId);

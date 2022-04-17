@@ -10,7 +10,6 @@ EditorApplication::EditorApplication() : Application()
 	m_cameraController = CreateScope<CameraController>(m_scene->getCamera());
 }
 
-
 EditorApplication::~EditorApplication()
 {
 	ImGui_ImplOpenGL3_Shutdown();
@@ -39,11 +38,11 @@ void EditorApplication::onStart()
 			float positionY = (float)j / size_y * 2;
 			float rotation = (float)j / size_x * 2 * 180.0f;
 
-			t.Position += Vec3(positionX, positionY, 0.0f);
-			t.Rotation = Vec3(rotation, rotation, rotation);
+			t.Position() += Vec3(positionX, positionY, 0.0f);
+			t.Rotation() = Vec3(rotation, rotation, rotation);
 
 			entity.add<Components::Transform>(t);
-			entity.add<Components::MeshRenderer>(MeshManager::Get("Cube"), false, true);
+			entity.add<Components::MeshRenderer>("Cube");
 		}
 	}
 
@@ -58,7 +57,7 @@ void EditorApplication::onStart()
 	};
 
 	entity.add<Components::Transform>(t);
-	entity.add<Components::MeshRenderer>(MeshManager::Get("Quad"), false, true);
+	entity.add<Components::MeshRenderer>("Quad");
 
 	auto sun = m_scene->createEntity("Sun");
 	sun.add<Components::DirectionalLight>();
@@ -135,54 +134,17 @@ void EditorApplication::onUpdate(Time dt)
 	m_cameraController->onUpdate(dt);
 
 	TextureManager::Bind("Damier");
-	const auto& shader = ShaderManager::GetShader("Base");
+	auto shader = ShaderManager::Get("Base").lock();
+
 	shader->bind();
-	shader->setUniform1i("u_TexId", 0);
-	shader->setUniformMat4f("u_VPMatrix", m_scene->getCamera()->getVPMatrix());
+	shader->setUniform1f("u_Material.Ambient", 0.5f);
+	shader->setUniform1i("u_Material.DiffuseMap", 0);
+	shader->setUniform3f("u_Material.DiffuseTint", 1.0f, 1.0f, 1.0f);
+	shader->setUniform1i("u_Material.SpecularMap", 0);
+	shader->setUniform3f("u_Material.SpecularTint", 1.0f, 1.0f, 1.0f);
+	shader->setUniform1f("u_Material.Shininess", 32.0f);
 
-	// Setting up lights, to do in beginScene()
-	{
-		auto view = m_scene->getRegistry()->view<Components::DirectionalLight>();
-		unsigned int i = 0;
-		shader->setUniform1i("u_nDirectionalLights", view.size());
-
-		for (auto entity : view)
-		{
-			auto& light = view.get<Components::DirectionalLight>(entity);
-			light.bind(shader, i);
-			i++;
-		}
-	}
-
-	{
-		auto view = m_scene->getRegistry()->view<Components::PointLight>();
-		unsigned int i = 0;
-		shader->setUniform1i("u_nPointLights", view.size());
-
-		for (auto entity : view)
-		{
-			auto& light = view.get<Components::PointLight>(entity);
-
-			light.bind(shader, i);
-			i++;
-		}
-	}
-
-	{
-		auto view = m_scene->getRegistry()->view<Components::SpotLight>();
-		unsigned int i = 0;
-		shader->setUniform1i("u_nSpotLights", view.size());
-
-		for (auto entity : view)
-		{
-			auto& light = view.get<Components::SpotLight>(entity);
-
-			light.bind(shader, i);
-			i++;
-		}
-	}
-
-	shader->setUniform3f("u_ViewPosition", m_scene->getCamera()->getPosition());
+	m_scene->beginScene();
 
 	{
 		auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer>();
@@ -195,6 +157,7 @@ void EditorApplication::onUpdate(Time dt)
 				BatchManager::RegisterMesh(meshRenderer, transform);
 		}
 	}
+
 	BatchManager::RenderBatches();
 
 	Renderer::Get()->displayFrame();

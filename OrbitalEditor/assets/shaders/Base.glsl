@@ -79,7 +79,16 @@ struct LightResult
 	vec3 Specular;
 };
 
-uniform sampler2D u_TexId;
+struct Material
+{
+	float Ambient;
+	sampler2D DiffuseMap;
+	vec3 DiffuseTint;
+	sampler2D SpecularMap;
+	vec3 SpecularTint;
+	float Shininess;
+};
+
 uniform vec3 u_ViewPosition;
 uniform DirectionalLight u_DirectionalLights[N_DIR_LIGHTS];
 uniform PointLight u_PointLights[N_POINT_LIGHTS];
@@ -87,22 +96,32 @@ uniform SpotLight u_SpotLights[N_SPOT_LIGHTS];
 uniform int u_nDirectionalLights;
 uniform int u_nPointLights;
 uniform int u_nSpotLights;
+uniform Material u_Material;
 
 LightResult CalculateDirectionalLight(DirectionalLight light, vec3 viewDirection)
 {
 	LightResult result;
-    vec3 direction = normalize(- light.Direction);
 	
 	// Ambient
-	result.Ambient = light.Ambient * vec3(texture(u_TexId, v_TexCoords)); // Add material response here
+	result.Ambient 
+		= light.Ambient
+		* u_Material.DiffuseTint
+		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
+
 	// Diffuse
-	result.Diffuse = light.Diffuse * max(dot(v_Normal, direction), 0.0) * vec3(texture(u_TexId, v_TexCoords)); // Add material response here;
+	result.Diffuse 
+		= light.Diffuse 
+		* u_Material.DiffuseTint
+		* max(dot(v_Normal, -light.Direction), 0.0)
+		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
+
 	// Specular
-	vec3 reflectionDirection = reflect(- direction, v_Normal);
+	vec3 reflectionDirection = reflect(light.Direction, v_Normal);
 	result.Specular
 		= light.Specular
-		* pow(max(dot(viewDirection, reflectionDirection), 0.0), 32.0); // Replace 2.0 by the material shininess here
-		// Multiply by the material response here
+		* u_Material.SpecularTint
+		* pow(max(dot(viewDirection, reflectionDirection), 0.0), u_Material.Shininess)
+		* vec3(texture(u_Material.SpecularMap, v_TexCoords));
 
     return result;
 }
@@ -114,15 +133,25 @@ LightResult CalculatePointLight(PointLight light, vec3 viewDirection)
     vec3 direction = normalize(directionNonNormalized);
 
 	// Ambient
-	result.Ambient = light.Ambient * vec3(texture(u_TexId, v_TexCoords)); // Add material response here
+	result.Ambient
+		= light.Ambient
+		* u_Material.DiffuseTint
+		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
+
     // Diffuse
-    result.Diffuse = light.Diffuse * max(dot(v_Normal, direction), 0.0) * vec3(texture(u_TexId, v_TexCoords)); // Add material response here;
+    result.Diffuse
+		= light.Diffuse
+		* u_Material.DiffuseTint
+		* max(dot(v_Normal, direction), 0.0)
+		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
+
     // Specular
-	vec3 reflectionDirection = reflect(- direction, v_Normal);
+	vec3 reflectionDirection = reflect(- light.Position, v_Normal);
 	result.Specular
 		= light.Specular
-		* pow(max(dot(viewDirection, reflectionDirection), 0.0), 32.0); // Replace 2.0 by the material shininess here
-		// Multiply by the material response here
+		* u_Material.SpecularTint
+		* pow(max(dot(viewDirection, reflectionDirection), 0.0), u_Material.Shininess)
+		* vec3(texture(u_Material.SpecularMap, v_TexCoords));
 
     // Attenuation
     float dist = length(directionNonNormalized);
@@ -142,15 +171,25 @@ LightResult CalculateSpotLight(SpotLight light, vec3 viewDirection)
     vec3 direction = normalize(directionNonNormalized);
 
 	// Ambient
-	result.Ambient = light.Ambient * vec3(texture(u_TexId, v_TexCoords)); // Add material response here
+	result.Ambient
+		= light.Ambient
+		* u_Material.DiffuseTint
+		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
+
     // Diffuse
-    result.Diffuse = light.Diffuse * max(dot(v_Normal, direction), 0.0) * vec3(texture(u_TexId, v_TexCoords)); // Add material response here;
+    result.Diffuse
+		= light.Diffuse
+		* u_Material.DiffuseTint
+		* max(dot(v_Normal, direction), 0.0)
+		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
+
     // Specular
-	vec3 reflectionDirection = reflect(- direction, v_Normal);
+	vec3 reflectionDirection = reflect(- light.Position, v_Normal);
 	result.Specular
 		= light.Specular
-		* pow(max(dot(viewDirection, reflectionDirection), 0.0), 32.0); // Replace 2.0 by the material shininess here
-		// Multiply by the material response here
+		* u_Material.SpecularTint
+		* pow(max(dot(viewDirection, reflectionDirection), 0.0), u_Material.Shininess)
+		* vec3(texture(u_Material.SpecularMap, v_TexCoords));
 
     // Attenuation
     float dist = length(directionNonNormalized);

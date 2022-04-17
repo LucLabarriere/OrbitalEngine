@@ -2,10 +2,10 @@
 
 namespace Orbital
 {
-	Shader* Shader::Create(unsigned int shaderId, const std::string& name, const std::string& filepath)
+	Shader* Shader::Create(const std::string& tag, const std::string& filepath)
 	{
-		Logger::Debug("OpenGLShader: Creating shader: {}", name);
-		return new OpenGLShader(shaderId, name, filepath);
+		Logger::Debug("OpenGLShader: Creating shader: {}", tag);
+		return new OpenGLShader(tag, filepath);
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -78,8 +78,8 @@ namespace Orbital
 		glad_glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
 	}
 
-	OpenGLShader::OpenGLShader(unsigned int shaderId, const std::string& name, const std::string& filepath)
-		: Shader(shaderId, name, filepath)
+	OpenGLShader::OpenGLShader(const std::string& tag, const std::string& filepath)
+		: Shader(tag, filepath)
 	{
 		Sources sources = parseSourceCode(m_filepath);
 		m_content = "#Vertex Shader\n" + sources.vs + "\n#Fragment Shader\n" + sources.fs;
@@ -92,7 +92,7 @@ namespace Orbital
 		int location = glad_glGetUniformLocation(m_rendererId, name.c_str());
 
 		if (location == -1)
-			Logger::Error("OpenGLShader: In shader '{}' Uniform '{}' doesn't exist", m_name, name);
+			Logger::Error("OpenGLShader: In shader '{}' Uniform '{}' doesn't exist", m_tag, name);
 
 		return location;
 	}
@@ -133,7 +133,7 @@ namespace Orbital
 			glad_glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
 			glad_glDeleteShader(shader);
 
-			Logger::Error("OpenGLShader: Error in shader '{}' ({}) : {}", m_name, typeName, errorLog);
+			Logger::Error("OpenGLShader: Error in shader '{}' ({}) : {}", m_tag, typeName, errorLog);
 			return 0;
 		}
 		

@@ -28,7 +28,7 @@ namespace Orbital
 
 	void OpenGLFrameBuffer::renderFrame()
 	{
-		const auto& shader = ShaderManager::GetShader("PostProcess");
+		auto shader = ShaderManager::Get("PostProcess").lock();
 		shader->bind();
 		glad_glDisable(GL_DEPTH_TEST);
 		glad_glActiveTexture(GL_TEXTURE0);
@@ -80,8 +80,8 @@ namespace Orbital
 		glad_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		const auto& screenMesh = MeshManager::Get("Quad");
-		const auto& vertices = screenMesh->getVertices();
-		const auto& indices = screenMesh->getIndices();
+		const auto& vertices = screenMesh.lock()->getVertices();
+		const auto& indices = screenMesh.lock()->getIndices();
 		m_batch = CreateRef<Batch>(RenderMode::STATIC_NOT_BATCHED, vertices.getCount(), indices.getCount());
 		//m_batch->addMesh(screenMesh, m_screenTransform);
 		m_batch->allocateMemory();

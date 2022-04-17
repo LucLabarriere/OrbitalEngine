@@ -5,36 +5,16 @@
 
 namespace Orbital
 {
-	class ShaderManager
+	class ShaderManager : public AssetManager<Shader>
 	{
 	public:
-		inline static void Initialize()
-		{
-			s_instance = new ShaderManager();
-		}
-
-		inline static void Terminate()
-		{
-			delete s_instance;
-		}
-
-		inline static ShaderManager* GetInstance() { return s_instance; }
-
-		inline static const Ref<Shader>& GetShader(size_t id) { return s_instance->getShader(id); }
-		inline static const Ref<Shader>& GetShader(const std::string& shaderName) { return s_instance->getShader(shaderName); };
-
-		std::vector<Ref<Shader>>::iterator begin() { return m_shaders.begin(); }
-		std::vector<Ref<Shader>>::iterator end() { return m_shaders.end(); }
+		static void Initialize() { s_instance = new ShaderManager(); }
 
 	private:
 		ShaderManager();
-		Ref<Shader>& load(const std::string& shaderName, const std::string& shaderPath);
+		WeakRef<Shader> load(const std::string& tag, const std::string& shaderPath);
 
-		const Ref<Shader>& getShader(size_t id) const;
-		const Ref<Shader>& getShader(const std::string& shaderName) const;
-		
-	private:
-		inline static ShaderManager* s_instance = nullptr;
-		std::vector<Ref<Shader>> m_shaders;
+		const WeakRef<Shader> get(size_t id) const;
+		const WeakRef<Shader> get(const std::string& tag) const;
 	};
 }

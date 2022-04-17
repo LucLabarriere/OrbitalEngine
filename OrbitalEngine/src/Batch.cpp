@@ -87,8 +87,9 @@ namespace Orbital
 		addMesh(MeshManager::Get(meshTag), transform);
 	}
 
-	void Batch::addMesh(const Ref<Mesh>& mesh, const Components::Transform& transform)
+	void Batch::addMesh(const WeakRef<Mesh>& meshWeak, const Components::Transform& transform)
 	{
+		auto mesh = meshWeak.lock();
 		const auto& vertices = mesh->getVertices();
 		const auto& indices = mesh->getIndices();
 		const std::string& tag = mesh->getTag();
@@ -108,16 +109,16 @@ namespace Orbital
 
 		m_currentIndex += indices.getCount();
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, transform.Position);
-		model = glm::rotate(model, glm::radians(transform.Rotation[0]), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(transform.Rotation[1]), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(transform.Rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, transform.Scale);
+		model = glm::translate(model, transform.Position());
+		model = glm::rotate(model, glm::radians(transform.Rotation()[0]), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(transform.Rotation()[1]), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(transform.Rotation()[2]), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, transform.Scale());
 
 		glm::mat4 rotation(0.0f);
-		rotation = glm::rotate(rotation, glm::radians(transform.Rotation[0]), glm::vec3(1.0f, 0.0f, 0.0f));
-		rotation = glm::rotate(rotation, glm::radians(transform.Rotation[1]), glm::vec3(0.0f, 1.0f, 0.0f));
-		rotation = glm::rotate(rotation, glm::radians(transform.Rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
+		rotation = glm::rotate(rotation, glm::radians(transform.Rotation()[0]), glm::vec3(1.0f, 0.0f, 0.0f));
+		rotation = glm::rotate(rotation, glm::radians(transform.Rotation()[1]), glm::vec3(0.0f, 1.0f, 0.0f));
+		rotation = glm::rotate(rotation, glm::radians(transform.Rotation()[2]), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		for (size_t i = 0; i < vertices.getCount(); i++)
 		{

@@ -15,10 +15,10 @@ namespace Orbital
 	{
 		switch (severity)
 		{
-			case GL_DEBUG_SEVERITY_HIGH:         Logger::Error("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
-			case GL_DEBUG_SEVERITY_MEDIUM:       Logger::Error("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
-			case GL_DEBUG_SEVERITY_LOW:          Logger::Warn("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
-			case GL_DEBUG_SEVERITY_NOTIFICATION: Logger::Debug("OpenGL: id:{}, type:{} -> {}", id, type, message); return;
+			case GL_DEBUG_SEVERITY_HIGH:         Logger::Error("OpenGL: id:{}, type:{} \n-> {}", id, type, message); return;
+			case GL_DEBUG_SEVERITY_MEDIUM:       Logger::Error("OpenGL: id:{}, type:{} \n-> {}", id, type, message); return;
+			case GL_DEBUG_SEVERITY_LOW:          Logger::Warn("OpenGL: id:{}, type:{} \n-> {}", id, type, message); return;
+			case GL_DEBUG_SEVERITY_NOTIFICATION: Logger::Debug("OpenGL: id:{}, type:{} \n-> {}", id, type, message); return;
 		}
 	}
 
@@ -28,7 +28,7 @@ namespace Orbital
 
 		if (error_code != GL_NO_ERROR)
 		{
-			Logger::Error("GLAD: ERROR %d in %s\n", error_code, name);
+			Logger::Error("GLAD: ERROR {} in {}\n", error_code, name);
 		}
 	}
 
@@ -38,7 +38,7 @@ namespace Orbital
 
 		if (error_code != GL_NO_ERROR)
 		{
-			Logger::Error("GLAD: ERROR %d in %s\n", error_code, name);
+			Logger::Error("GLAD: ERROR {} in {}\n", error_code, name);
 		}
 	}
 

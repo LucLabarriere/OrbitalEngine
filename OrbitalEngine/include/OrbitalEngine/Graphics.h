@@ -12,6 +12,8 @@
 #include "OrbitalEngine/Graphics/ShaderManager.h"
 #include "OrbitalEngine/Graphics/Texture.h"
 #include "OrbitalEngine/Graphics/TextureManager.h"
+#include "OrbitalEngine/Graphics/Material.h"
+#include "OrbitalEngine/Graphics/MaterialManager.h"
 #include "OrbitalEngine/Graphics/Batch.h"
 #include "OrbitalEngine/Graphics/BatchManager.h"
 

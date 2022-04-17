@@ -32,7 +32,7 @@ namespace Orbital
 		void flush();
 
 		void addMesh(const std::string& meshTag, const Components::Transform& transform);
-		void addMesh(const Ref<Mesh>& mesh, const Components::Transform& transform);
+		void addMesh(const WeakRef<Mesh>& mesh, const Components::Transform& transform);
 		
 		size_t getVertexContainerCount() const;
 		size_t getVertexContainerSize() const;

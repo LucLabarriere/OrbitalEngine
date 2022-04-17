@@ -7,19 +7,18 @@ namespace Orbital
 {
 	class MeshManager;
 
-	class Mesh
+	class Mesh : public Asset
 	{
 	public:
-		const std::string& getTag() const { return m_tag;  }
 		const BasicVertexContainer& getVertices() const { return m_vertices; }
 		const IndexContainer& getIndices() const { return m_indices; }
 
 	private:
 		Mesh(const std::string& tag, const BasicVertexContainer& vertices,
 			const IndexContainer& indices)
-			: m_tag(tag), m_vertices(vertices), m_indices(indices) { }
+			: Asset(tag), m_vertices(vertices), m_indices(indices) { }
 
-		static Mesh* Quad(const std::string& tag = "Quad")
+		static Ref<Mesh> Quad(const std::string& tag = "Quad")
 		{
 			BasicVertexContainer vertices(
 				BasicVertex({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f }),
@@ -30,10 +29,10 @@ namespace Orbital
 
 			IndexContainer indices({ 0, 1, 2, 1, 2, 3 });
 
-			return new Mesh(tag, vertices, indices);
+			return Ref<Mesh>(new Mesh(tag, vertices, indices));
 		}
 
-		static Mesh* Cube(const std::string& tag = "Cube")
+		static Ref<Mesh> Cube(const std::string& tag = "Cube")
 		{
 			BasicVertexContainer vertices(
 				// Same X
@@ -79,13 +78,12 @@ namespace Orbital
 				20, 21, 22, 21, 22, 23
 			});
 
-			return new Mesh(tag, vertices, indices);
+			return Ref<Mesh>(new Mesh(tag, vertices, indices));
 		}
 
 	private:
 		friend MeshManager;
 
-		std::string m_tag;
 		BasicVertexContainer m_vertices;
 		IndexContainer m_indices;
 	};

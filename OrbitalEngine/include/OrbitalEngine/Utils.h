@@ -7,3 +7,5 @@
 #include "OrbitalEngine/Utils/InputCodes.h"
 #include "OrbitalEngine/Utils/Settings.h"
 #include "OrbitalEngine/Utils/Metrics.h"
+#include "OrbitalEngine/Utils/Asset.h"
+#include "OrbitalEngine/Utils/AssetManager.h"

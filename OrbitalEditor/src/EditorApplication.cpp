@@ -136,16 +136,7 @@ void EditorApplication::onUpdate(Time dt)
 	TextureManager::Bind("Damier");
 	auto shader = ShaderManager::Get("Base").lock();
 
-	shader->bind();
-	shader->setUniform1f("u_Material.Ambient", 0.5f);
-	shader->setUniform1i("u_Material.DiffuseMap", 0);
-	shader->setUniform3f("u_Material.DiffuseTint", 1.0f, 1.0f, 1.0f);
-	shader->setUniform1i("u_Material.SpecularMap", 0);
-	shader->setUniform3f("u_Material.SpecularTint", 1.0f, 1.0f, 1.0f);
-	shader->setUniform1f("u_Material.Shininess", 32.0f);
-
 	m_scene->beginScene();
-
 	{
 		auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer>();
 		for (auto entity : view)
@@ -154,11 +145,15 @@ void EditorApplication::onUpdate(Time dt)
 			auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
 
 			if (!meshRenderer.Hidden)
-				BatchManager::RegisterMesh(meshRenderer, transform);
+			{
+				Renderer::RegisterMesh(meshRenderer, transform);
+				//BatchManager::RegisterMesh(meshRenderer, transform);
+			}
 		}
 	}
 
-	BatchManager::RenderBatches();
+	Renderer::RenderBatches();
+	//BatchManager::RenderBatches();
 
 	Renderer::Get()->displayFrame();
 

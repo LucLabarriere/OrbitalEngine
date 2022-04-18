@@ -3,6 +3,7 @@
 namespace Orbital
 {
 	class Batch;
+	class DynamicBatch;
 
 	class VertexArray
 	{
@@ -18,6 +19,7 @@ namespace Orbital
 
 	protected:
 			friend Batch;
+			friend DynamicBatch;
 
 			unsigned int m_rendererId;
 	};

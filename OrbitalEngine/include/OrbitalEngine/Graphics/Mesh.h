@@ -14,12 +14,13 @@ namespace Orbital
 		const IndexContainer& getIndices() const { return m_indices; }
 
 	private:
-		Mesh(const std::string& tag, const BasicVertexContainer& vertices,
-			const IndexContainer& indices)
-			: Asset(tag), m_vertices(vertices), m_indices(indices) { }
+		Mesh(const std::string& tag, const BasicVertexContainer& vertices, const IndexContainer& indices)
+			: Asset(s_id, tag), m_vertices(vertices), m_indices(indices) { s_id += 1; }
 
 		static Ref<Mesh> Quad(const std::string& tag = "Quad")
 		{
+			BasicVertex vertex({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f });
+
 			BasicVertexContainer vertices(
 				BasicVertex({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f }),
 				BasicVertex({  0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f }),
@@ -81,10 +82,25 @@ namespace Orbital
 			return Ref<Mesh>(new Mesh(tag, vertices, indices));
 		}
 
+		static Ref<Mesh> Triangle(const std::string& tag = "Triangle")
+		{
+			BasicVertexContainer vertices(
+				BasicVertex({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f }),
+				BasicVertex({ 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f }),
+				BasicVertex({ -0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 1.0f })
+			);
+
+			IndexContainer indices({ 0, 1, 2 });
+
+			return Ref<Mesh>(new Mesh(tag, vertices, indices));
+		}
+
 	private:
 		friend MeshManager;
 
 		BasicVertexContainer m_vertices;
 		IndexContainer m_indices;
+
+		static inline size_t s_id = 0;
 	};
 }

@@ -14,6 +14,7 @@ namespace Orbital
 
 		virtual void allocateMemory(const void* data, size_t size) const override;
 		virtual void submitData(const void* data, size_t size) const override;
+		virtual void submitSubData(const void* data, size_t offset, size_t size) const override;
 		virtual void setAttribute(size_t index, size_t count, unsigned int type,
 			unsigned int normalized, size_t size, const void* pointer) const override;
 

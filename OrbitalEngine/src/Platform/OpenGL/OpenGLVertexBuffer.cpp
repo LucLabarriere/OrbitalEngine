@@ -40,6 +40,11 @@ namespace Orbital
 		glad_glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 
+	void OpenGLVertexBuffer::submitSubData(const void* data, size_t offset, size_t size) const
+	{
+		glad_glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+	}
+
 	void OpenGLVertexBuffer::setAttribute(size_t index, size_t count, unsigned int type,
 		unsigned int normalized, size_t size, const void* pointer) const
 	{

@@ -3,6 +3,7 @@
 namespace Orbital
 {
 	class Batch;
+	class DynamicBatch;
 
 	class IndexBuffer
 	{
@@ -22,6 +23,7 @@ namespace Orbital
 
 	protected:
 		friend Batch;
+		friend DynamicBatch;
 		
 		unsigned int m_rendererId;
 		unsigned int m_drawMode;

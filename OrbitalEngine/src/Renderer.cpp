@@ -36,6 +36,7 @@ namespace Orbital
 
 	Renderer::Renderer()
 		: m_frameBuffer(FrameBuffer::Create())
+		, m_dynamicBatchManager(new DynamicBatchManager)
 	{
 		RenderCommands::Initialize();
 	}
@@ -43,5 +44,20 @@ namespace Orbital
 	void Renderer::onWindowResized()
 	{
 		m_frameBuffer.reset(FrameBuffer::Create());
+	}
+
+	void Renderer::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
+	{
+		m_dynamicBatchManager->registerMesh(mr, t);
+	}
+
+	void Renderer::deleteMesh(Components::MeshRenderer& mr)
+	{
+		m_dynamicBatchManager->deleteMesh(mr);
+	}
+
+	void Renderer::renderBatches()
+	{
+		m_dynamicBatchManager->renderBatches();
 	}
 }

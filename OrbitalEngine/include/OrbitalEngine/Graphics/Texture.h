@@ -32,9 +32,9 @@ namespace Orbital
 
 	protected:
 		Texture(const std::string& tag, unsigned int width, unsigned int height)
-			: Asset(tag), m_rendererId(0), m_width(width), m_height(height)
+			: Asset(s_id,  tag), m_rendererId(0), m_width(width), m_height(height)
 		{
-
+			s_id += 1;
 		}
 		static Texture* Create(
 			const std::string& tag, unsigned int width, unsigned int height, unsigned char* data);
@@ -52,5 +52,7 @@ namespace Orbital
 		unsigned int m_wrap_t;
 		unsigned int m_minFilter;
 		unsigned int m_maxFilter;
+
+		static inline size_t s_id = 0;
 	};
 }

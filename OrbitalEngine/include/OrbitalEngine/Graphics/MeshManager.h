@@ -24,6 +24,7 @@ namespace Orbital
 			s_managerName = "MeshManager";
 			m_assets.push_back(Mesh::Quad());
 			m_assets.push_back(Mesh::Cube());
+			m_assets.push_back(Mesh::Triangle());
 		}
 
 		std::vector<const char*> getAvailableMeshes()

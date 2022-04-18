@@ -28,7 +28,7 @@ namespace
 
 	protected:
 		Shader(const std::string& name, const std::string& filepath)
-			: Asset(name), m_rendererId(0), m_filepath(filepath) { };
+			: Asset(s_id, name), m_rendererId(0), m_filepath(filepath) { s_id += 1; }
 		static Shader* Create(const std::string& name, const std::string& filepath);
 
 	protected:
@@ -37,5 +37,7 @@ namespace
 		unsigned int m_rendererId;
 		std::string m_filepath;
 		std::string m_content = "";
+
+		static inline size_t s_id = 0;
 	};
 }

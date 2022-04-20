@@ -29,14 +29,15 @@ void EditorApplication::onStart()
 			auto entity = m_scene->createEntity(tag);
 
 			Components::Transform t = {
-				{ -1.0f, -1.0f, 2.0f },
+				{ -1.0f, -1.0f, 0.3f },
 				{  0.0f,  0.0f, 0.0f },
-				{  0.2f,  0.2f, 0.2f }
+				{  0.05f,  0.05f, 0.05f }
 			};
 
 			float positionX = (float)i / size_x * 2;
 			float positionY = (float)j / size_y * 2;
-			float rotation = (float)j / size_x * 2 * 180.0f;
+			//float rotation = (float)j / size_x * 2 * 180.0f;
+			float rotation = 0;
 
 			t.Position() += Vec3(positionX, positionY, 0.0f);
 			t.Rotation() = Vec3(rotation, rotation, rotation);
@@ -91,6 +92,7 @@ void EditorApplication::onStart()
 	m_hierarchyPanel = CreateRef<HierarchyPanel>(m_scene);
 	m_hierarchyPanel->initialize();
 	m_metricsPanel = CreateScope<MetricsPanel>();
+	m_batchesPanel = CreateScope<BatchesPanel>();
 	m_assetManagerPanel = CreateScope<AssetManagerPanel>();
 	m_fileExplorerPanel = CreateScope<FileExplorerPanel>();
 	Inspector::Initialize(m_scene);
@@ -119,6 +121,7 @@ void EditorApplication::onUpdate(Time dt)
 	m_hierarchyPanel->update();
 	m_hierarchyPanel->render();
 	m_metricsPanel->render();
+	m_batchesPanel->render();
 	m_assetManagerPanel->render();
 	m_fileExplorerPanel->render();
 

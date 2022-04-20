@@ -43,6 +43,7 @@ private:
 	unsigned int m_renderAreaHeight;
 	Ref<HierarchyPanel> m_hierarchyPanel;
 	Scope<MetricsPanel> m_metricsPanel;
+	Scope<BatchesPanel> m_batchesPanel;
 	Scope<AssetManagerPanel> m_assetManagerPanel;
 	Scope<FileExplorerPanel> m_fileExplorerPanel;
 };

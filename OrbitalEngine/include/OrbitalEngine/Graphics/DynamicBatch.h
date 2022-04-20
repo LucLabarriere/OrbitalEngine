@@ -29,6 +29,8 @@ namespace Orbital
 		void render() const;
 		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
 		void deleteMesh(Components::MeshRenderer& mr);
+		const BasicVertexContainer& getVertices() const { return m_vertices; }
+		const std::vector<bool>& getFreeVerticesList() const { return m_freeVertices; }
 
 		std::tuple<int, int> getAvailableSlot(size_t vertexCount, size_t indexCount);
 

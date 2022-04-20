@@ -36,9 +36,6 @@ namespace Orbital
 
 	void DynamicBatch::allocateMemory() const
 	{
-		//const void* vertexData = m_vertices.getData();
-		//const void* indexData = m_indices.getData();
-
 		m_vao->bind();
 		m_vbo->bind();
 		m_vbo->allocateMemory(nullptr, m_vertices.getSize());
@@ -160,12 +157,14 @@ namespace Orbital
 
 		for (size_t i = vertexPointer; i < vertices.getCount() + vertexPointer; i++)
 		{
+			m_vertices[i] = BasicVertex::Empty();
 			m_freeVertices[i] = true;
 			m_modifiedVertices[i] = true;
 		}
 
 		for (size_t i = indexPointer; i < indices.getCount() + indexPointer; i++)
 		{
+			m_indices[i] = 0;
 			m_freeIndices[i] = true;
 			m_modifiedIndices[i] = true;
 		}

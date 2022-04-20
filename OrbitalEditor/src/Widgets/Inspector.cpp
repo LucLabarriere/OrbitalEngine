@@ -73,6 +73,7 @@ void Inspector::renderEntity()
 				ImGui::DragFloat3("Position", &transform->Position()[0], 0.001f);
 				ImGui::DragFloat3("Rotation", &transform->Rotation()[0], 1.0f);
 				ImGui::DragFloat3("Scale", &transform->Scale()[0], 0.01f);
+
 				if (ImGui::Button("X"))
 				{
 					entity.remove<Components::Transform>();
@@ -108,6 +109,7 @@ void Inspector::renderEntity()
 				if (ImGui::Button("X"))
 				{
 					entity.remove<Components::MeshRenderer>();
+					meshRenderer->destroy();
 				}
 			}
 		}

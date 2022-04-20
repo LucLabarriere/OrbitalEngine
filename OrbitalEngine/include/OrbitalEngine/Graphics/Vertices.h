@@ -94,6 +94,7 @@ namespace Orbital
 		static size_t GetSize() { return (Bases::GetSize() + ...); }
 		static unsigned int GetType() { return (Bases::GetType() + ...); }
 		static unsigned int GetNormalized() { return (Bases::GetNormalized() + ...); }
+		static Vertex<Bases...> Empty() { return Vertex<Bases...>(); }
 	};
 
 	template <class ...Vertices>

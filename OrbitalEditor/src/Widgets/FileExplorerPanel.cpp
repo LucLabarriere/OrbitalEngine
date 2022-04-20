@@ -38,8 +38,8 @@ unsigned int FileExplorerPanel::getIconIndex(const std::string& fileName)
 {
 	std::filesystem::path filePath(std::filesystem::path(m_currentDirectory / fileName));
 	std::string extension = filePath.extension().string();
-	if (std::filesystem::is_directory(filePath))
-		extension = "folder";
+	/*if (std::filesystem::is_directory(filePath))
+		extension = "folder";*/
 	
 	if (extension == "folder")
 		return 1;

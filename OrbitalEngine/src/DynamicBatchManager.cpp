@@ -9,7 +9,7 @@ namespace Orbital
 		auto material = MaterialManager::Get(0);
 		for (auto& material2 : *MaterialManager::GetInstance())
 		{
-			m_batches[material2->getTag()] = CreateRef<DynamicBatch>(material, 2000);
+			m_batches[material2->getTag()] = CreateRef<DynamicBatch>(material, 10000);
 			m_batches[material2->getTag()]->allocateMemory();
 		}
 	}

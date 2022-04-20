@@ -27,10 +27,11 @@ namespace Orbital
 		}
 		static void inline Terminate() { delete s_instance; RenderCommands::Terminate(); }
 		static Renderer* Get() { return s_instance; }
+		static WeakRef<DynamicBatchManager> GetBatchManager() { return s_instance->m_dynamicBatchManager; }
 
 		static void Submit(Ref<Batch>& batch);
 		static void RegisterMesh(Components::MeshRenderer& mr, Components::Transform& t) { s_instance->registerMesh(mr, t); }
-		static void DeleteMesh(Components::MeshRenderer& mr, Components::Transform& t) { s_instance->deleteMesh(mr); }
+		static void DeleteMesh(Components::MeshRenderer& mr) { s_instance->deleteMesh(mr); }
 		static void RenderBatches() { s_instance->renderBatches(); }
 
 		static void OnWindowResized();
@@ -51,6 +52,6 @@ namespace Orbital
 	private:
 		static inline Renderer* s_instance = nullptr;
 		Scope<FrameBuffer> m_frameBuffer;
-		Scope<DynamicBatchManager> m_dynamicBatchManager;
+		Ref<DynamicBatchManager> m_dynamicBatchManager;
 	};
 }

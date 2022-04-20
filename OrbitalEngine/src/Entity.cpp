@@ -15,7 +15,7 @@ namespace Orbital
 
 	void Entity::destroy()
 	{
-		auto& hierarchy = this->get<Components::Hierarchy>();
+		auto& hierarchy = get<Components::Hierarchy>();
 		auto& children = hierarchy.getChildren();
 
 		for (int i = children.size() - 1; i >= 0; i--)
@@ -23,6 +23,9 @@ namespace Orbital
 			children[i].destroy();
 		}
 		hierarchy.getParent().get<Components::Hierarchy>().removeChild(*this);
+
+		auto mr = tryGet<Components::MeshRenderer>();
+		if (mr) mr->destroy();
 
 		m_registry->destroy(m_handle);
 	}

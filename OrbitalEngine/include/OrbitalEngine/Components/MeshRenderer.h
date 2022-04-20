@@ -4,6 +4,7 @@
 #include "OrbitalEngine/Graphics/Batch.h"
 #include "OrbitalEngine/Graphics/MaterialManager.h"
 #include "OrbitalEngine/Graphics/MeshManager.h"
+#include "OrbitalEngine/Graphics/Renderer.h"
 
 namespace Orbital
 {
@@ -22,6 +23,8 @@ namespace Orbital
 			int indexPointer = -1;
 
 			MeshRenderer(const std::string& meshTag) : Mesh(MeshManager::Get(meshTag)) { }
+
+			void destroy() { Renderer::DeleteMesh(*this); }
 		};
 	}
 }

@@ -1,163 +1,76 @@
 #include "OrbitalEngine/Graphics/BatchManager.h"
-#include "OrbitalEngine/Graphics/MeshManager.h"
-#include "OrbitalEngine/Graphics/Renderer.h"
-#include "OrbitalEngine/Components/Transform.h"
-#include "OrbitalEngine/Components/MeshRenderer.h"
+#include "OrbitalEngine/Graphics/MaterialManager.h"
+#include "OrbitalEngine/Components.h"
+
 
 namespace Orbital
 {
-	void BatchManager::RegisterMesh(
-		Components::MeshRenderer& meshRenderer, Components::Transform& transform)
+	constexpr size_t batchsize = 2000;
+
+	BatchContainer::BatchContainer(const WeakRef<Material>& material)
 	{
-		if (meshRenderer.StaticDraw && meshRenderer.BatchedDraw)
-			RegisterStaticBatchedMesh(meshRenderer, transform);
-		else if (meshRenderer.StaticDraw && !meshRenderer.BatchedDraw)
-			RegisterStaticMesh(meshRenderer, transform);
-		else if (!meshRenderer.StaticDraw && !meshRenderer.BatchedDraw)
-			RegisterDynamicMesh(meshRenderer, transform);
-		else
-			RegisterDynamicBatchedMesh(meshRenderer, transform);
+		m_batches.push_back(CreateRef<Batch>(material, batchsize));
+		m_batches[0]->allocateMemory();
 	}
 
-	void BatchManager::RegisterStaticMesh(
-		Components::MeshRenderer& meshRenderer,
-		const Components::Transform& transform)
+	void BatchContainer::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
-		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::STATIC_NOT_BATCHED)
+		for (auto& batch : m_batches)
 		{
-			const auto& vertices = meshRenderer.Mesh.lock()->getVertices();
-			const auto& indices = meshRenderer.Mesh.lock()->getIndices();
+			bool value = batch->isFull();
 
-			size_t index = s_static.size();
-			s_static.push_back(CreateRef<Batch>(RenderMode::STATIC_BATCHED, vertices.getCount(), indices.getCount()));
-			meshRenderer.Batch = s_static[index];
-			meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
-			meshRenderer.Batch->allocateMemory();
-		}
-
-		meshRenderer.Batch->requestDraw();
-	}
-
-	void BatchManager::RegisterStaticBatchedMesh(
-		Components::MeshRenderer& meshRenderer,
-		const Components::Transform& transform)
-	{
-		// TODO: if transform modified, update vertices
-		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::STATIC_BATCHED)
-		{
-			const auto& vertices = meshRenderer.Mesh.lock()->getVertices();
-			const auto& indices = meshRenderer.Mesh.lock()->getIndices();
-			for (size_t i = 0; i < s_staticBatched.size(); i++)
+			if (!batch->isFull() && batch->meshFits(mr))
 			{
-				if (s_staticBatched[i]->getAvailableVertexCount() >= vertices.getCount())
-				{
-					meshRenderer.Batch = s_staticBatched[i];
-					break;
-				}
+				batch->registerMesh(mr, t);
+				return;
 			}
-
-			if (!meshRenderer.Batch)
-			{
-				Logger::Trace("BatchManager: Creating static Batch");
-				size_t index = s_staticBatched.size();
-				s_staticBatched.push_back(CreateRef<Batch>(RenderMode::STATIC_BATCHED, s_batchMaxVertexCount, s_batchMaxVertexCount * 3));
-				meshRenderer.Batch = s_staticBatched[index];
-				meshRenderer.Batch->allocateMemory();
-			}
-
-			meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
-			meshRenderer.Batch->submitData();
 		}
-
-		else if (meshRenderer.Batch->isFlushRequested())
-		{
-			meshRenderer.Batch->flush();
-			meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
-			meshRenderer.Batch->submitData();
-		}
-
-		meshRenderer.Batch->requestDraw();
+		auto batch = CreateRef<Batch>(mr.Material, batchsize);
+		m_batches.push_back(batch);
+		batch->allocateMemory();
+		batch->registerMesh(mr, t);
 	}
 
-	void BatchManager::RegisterDynamicMesh(
-		Components::MeshRenderer& meshRenderer,
-		const Components::Transform& transform)
+	void BatchContainer::renderBatches()
 	{
-
-		if (!meshRenderer.Batch || meshRenderer.Batch->getRenderMode() != RenderMode::DYNAMIC_NOT_BATCHED)
+		for (auto& batch : m_batches)
 		{
-			const auto& vertices = meshRenderer.Mesh.lock()->getVertices();
-			const auto& indices = meshRenderer.Mesh.lock()->getIndices();
-
-			size_t index = s_dynamic.size();
-			s_dynamic.push_back(CreateRef<Batch>(RenderMode::DYNAMIC_NOT_BATCHED, vertices.getCount(), indices.getCount()));
-			meshRenderer.Batch = s_dynamic[index];
-			meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
-			meshRenderer.Batch->allocateMemory();
-			meshRenderer.Batch->submitData();
+			batch->bindMaterial();
+			batch->submitData();
+			batch->render();
 		}
-		else
-		{
-			meshRenderer.Batch->flush();
-			meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
-			meshRenderer.Batch->submitData();
-		}
-
-		meshRenderer.Batch->requestDraw();
 	}
 
-	void BatchManager::RegisterDynamicBatchedMesh(
-		Components::MeshRenderer& meshRenderer,
-		const Components::Transform& transform)
+	void BatchContainer::deleteMesh(Components::MeshRenderer& mr)
 	{
-		const auto& vertices = meshRenderer.Mesh.lock()->getVertices();
-		const auto& indices = meshRenderer.Mesh.lock()->getIndices();
-
-		if (s_dynamicBatched->getAvailableVertexCount() < vertices.getCount())
-		{
-			s_dynamicBatched->bind();
-			s_dynamicBatched->submitData();
-			Renderer::Submit(s_dynamicBatched);
-			s_dynamicBatched->flush();
-		}
-
-		meshRenderer.Batch = s_dynamicBatched;
-		meshRenderer.Batch->addMesh(meshRenderer.Mesh, transform);
-		meshRenderer.Batch->requestDraw();
+		for (auto& batch : m_batches)
+			batch->deleteMesh(mr);
 	}
 
-	void BatchManager::RenderBatches()
+	BatchManager::BatchManager()
 	{
-		// Static Not batched
-		for (int i = s_static.size() - 1; i >= 0; i--)
+		auto material = MaterialManager::Get(0);
+		for (auto& material2 : *MaterialManager::GetInstance())
 		{
-			if (s_static[i] == nullptr)
-				s_static.erase(s_static.begin() + i);
-			else if (s_static[i]->isDrawRequested())
-				Renderer::Submit(s_static[i]);
+			m_batchContainers[material2->getTag()] = CreateRef<BatchContainer>(material);
 		}
-
-		// Static Batched
-		for (int i = s_staticBatched.size() - 1; i >= 0; i--)
-		{
-			if (s_staticBatched[i]->isDrawRequested())
-				Renderer::Submit(s_staticBatched[i]);
-		}
-
-		// Dynamic Not Batched
-		for (int i = s_dynamic.size() - 1; i >= 0; i--)
-		{
-			if (s_dynamic[i] == nullptr)
-				s_dynamic.erase(s_dynamic.begin() + i);
-			else if (s_dynamic[i]->isDrawRequested())
-				Renderer::Submit(s_dynamic[i]);
-		}
-
-		// Dynamic Batched
-		s_dynamicBatched->bind();
-		s_dynamicBatched->submitData();
-		Renderer::Submit(s_dynamicBatched);
-		s_dynamicBatched->flush();
 	}
 
+	void BatchManager::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
+	{
+		m_batchContainers[mr.Material.lock()->getTag()]->registerMesh(mr, t);
+	}
+
+	void BatchManager::deleteMesh(Components::MeshRenderer& mr)
+	{
+		m_batchContainers[mr.Material.lock()->getTag()]->deleteMesh(mr);
+	}
+
+	void BatchManager::renderBatches()
+	{
+		for (auto& batch : m_batchContainers)
+		{
+			batch.second->renderBatches();
+		}
+	}
 }

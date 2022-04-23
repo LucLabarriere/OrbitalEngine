@@ -3,7 +3,7 @@
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/RenderCommands.h"
 #include "OrbitalEngine/Graphics/FrameBuffer.h"
-#include "OrbitalEngine/Graphics/DynamicBatchManager.h"
+#include "OrbitalEngine/Graphics/BatchManager.h"
 
 namespace Orbital
 {
@@ -27,9 +27,8 @@ namespace Orbital
 		}
 		static void inline Terminate() { delete s_instance; RenderCommands::Terminate(); }
 		static Renderer* Get() { return s_instance; }
-		static WeakRef<DynamicBatchManager> GetBatchManager() { return s_instance->m_dynamicBatchManager; }
+		static WeakRef<BatchManager> GetBatchManager() { return s_instance->m_BatchManager; }
 
-		static void Submit(Ref<Batch>& batch);
 		static void RegisterMesh(Components::MeshRenderer& mr, Components::Transform& t) { s_instance->registerMesh(mr, t); }
 		static void DeleteMesh(Components::MeshRenderer& mr) { s_instance->deleteMesh(mr); }
 		static void RenderBatches() { s_instance->renderBatches(); }
@@ -52,6 +51,6 @@ namespace Orbital
 	private:
 		static inline Renderer* s_instance = nullptr;
 		Scope<FrameBuffer> m_frameBuffer;
-		Ref<DynamicBatchManager> m_dynamicBatchManager;
+		Ref<BatchManager> m_BatchManager;
 	};
 }

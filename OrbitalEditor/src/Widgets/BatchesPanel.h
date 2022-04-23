@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
+#include "imgui.h"
 
 using namespace Orbital;
 
@@ -20,7 +21,7 @@ public:
 		if (ImGui::Begin("Batches"))
 		{
 			auto bm = Renderer::GetBatchManager().lock();
-			const auto& batches = bm->getBatches();
+			const auto& batches = bm->getBatchContainers();
 			std::vector<const char*> batchNames;
 
 			for (auto& batchEntry : *bm)
@@ -32,28 +33,33 @@ public:
 			ImGuiTabBarFlags tabFlags = ImGuiTabBarFlags_None;
 			if (ImGui::BeginTabBar("Batches tab", tabFlags))
 			{
-				for (auto& batchEntry : *bm)
+				for (auto& container : *bm)
 				{
-					if (ImGui::BeginTabItem(batchEntry.first.c_str()))
+					int j = 0;
+					for (auto& batchEntry : *container.second)
 					{
-						const auto& vertices = batchEntry.second->getVertices();
-						const auto& freeVertices = batchEntry.second->getFreeVerticesList();
-
-						for (size_t i = 0; i < vertices.getCount(); i++)
+						if (ImGui::BeginTabItem((container.first + "_" + std::to_string(j)).c_str()))
 						{
-							std::string text = std::to_string(i);
-							if (!freeVertices[i])
+							const auto& vertices = batchEntry->getVertices();
+							const auto& freeVertices = batchEntry->getFreeVerticesList();
+
+							for (size_t i = 0; i < vertices.getCount(); i++)
 							{
-								text += fmt::format(": p[{: .2e} {: .2e} {: .2e}], c[{: .2e} {: .2e} {: .2e}, {: .2e}], n[{: .2e} {: .2e} {: .2e}], t[{: .1e} {: .1e}]",
-									vertices[i].position[0], vertices[i].position[1], vertices[i].position[2],
-									vertices[i].color[0], vertices[i].color[1], vertices[i].color[2], vertices[i].color[3],
-									vertices[i].normal[0], vertices[i].normal[1], vertices[i].normal[2],
-									vertices[i].texCoords[0], vertices[i].texCoords[1]
-								);
+								std::string text = std::to_string(i);
+								if (!freeVertices[i])
+								{
+									text += fmt::format(": p[{: .2e} {: .2e} {: .2e}], c[{: .2e} {: .2e} {: .2e}, {: .2e}], n[{: .2e} {: .2e} {: .2e}], t[{: .1e} {: .1e}]",
+										vertices[i].position[0], vertices[i].position[1], vertices[i].position[2],
+										vertices[i].color[0], vertices[i].color[1], vertices[i].color[2], vertices[i].color[3],
+										vertices[i].normal[0], vertices[i].normal[1], vertices[i].normal[2],
+										vertices[i].texCoords[0], vertices[i].texCoords[1]
+									);
+								}
+								ImGui::Text(text.c_str());
 							}
-							ImGui::Text(text.c_str());
+							ImGui::EndTabItem();
 						}
-						ImGui::EndTabItem();
+						j += 1;
 					}
 				}
 				ImGui::EndTabBar();

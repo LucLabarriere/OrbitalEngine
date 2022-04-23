@@ -1,6 +1,5 @@
 #pragma once
 
-#include "OrbitalEngine/Graphics/DynamicBatch.h"
 #include "OrbitalEngine/Graphics/Batch.h"
 #include "OrbitalEngine/Graphics/MaterialManager.h"
 #include "OrbitalEngine/Graphics/MeshManager.h"
@@ -18,7 +17,6 @@ namespace Orbital
 			bool BatchedDraw = true;
 			bool Hidden = false;
 			Ref<Batch> Batch = nullptr;
-			Ref<DynamicBatch> DynamicBatch = nullptr;
 			int vertexPointer = -1;
 			int indexPointer = -1;
 

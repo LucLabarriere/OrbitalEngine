@@ -28,12 +28,12 @@ namespace Orbital
 	private:
 		friend MaterialManager;
 
-		WeakRef<Shader> m_shader;
+		Ref<Shader> m_shader;
 
 		float m_ambient = 1.0f;
-		WeakRef<Texture> m_diffuseMap;
+		Ref<Texture> m_diffuseMap;
 		Vec3 m_diffuseTint = { 1.0f, 1.0f, 1.0f };
-		WeakRef<Texture> m_specularMap;
+		Ref<Texture> m_specularMap;
 		Vec3 m_specularTint = { 1.0f, 1.0f, 1.0f };
 		float m_shininess = 32.0f;
 

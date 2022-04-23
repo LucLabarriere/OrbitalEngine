@@ -1,39 +1,40 @@
 #pragma once
 
-#include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/Batch.h"
 
 namespace Orbital
 {
+	class BatchContainer
+	{
+	public:
+		BatchContainer(const WeakRef<Material>& material);
+
+		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
+		void deleteMesh(Components::MeshRenderer& mr);
+		void renderBatches();
+
+		const std::vector<Ref<Batch>>& getBatches() const { return m_batches; }
+		std::vector<Ref<Batch>>::iterator begin() { return m_batches.begin(); }
+		std::vector<Ref<Batch>>::iterator end() { return m_batches.end(); }
+
+	private:
+		std::vector<Ref<Batch>> m_batches;
+	};
+
 	class BatchManager
 	{
 	public:
-		inline static void Initialize()
-		{
-			s_dynamicBatched = CreateRef<Batch>(RenderMode::DYNAMIC_BATCHED, s_batchMaxVertexCount, s_batchMaxVertexCount * 3);
-			s_dynamicBatched->allocateMemory();
-		}
+		BatchManager();
 
-		static void RenderBatches();
-		static void RegisterMesh(
-			Components::MeshRenderer& meshRenderer, Components::Transform& transform);
+		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
+		void deleteMesh(Components::MeshRenderer& mr);
+		void renderBatches();
 
-	private:
-
-		static void RegisterStaticMesh(
-			Components::MeshRenderer& meshRenderer, const Components::Transform& transform);
-		static void RegisterStaticBatchedMesh(
-			Components::MeshRenderer& meshRenderer, const Components::Transform& transform);
-		static void RegisterDynamicMesh(
-			Components::MeshRenderer& meshRenderer, const Components::Transform& transform);
-		static void RegisterDynamicBatchedMesh(
-			Components::MeshRenderer& meshRenderer, const Components::Transform& transform);
+		const std::map<std::string, Ref<BatchContainer>>& getBatchContainers() const { return m_batchContainers; }
+		std::map<std::string, Ref<BatchContainer>>::iterator begin() { return m_batchContainers.begin(); }
+		std::map<std::string, Ref<BatchContainer>>::iterator end() { return m_batchContainers.end(); }
 
 	private:
-		inline static std::vector<Ref<Batch>> s_static;
-		inline static std::vector<Ref<Batch>> s_dynamic;
-		inline static std::vector<Ref<Batch>> s_staticBatched;
-		inline static Ref<Batch> s_dynamicBatched;
-		const inline static size_t s_batchMaxVertexCount = 1000;
+		std::map<std::string, Ref<BatchContainer>> m_batchContainers;
 	};
 }

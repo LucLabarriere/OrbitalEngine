@@ -1,69 +1,58 @@
 #pragma once
-#pragma warning(push)
-#pragma warning(disable : 4661)
 
 #include "OrbitalEngine/Utils.h"
-#include "OrbitalEngine/Graphics/IndexContainer.h"
-#include "OrbitalEngine/Graphics/MeshManager.h"
 #include "OrbitalEngine/Graphics/Vertices.h"
+#include "OrbitalEngine/Graphics/IndexContainer.h"
 
 namespace Orbital
 {
 	class VertexArray;
 	class VertexBuffer;
 	class IndexBuffer;
+	class Material;
 
 	namespace Components
 	{
+		struct MeshRenderer;
 		class Transform;
-		class MeshRenderer;
 	}
 
-	class Batch
+	class Batch : public std::enable_shared_from_this<Batch>
 	{
 	public:
-		Batch(RenderMode renderMode, size_t count, size_t indexCount = 0);
+		Batch(WeakRef<Material>& material, size_t vertexCount, size_t indexCount = 0);
 
 		void bind() const;
+		void bindMaterial() const;
 		void allocateMemory() const;
 		void submitData() const;
-		void requestDraw(bool request = true);
-		void requestFlush(bool request = true);
-		void flush();
+		void render() const;
+		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
+		void deleteMesh(Components::MeshRenderer& mr);
+		bool meshFits(Components::MeshRenderer& mr);
 
-		void addMesh(const std::string& meshTag, const Components::Transform& transform);
-		void addMesh(const WeakRef<Mesh>& mesh, const Components::Transform& transform);
-		
-		size_t getVertexContainerCount() const;
-		size_t getVertexContainerSize() const;
-		size_t getIndexContainerCount() const;
-		size_t getIndexContainerSize() const;
-		size_t getAvailableVertexCount() const;
-		size_t getAvailableIndexCount() const;
-		unsigned int getDrawType() { return m_drawType; }
-		RenderMode getRenderMode() { return m_renderMode; }
-		bool isDrawRequested() const { return m_requestDraw; }
-		bool isFlushRequested() const { return m_requestFlush; }
+		const BasicVertexContainer& getVertices() const { return m_vertices; }
+		const std::vector<bool>& getFreeVerticesList() const { return m_freeVertices; }
+		std::tuple<int, int> getAvailableSlot(size_t vertexCount, size_t indexCount);
+		bool isFull() const { return m_full; }
 
 	private:
-		bool m_requestDraw = false;
-		bool m_requestFlush = false;
-		size_t m_maxVertexContainerCount;
-		size_t m_maxIndexContainerCount;
-		size_t m_maxVertexContainerSize;
-		size_t m_maxIndexContainerSize;
-		unsigned int m_drawType = OE_TRIANGLES;
-		RenderMode m_renderMode;
+		void updateFullStatus();
+
+	private:
+		Ref<VertexArray> m_vao;
+		Ref<VertexBuffer> m_vbo;
+		Ref<IndexBuffer> m_ibo;
+		WeakRef<Material> m_material;
 
 		BasicVertexContainer m_vertices;
 		IndexContainer m_indices;
 		
-		size_t m_currentVertex = 0;
-		size_t m_currentIndex = 0;
-
-		Ref<VertexArray> m_vao;
-		Ref<VertexBuffer> m_vbo;
-		Ref<IndexBuffer> m_ibo;
+		std::vector<bool> m_freeVertices;
+		std::vector<bool> m_modifiedVertices;
+		std::vector<bool> m_freeIndices;
+		std::vector<bool> m_modifiedIndices;
+		bool m_full = false;
+		unsigned int m_renderMode;
 	};
 }
-#pragma warning(pop)

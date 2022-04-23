@@ -3,6 +3,8 @@
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics.h"
 
+#define OE_UNIFORM_LIGHT(STR1, STR2, VAR) (std::string(#STR1"[") + lightIdStr + "]."#STR2).c_str(), VAR
+
 namespace Orbital
 {
 	namespace Components
@@ -16,10 +18,11 @@ namespace Orbital
 
 			void bind(const Ref<Shader>& shader, unsigned int lightId)
 			{
-				shader->setUniform3f(fmt::format("u_DirectionalLights[{}].Direction", lightId).c_str(), Direction);
-				shader->setUniform3f(fmt::format("u_DirectionalLights[{}].Ambient", lightId).c_str(), Ambient);
-				shader->setUniform3f(fmt::format("u_DirectionalLights[{}].Diffuse", lightId).c_str(), Diffuse);
-				shader->setUniform3f(fmt::format("u_DirectionalLights[{}].Specular", lightId).c_str(), Specular);
+				std::string lightIdStr = std::to_string(lightId);
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_DirectionalLights, Direction, Direction));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_DirectionalLights, Ambient, Ambient));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_DirectionalLights, Diffuse, Diffuse));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_DirectionalLights, Specular, Specular));
 			}
 		};
 
@@ -35,13 +38,14 @@ namespace Orbital
 
 			void bind(const Ref<Shader>& shader, unsigned int lightId)
 			{
-				shader->setUniform3f(fmt::format("u_PointLights[{}].Position", lightId).c_str(), *Position);
-				shader->setUniform3f(fmt::format("u_PointLights[{}].Ambient", lightId).c_str(), Ambient);
-				shader->setUniform3f(fmt::format("u_PointLights[{}].Diffuse", lightId).c_str(), Diffuse);
-				shader->setUniform3f(fmt::format("u_PointLights[{}].Specular", lightId).c_str(), Specular);
-				shader->setUniform1f(fmt::format("u_PointLights[{}].Constant", lightId).c_str(), ConstantAttenuation);
-				shader->setUniform1f(fmt::format("u_PointLights[{}].Linear", lightId).c_str(), LinearAttenuation);
-				shader->setUniform1f(fmt::format("u_PointLights[{}].Quadratic", lightId).c_str(), QuadraticAttenuation);
+				std::string lightIdStr = std::to_string(lightId);
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_PointLights, Position, *Position));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_PointLights, Ambient, Ambient));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_PointLights, Diffuse, Diffuse));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_PointLights, Specular, Specular));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, ConstantAttenuation, ConstantAttenuation));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, LinearAttenuation, LinearAttenuation));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, QuadraticAttenuation, QuadraticAttenuation));
 			}
 		};
 
@@ -60,16 +64,17 @@ namespace Orbital
 
 			void bind(const Ref<Shader>& shader, unsigned int lightId)
 			{
-				shader->setUniform3f(fmt::format("u_SpotLights[{}].Position", lightId).c_str(), *Position);
-				shader->setUniform3f(fmt::format("u_SpotLights[{}].Direction", lightId).c_str(), - glm::normalize(Direction));
-				shader->setUniform3f(fmt::format("u_SpotLights[{}].Ambient", lightId).c_str(), Ambient);
-				shader->setUniform3f(fmt::format("u_SpotLights[{}].Diffuse", lightId).c_str(), Diffuse);
-				shader->setUniform3f(fmt::format("u_SpotLights[{}].Specular", lightId).c_str(), Specular);
-				shader->setUniform1f(fmt::format("u_SpotLights[{}].Constant", lightId).c_str(), ConstantAttenuation);
-				shader->setUniform1f(fmt::format("u_SpotLights[{}].Linear", lightId).c_str(), LinearAttenuation);
-				shader->setUniform1f(fmt::format("u_SpotLights[{}].Quadratic", lightId).c_str(), QuadraticAttenuation);
-				shader->setUniform1f(fmt::format("u_SpotLights[{}].CutOff", lightId).c_str(), Cutoff);
-				shader->setUniform1f(fmt::format("u_SpotLights[{}].OuterCutOff", lightId).c_str(), Cutoff - Cutoff * Edge / 100.0f);
+				std::string lightIdStr = std::to_string(lightId);
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_SpotLights, Position,  *Position));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_SpotLights, Direction,  - glm::normalize(Direction)));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_SpotLights, Ambient,  Ambient));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_SpotLights, Diffuse,  Diffuse));
+				shader->setUniform3f(OE_UNIFORM_LIGHT(u_SpotLights, Specular,  Specular));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_SpotLights, Constant,  ConstantAttenuation));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_SpotLights, Linear,  LinearAttenuation));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_SpotLights, Quadratic,  QuadraticAttenuation));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_SpotLights, CutOff,  Cutoff));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_SpotLights, OuterCutOff,  Cutoff - Cutoff * Edge / 100.0f));
 			}
 		};
 	}

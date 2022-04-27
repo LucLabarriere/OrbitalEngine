@@ -19,8 +19,8 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::onStart()
 {
-	unsigned int size_x = 5;
-	unsigned int size_y = 5;
+	unsigned int size_x = 100;
+	unsigned int size_y = 100;
 	for (unsigned int i = 0; i <= size_x; i++)
 	{
 		for (unsigned int j = 0; j <= size_y; j++)
@@ -29,9 +29,9 @@ void EditorApplication::onStart()
 			auto entity = m_scene->createEntity(tag);
 
 			Components::Transform t = {
-				{ -1.0f, -1.0f, 0.3f },
+				{ -1.0f, -1.0f, 0.6f },
 				{  0.0f,  0.0f, 0.0f },
-				{  0.05f,  0.05f, 0.05f }
+				{  0.001f,  0.001f, 0.001f }
 			};
 
 			float positionX = (float)i / size_x * 2;
@@ -46,8 +46,6 @@ void EditorApplication::onStart()
 			entity.add<Components::MeshRenderer>("Cube");
 		}
 	}
-
-	m_scene->getEntity("Cube_1_1").get<Components::Hierarchy>().setParent(m_scene->getEntity("Cube_2_1"));
 
 	auto entity = m_scene->createEntity("Quad");
 
@@ -150,14 +148,11 @@ void EditorApplication::onUpdate(Time dt)
 			if (!meshRenderer.Hidden)
 			{
 				Renderer::RegisterMesh(meshRenderer, transform);
-				//BatchManager::RegisterMesh(meshRenderer, transform);
 			}
 		}
 	}
 
 	Renderer::RenderBatches();
-	//BatchManager::RenderBatches();
-
 	Renderer::Get()->displayFrame();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

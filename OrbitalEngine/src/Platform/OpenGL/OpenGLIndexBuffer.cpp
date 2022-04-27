@@ -38,4 +38,9 @@ namespace Orbital
 	{
 		glad_glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
 	}
+
+	void OpenGLIndexBuffer::submitSubData(const void* data, size_t offset, size_t size) const
+	{
+		glad_glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+	}
 }

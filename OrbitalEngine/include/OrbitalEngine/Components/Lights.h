@@ -43,9 +43,9 @@ namespace Orbital
 				shader->setUniform3f(OE_UNIFORM_LIGHT(u_PointLights, Ambient, Ambient));
 				shader->setUniform3f(OE_UNIFORM_LIGHT(u_PointLights, Diffuse, Diffuse));
 				shader->setUniform3f(OE_UNIFORM_LIGHT(u_PointLights, Specular, Specular));
-				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, ConstantAttenuation, ConstantAttenuation));
-				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, LinearAttenuation, LinearAttenuation));
-				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, QuadraticAttenuation, QuadraticAttenuation));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, Constant, ConstantAttenuation));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, Linear, LinearAttenuation));
+				shader->setUniform1f(OE_UNIFORM_LIGHT(u_PointLights, Quadratic, QuadraticAttenuation));
 			}
 		};
 

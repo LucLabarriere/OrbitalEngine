@@ -13,9 +13,9 @@ namespace Orbital
 		, m_vertices(vertexCount)
 		, m_indices(indexCount == 0 ? int(vertexCount - 2) * 3 : indexCount)
 		, m_freeVertices(m_vertices.getCount(), true)
-		, m_modifiedVertices(m_vertices.getCount(), true)
+		, m_modifiedVertices(m_vertices.getCount(), false)
 		, m_freeIndices(m_indices.getCount(), true)
-		, m_modifiedIndices(m_indices.getCount(), true)
+		, m_modifiedIndices(m_indices.getCount(), false)
 		, m_renderMode(OE_DYNAMIC_DRAW)
 	{
 		m_vao = Ref<VertexArray>(VertexArray::Create());
@@ -57,33 +57,36 @@ namespace Orbital
 		m_ibo->submitData(m_indices.getData(), m_indices.getSize());
 	}
 
-	void Batch::render() const
+	void Batch::render()
 	{
-		size_t stride = 0;
-		size_t offset = 0;
-		bool recording = true;
+		m_vao->bind();
+		m_vbo->bind();
 
-		for (size_t i = 0; i < m_modifiedVertices.size(); i++)
+		for (auto& subData : m_subDataVertices)
 		{
-			if (m_modifiedVertices[i])
-			{
-				if (!recording)
-				{
-					recording = true;
-					offset = i;
-				}
-				else
-				{
-					stride += 1;
-				}
-			}
-			else if (recording)
-			{
-				recording = false;
-				m_vbo->submitSubData(m_vertices.getData(), offset * sizeof(BasicVertex), stride * sizeof(BasicVertex));
-				stride = 0;
-			}
+			size_t stride = (subData.lastIndex - subData.firstIndex + 1);
+			m_vbo->submitSubData(
+				m_vertices.getFirstVertex() + subData.firstIndex,
+				subData.firstIndex * sizeof(BasicVertex),
+				stride * sizeof(BasicVertex)
+			);
 		}
+
+		m_currentSubDataVertices = nullptr;
+		m_subDataVertices.resize(0);
+
+		m_ibo->bind();
+		
+		for (auto& subData : m_subDataIndices)
+		{
+			size_t stride = (subData.lastIndex - subData.firstIndex + 1);
+			m_ibo->submitSubData(
+				m_indices.getFirstIndex() + subData.firstIndex,
+				subData.firstIndex * sizeof(unsigned int),
+				stride * sizeof(unsigned int));
+		}
+		m_currentSubDataIndices = nullptr;
+		m_subDataIndices.resize(0);
 
 		RenderCommands::DrawIndexed(OE_TRIANGLES, m_indices.getSize());
 		Metrics::IncrementBatchCount();
@@ -126,6 +129,16 @@ namespace Orbital
 		rotation = glm::rotate(rotation, glm::radians(t.Rotation()[0]), { 1.0f, 0.0f, 0.0f });
 		rotation = glm::rotate(rotation, glm::radians(t.Rotation()[1]), { 0.0f, 1.0f, 0.0f });
 		rotation = glm::rotate(rotation, glm::radians(t.Rotation()[2]), { 0.0f, 0.0f, 1.0f });
+		
+		if (m_currentSubDataVertices == nullptr || m_currentSubDataVertices->lastIndex + 1 != vertexPointer)
+		{
+			m_subDataVertices.push_back(BufferSubData(vertexPointer, vertexPointer + vertices.getCount() - 1));
+			m_currentSubDataVertices = &m_subDataVertices[m_subDataVertices.size() - 1];
+		}
+		else
+		{
+			m_currentSubDataVertices->lastIndex += vertices.getCount();
+		}
 
 		for (size_t i = 0; i < vertices.getCount(); i++)
 		{
@@ -136,10 +149,20 @@ namespace Orbital
 			m_modifiedVertices[i + vertexPointer] = true;
 		}
 
-		for (size_t i = indexPointer; i < indices.getCount() + indexPointer; i++)
+		if (m_currentSubDataIndices == nullptr || m_currentSubDataIndices->lastIndex  + 1 != indexPointer)
 		{
-			m_indices[i] = vertexPointer + indices[i - indexPointer];
-			m_freeIndices[i] = false;
+			m_subDataIndices.push_back(BufferSubData(indexPointer, indexPointer + indices.getCount() - 1));
+			m_currentSubDataIndices = &m_subDataIndices[m_subDataIndices.size() - 1];
+		}
+		else
+		{
+			m_currentSubDataIndices->lastIndex += indices.getCount();
+		}
+
+		for (size_t i = 0; i < indices.getCount(); i++)
+		{
+			m_indices[i + indexPointer] = vertexPointer + indices[i];
+			m_freeIndices[i + indexPointer] = false;
 			m_modifiedIndices[i + indexPointer] = true;
 		}
 

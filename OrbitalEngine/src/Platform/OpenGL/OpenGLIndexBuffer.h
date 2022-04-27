@@ -14,6 +14,7 @@ namespace Orbital
 
 		virtual void allocateMemory(const void* data, size_t size) const override;
 		virtual void submitData(const void* data, size_t size) const override;
+		virtual void submitSubData(const void* data, size_t offset, size_t size) const override;
 
 	private:
 		OpenGLIndexBuffer(unsigned int drawMode);

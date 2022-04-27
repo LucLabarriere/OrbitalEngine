@@ -18,10 +18,11 @@ void HierarchyPanel::initialize()
 
 void HierarchyPanel::update()
 {
-	m_treeNodes.clear();
-	for (auto& child : *m_sceneChildren)
+	m_treeNodes.resize(m_sceneChildren->size());
+	
+	for (size_t i = 0; i < m_sceneChildren->size(); i++)
 	{
-		m_treeNodes.push_back(TreeNode(child, shared_from_this()));
+		m_treeNodes[i].initialize((*m_sceneChildren)[i], shared_from_this());
 	}
 }
 

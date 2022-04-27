@@ -114,8 +114,12 @@ namespace Orbital
 		size_t getCount() const { return m_vertices.size(); }
 		size_t getSize() const { return m_vertices.size() * Vertex<Vertices...>::GetSize(); }
 		const void* getData() const { return m_vertices.data(); }
+		const Vertex<Vertices...>* getFirstVertex() const { return &m_vertices[0]; }
 		const Vertex<Vertices...>& operator[](size_t i) const { return m_vertices[i]; }
 		Vertex<Vertices...>& operator[](size_t i) { return m_vertices[i]; }
+
+		std::vector<Vertex<Vertices...>>::iterator begin() { return m_vertices.begin(); }
+		std::vector<Vertex<Vertices...>>::iterator end() { return m_vertices.end(); }
 
 	private:
 		std::vector <Vertex<Vertices...>> m_vertices;

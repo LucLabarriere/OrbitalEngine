@@ -17,9 +17,17 @@ namespace Orbital
 		}
 		if (Inputs::IsKeyDown(OE_KEY_W))
 		{
-			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(0.0f, 1.0f, 0.0f));
+			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(0.0f, 0.0f, 1.0f));
 		}
 		if (Inputs::IsKeyDown(OE_KEY_S))
+		{
+			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(0.0f, 0.0f, -1.0f));
+		}
+		if (Inputs::IsKeyDown(OE_KEY_E))
+		{
+			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		if (Inputs::IsKeyDown(OE_KEY_Q))
 		{
 			m_camera->move(m_translationSpeed * dt.seconds() * glm::vec3(0.0f, -1.0f, 0.0f));
 		}

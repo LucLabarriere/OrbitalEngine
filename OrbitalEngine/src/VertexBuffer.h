@@ -4,12 +4,10 @@
 
 namespace Orbital
 {
-	class Batch;
-	class DynamicBatch;
-
 	class VertexBuffer
 	{
 	public:
+		static VertexBuffer* Create(unsigned int drawMode);
 		virtual ~VertexBuffer() {};
 
 		virtual void bind() const = 0;
@@ -24,12 +22,8 @@ namespace Orbital
 	protected:
 		VertexBuffer(unsigned int drawMode)
 			: m_rendererId(0), m_drawMode(drawMode) { }
-		static VertexBuffer* Create(unsigned int drawMode);
 
 	protected:
-		friend DynamicBatch;
-		friend Batch;
-
 		unsigned int m_rendererId;
 		unsigned int m_drawMode;
 	};

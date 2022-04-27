@@ -17,6 +17,12 @@ namespace Orbital
 		class Transform;
 	}
 
+	struct BufferSubData
+	{
+		size_t firstIndex;
+		size_t lastIndex;
+	};
+
 	class Batch : public std::enable_shared_from_this<Batch>
 	{
 	public:
@@ -26,7 +32,7 @@ namespace Orbital
 		void bindMaterial() const;
 		void allocateMemory() const;
 		void submitData() const;
-		void render() const;
+		void render();
 		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
 		void deleteMesh(Components::MeshRenderer& mr);
 		bool meshFits(Components::MeshRenderer& mr);
@@ -52,6 +58,11 @@ namespace Orbital
 		std::vector<bool> m_modifiedVertices;
 		std::vector<bool> m_freeIndices;
 		std::vector<bool> m_modifiedIndices;
+		std::vector<BufferSubData> m_subDataVertices;
+		std::vector<BufferSubData> m_subDataIndices;
+		BufferSubData* m_currentSubDataVertices = nullptr;
+		BufferSubData* m_currentSubDataIndices = nullptr;
+
 		bool m_full = false;
 		unsigned int m_renderMode;
 	};

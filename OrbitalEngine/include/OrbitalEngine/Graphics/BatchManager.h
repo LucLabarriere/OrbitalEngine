@@ -18,6 +18,7 @@ namespace Orbital
 		std::vector<Ref<Batch>>::iterator end() { return m_batches.end(); }
 
 	private:
+		Ref<Material> m_material;
 		std::vector<Ref<Batch>> m_batches;
 	};
 
@@ -29,12 +30,15 @@ namespace Orbital
 		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
 		void deleteMesh(Components::MeshRenderer& mr);
 		void renderBatches();
+		void onUpdate();
+		size_t getCount() const { return m_batchContainers.size(); }
+		const Ref<BatchContainer>& getBatch(size_t id) const { return m_batchContainers[id]; }
 
-		const std::map<std::string, Ref<BatchContainer>>& getBatchContainers() const { return m_batchContainers; }
-		std::map<std::string, Ref<BatchContainer>>::iterator begin() { return m_batchContainers.begin(); }
-		std::map<std::string, Ref<BatchContainer>>::iterator end() { return m_batchContainers.end(); }
+		const std::vector<Ref<BatchContainer>>& getBatchContainers() const { return m_batchContainers; }
+		std::vector<Ref<BatchContainer>>::iterator begin() { return m_batchContainers.begin(); }
+		std::vector<Ref<BatchContainer>>::iterator end() { return m_batchContainers.end(); }
 
 	private:
-		std::map<std::string, Ref<BatchContainer>> m_batchContainers;
+		std::vector<Ref<BatchContainer>> m_batchContainers;
 	};
 }

@@ -2,6 +2,12 @@
 #include "HierarchyPanel.h"
 #include "Inspector.h"
 
+TreeNode::TreeNode()
+	: m_entity(), m_panel(nullptr)
+{
+
+}
+
 TreeNode::TreeNode(const Entity& entity, Ref<HierarchyPanel> panel)
 	: m_entity(entity), m_panel(panel)
 {
@@ -10,6 +16,23 @@ TreeNode::TreeNode(const Entity& entity, Ref<HierarchyPanel> panel)
 	for (auto& child : children)
 	{
 		m_children.push_back(TreeNode(child, m_panel));
+	}
+
+	m_title = m_entity.get<Components::Tag>();
+}
+
+void TreeNode::initialize(const Entity& entity, Ref<HierarchyPanel> panel)
+{
+	m_entity = entity;
+	m_panel = panel;
+
+	auto& hierarchy = m_entity.get<Components::Hierarchy>();
+	const auto& children = hierarchy.getChildren();
+	m_children.resize(children.size());
+
+	for (size_t i = 0; i < children.size(); i++)
+	{
+		m_children[i].initialize(children[i], m_panel);
 	}
 
 	m_title = m_entity.get<Components::Tag>();

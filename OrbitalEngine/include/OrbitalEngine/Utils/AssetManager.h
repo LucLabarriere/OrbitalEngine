@@ -37,6 +37,8 @@ namespace Orbital
 
 			OE_RAISE_SIGSEGV("{}: {} does not exist", s_managerName, assetId);
 		}
+		
+		static size_t GetCount() { return s_instance->m_assets.size(); }
 
 		std::vector<Ref<T>>::iterator begin() { return m_assets.begin(); }
 		std::vector<Ref<T>>::iterator end() { return m_assets.end(); }

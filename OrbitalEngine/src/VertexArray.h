@@ -2,12 +2,10 @@
 
 namespace Orbital
 {
-	class Batch;
-	class DynamicBatch;
-
 	class VertexArray
 	{
 	public:
+		static VertexArray* Create();
 		virtual ~VertexArray() { }
 
 		virtual void bind() const = 0;
@@ -15,12 +13,8 @@ namespace Orbital
 
 	protected:
 		VertexArray() : m_rendererId(0) { }
-		static VertexArray* Create();
 
 	protected:
-			friend Batch;
-			friend DynamicBatch;
-
 			unsigned int m_rendererId;
 	};
 

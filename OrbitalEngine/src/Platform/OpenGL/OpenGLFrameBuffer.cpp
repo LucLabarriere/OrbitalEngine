@@ -1,6 +1,9 @@
 #include "OpenGLFrameBuffer.h"
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics.h"
+#include "VertexArray.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 namespace Orbital
 {
@@ -34,7 +37,13 @@ namespace Orbital
 		glad_glActiveTexture(GL_TEXTURE0);
 		glad_glBindTexture(GL_TEXTURE_2D, m_textureId);
 		shader->setUniform1i("u_ScreenTexture", 0);
-		Renderer::Submit(m_batch);
+
+		m_vao->bind();
+		m_ibo->bind();
+
+		RenderCommands::DrawIndexed(
+			OE_TRIANGLES, 6
+		);
 	}
 
 	OpenGLFrameBuffer::OpenGLFrameBuffer()
@@ -82,9 +91,17 @@ namespace Orbital
 		const auto& screenMesh = MeshManager::Get("Quad");
 		const auto& vertices = screenMesh.lock()->getVertices();
 		const auto& indices = screenMesh.lock()->getIndices();
-		m_batch = CreateRef<Batch>(RenderMode::STATIC_NOT_BATCHED, vertices.getCount(), indices.getCount());
-		//m_batch->addMesh(screenMesh, m_screenTransform);
-		m_batch->allocateMemory();
+
+		m_vao = Scope<VertexArray>(VertexArray::Create());
+		m_vbo = Scope<VertexBuffer>(VertexBuffer::Create(OE_STATIC_DRAW));
+		m_vao->bind();
+		m_vbo->bind();
+		m_vbo->allocateMemory(vertices.getData(), vertices.getSize());
+
+		m_ibo = Scope<IndexBuffer>(IndexBuffer::Create(OE_STATIC_DRAW));
+		m_ibo->allocateMemory(indices.getData(), indices.getSize());
+
+		vertices.setLayout(*m_vbo);
 
 		glad_glViewport(0, 0, width, height);
 	}

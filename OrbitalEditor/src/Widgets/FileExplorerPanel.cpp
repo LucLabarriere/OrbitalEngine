@@ -53,62 +53,63 @@ unsigned int FileExplorerPanel::getIconIndex(const std::string& fileName)
 
 void FileExplorerPanel::render()
 {
-	ImGui::Begin("Files");
-	if (ImGui::Button("<"))
+	if (ImGui::Begin("Files"))
 	{
-		m_currentDirectory = m_currentDirectory.parent_path();
-		updateFiles();
-	}
-	ImGui::Text(m_currentDirectory.parent_path().string().c_str());
-
-	auto texture = TextureManager::Get("Icons").lock();
-	ImGuiTableFlags tableFlags = ImGuiTableFlags_SizingFixedFit | 
-		ImGuiTableFlags_ContextMenuInBody | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_RowBg;
-	
-	ImGuiSelectableFlags selectableFlags = ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowDoubleClick;
-
-	if (ImGui::BeginTable("File explorer table", 2, tableFlags))
-	{
-		ImGui::TableSetupColumn("AAA", ImGuiTableColumnFlags_WidthFixed);
-		ImGui::TableSetupColumn("BBB", ImGuiTableColumnFlags_WidthStretch);
-		for (size_t i = 0; i < m_fileNames.size(); i++)
+		if (ImGui::Button("<"))
 		{
-			unsigned int iconIndex = getIconIndex(m_fileNames[i]);
-			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
-			ImGui::Image(
-				(void*)(intptr_t)texture->getRendererId(),
-				ImVec2(16, 16),
-				ImVec2(0.2f * (float)iconIndex, 0),
-				ImVec2(0.2f * ((float)iconIndex + 1), 1)
-			);
-			ImGui::TableNextColumn();
+			m_currentDirectory = m_currentDirectory.parent_path();
+			updateFiles();
+		}
+		ImGui::Text(m_currentDirectory.parent_path().string().c_str());
 
-			bool selected = ImGui::Selectable(m_fileNames[i].c_str(), m_selected == i, selectableFlags);
+		auto texture = TextureManager::Get("Icons").lock();
+		ImGuiTableFlags tableFlags = ImGuiTableFlags_SizingFixedFit | 
+			ImGuiTableFlags_ContextMenuInBody | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_RowBg;
+	
+		ImGuiSelectableFlags selectableFlags = ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowDoubleClick;
 
-			if (iconIndex == 2 && ImGui::BeginPopupContextItem(fmt::format("Load Texture {}", i).c_str()))
+		if (ImGui::BeginTable("File explorer table", 2, tableFlags))
+		{
+			ImGui::TableSetupColumn("AAA", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableSetupColumn("BBB", ImGuiTableColumnFlags_WidthStretch);
+			for (size_t i = 0; i < m_fileNames.size(); i++)
 			{
-				if (ImGui::Button("Load as Texture"))
-					ImGui::OpenPopup(fmt::format("Load Texture Window {}", i).c_str());
-				if (ImGui::BeginPopupModal(fmt::format("Load Texture Window {}", i).c_str()))
+				unsigned int iconIndex = getIconIndex(m_fileNames[i]);
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::Image(
+					(void*)(intptr_t)texture->getRendererId(),
+					ImVec2(16, 16),
+					ImVec2(0.2f * (float)iconIndex, 0),
+					ImVec2(0.2f * ((float)iconIndex + 1), 1)
+				);
+				ImGui::TableNextColumn();
+
+				bool selected = ImGui::Selectable(m_fileNames[i].c_str(), m_selected == i, selectableFlags);
+
+				if (iconIndex == 2 && ImGui::BeginPopupContextItem(fmt::format("Load Texture {}", i).c_str()))
 				{
-					ImGui::Text("test");
+					if (ImGui::Button("Load as Texture"))
+						ImGui::OpenPopup(fmt::format("Load Texture Window {}", i).c_str());
+					if (ImGui::BeginPopupModal(fmt::format("Load Texture Window {}", i).c_str()))
+					{
+						ImGui::Text("test");
+						ImGui::EndPopup();
+					}
 					ImGui::EndPopup();
 				}
-				ImGui::EndPopup();
-			}
 
-			if (selected)
-			{
-				m_selected = i;
-				if (ImGui::IsMouseDoubleClicked(0))
+				if (selected)
 				{
-					changeFolder();
+					m_selected = i;
+					if (ImGui::IsMouseDoubleClicked(0))
+					{
+						changeFolder();
+					}
 				}
 			}
+			ImGui::EndTable();
 		}
-		ImGui::EndTable();
 	}
-
 	ImGui::End();
 }

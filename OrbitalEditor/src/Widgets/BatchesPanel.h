@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Graphics.h"
 #include "imgui.h"
 
 using namespace Orbital;
@@ -24,21 +25,21 @@ public:
 			const auto& batches = bm->getBatchContainers();
 			std::vector<const char*> batchNames;
 
-			for (auto& batchEntry : *bm)
+			for (size_t i = 0; i < bm->getCount(); i++)
 			{
-				batchNames.push_back(batchEntry.first.c_str());
+				batchNames.push_back(MaterialManager::Get(i).lock()->getTag().c_str());
 			}
-
 
 			ImGuiTabBarFlags tabFlags = ImGuiTabBarFlags_None;
 			if (ImGui::BeginTabBar("Batches tab", tabFlags))
 			{
-				for (auto& container : *bm)
+				for (size_t i = 0; i < bm->getCount(); i++)
 				{
 					int j = 0;
-					for (auto& batchEntry : *container.second)
+					std::string materialName = MaterialManager::Get(i).lock()->getTag();
+					for (auto& batchEntry : *bm->getBatch(i))
 					{
-						if (ImGui::BeginTabItem((container.first + "_" + std::to_string(j)).c_str()))
+						if (ImGui::BeginTabItem((materialName + "_" + std::to_string(j)).c_str()))
 						{
 							const auto& vertices = batchEntry->getVertices();
 							const auto& freeVertices = batchEntry->getFreeVerticesList();

@@ -5,9 +5,10 @@
 
 namespace Orbital
 {
-	constexpr size_t batchsize = 2000;
+	constexpr size_t batchsize = 5000;
 
 	BatchContainer::BatchContainer(const WeakRef<Material>& material)
+		: m_material(material.lock())
 	{
 		m_batches.push_back(CreateRef<Batch>(material, batchsize));
 		m_batches[0]->allocateMemory();
@@ -15,6 +16,11 @@ namespace Orbital
 
 	void BatchContainer::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
+		if (mr.Batch)
+		{
+			mr.Batch->registerMesh(mr, t);
+			return;
+		}
 		for (auto& batch : m_batches)
 		{
 			bool value = batch->isFull();
@@ -33,10 +39,10 @@ namespace Orbital
 
 	void BatchContainer::renderBatches()
 	{
+		m_material->bind();
 		for (auto& batch : m_batches)
 		{
-			batch->bindMaterial();
-			batch->submitData();
+			//batch->submitData();
 			batch->render();
 		}
 	}
@@ -50,27 +56,34 @@ namespace Orbital
 	BatchManager::BatchManager()
 	{
 		auto material = MaterialManager::Get(0);
+		m_batchContainers.resize(MaterialManager::GetCount());
+
 		for (auto& material2 : *MaterialManager::GetInstance())
 		{
-			m_batchContainers[material2->getTag()] = CreateRef<BatchContainer>(material);
+			m_batchContainers[material2->getId()] = CreateRef<BatchContainer>(material);
 		}
 	}
 
 	void BatchManager::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
-		m_batchContainers[mr.Material.lock()->getTag()]->registerMesh(mr, t);
+		m_batchContainers[mr.Material.lock()->getId()]->registerMesh(mr, t);
 	}
 
 	void BatchManager::deleteMesh(Components::MeshRenderer& mr)
 	{
-		m_batchContainers[mr.Material.lock()->getTag()]->deleteMesh(mr);
+		m_batchContainers[mr.Material.lock()->getId()]->deleteMesh(mr);
 	}
 
 	void BatchManager::renderBatches()
 	{
 		for (auto& batch : m_batchContainers)
 		{
-			batch.second->renderBatches();
+			batch->renderBatches();
 		}
+	}
+
+	void BatchManager::onUpdate()
+	{
+		// Create and remove batchContainers here depending on changing on materials
 	}
 }

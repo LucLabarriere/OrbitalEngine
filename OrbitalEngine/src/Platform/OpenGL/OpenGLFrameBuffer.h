@@ -5,7 +5,9 @@
 
 namespace Orbital
 {
-	class Batch;
+	class VertexArray;
+	class VertexBuffer;
+	class IndexBuffer;
 
 	class OpenGLFrameBuffer: public FrameBuffer
 	{
@@ -24,7 +26,9 @@ namespace Orbital
 		friend FrameBuffer;
 
 		unsigned int m_renderBufferId;
-		Ref<Batch> m_batch;
+		Scope<VertexArray> m_vao;
+		Scope<VertexBuffer> m_vbo;
+		Scope<IndexBuffer> m_ibo;
 		const Components::Transform m_screenTransform = {
 			{ 0.0f, 0.0f, 0.0f },
 			{ 0.0f, 0.0f, 0.0f },

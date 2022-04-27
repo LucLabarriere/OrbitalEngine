@@ -11,7 +11,9 @@ class HierarchyPanel;
 class TreeNode
 {
 public:
+	TreeNode();
 	TreeNode(const Entity& entity, Ref<HierarchyPanel> panel);
+	void initialize(const Entity& entity, Ref<HierarchyPanel> panel);
 
 	void render();
 

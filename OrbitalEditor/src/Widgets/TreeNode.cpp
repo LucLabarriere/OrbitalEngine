@@ -38,6 +38,20 @@ void TreeNode::initialize(const Entity& entity, Ref<HierarchyPanel> panel)
 	m_title = m_entity.get<Components::Tag>();
 }
 
+void TreeNode::update()
+{
+	/*for (size_t i = m_children.size() - 1; i >= 0; i++)
+	{
+		if (!m_children[i].getEntity().isValid())
+			m_children.erase(m_children.begin() + i);
+	}
+
+	for (auto& e : m_scene->getCreatedEntities())
+	{
+		m_treeNodes.push_back(TreeNode(e, shared_from_this()));
+	}*/
+}
+
 void TreeNode::render()
 {
 	bool nodeOpen = false;

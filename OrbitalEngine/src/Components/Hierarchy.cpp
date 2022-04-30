@@ -32,7 +32,7 @@ namespace Orbital
 		void Hierarchy::removeChild(const Entity& entity)
 		{
 			for (size_t i = 0; i < m_children.size(); i++)
-				if (m_children[i] == entity)
+				if (m_children[i].getHandle() == entity.getHandle())
 					m_children.erase(m_children.begin() + i);
 		}
 

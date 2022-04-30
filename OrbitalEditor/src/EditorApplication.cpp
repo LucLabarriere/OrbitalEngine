@@ -19,8 +19,9 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::onStart()
 {
-	unsigned int size_x = 100;
-	unsigned int size_y = 100;
+	unsigned int size_x = 2;
+	unsigned int size_y = 2;
+	float width = 0.02f;
 	for (unsigned int i = 0; i <= size_x; i++)
 	{
 		for (unsigned int j = 0; j <= size_y; j++)
@@ -31,7 +32,7 @@ void EditorApplication::onStart()
 			Components::Transform t = {
 				{ -1.0f, -1.0f, 0.6f },
 				{  0.0f,  0.0f, 0.0f },
-				{  0.001f,  0.001f, 0.001f }
+				{  width,  width, width }
 			};
 
 			float positionX = (float)i / size_x * 2;
@@ -115,7 +116,6 @@ void EditorApplication::onUpdate(Time dt)
 	ImGui::End();
 	ImGui::GetStyle().WindowPadding = ImVec2(12, 12);
 
-	m_hierarchyPanel->initialize();
 	m_hierarchyPanel->update();
 	m_hierarchyPanel->render();
 	m_metricsPanel->render();

@@ -25,11 +25,13 @@ namespace Orbital
 		Ref<entt::registry>& getRegistry(LayerID layerId = 0) { return m_layers[layerId]; }
 		Entity getSceneEntity();
 		bool entityDeleted() { return m_deleteRequired.size() == 0 ? false : true; }
+		const std::vector<Entity> getCreatedEntities() const { return m_createdEntities; }
 
 	private:
 		Ref<Camera> m_camera;
 		std::array<Ref<entt::registry>, OE_LAST_LAYER + 1> m_layers;
 		entt::entity m_entityHandle = entt::null;
 		std::vector<Entity> m_deleteRequired;
+		std::vector<Entity> m_createdEntities;
 	};
 }

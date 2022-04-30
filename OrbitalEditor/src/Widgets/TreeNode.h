@@ -14,6 +14,8 @@ public:
 	TreeNode();
 	TreeNode(const Entity& entity, Ref<HierarchyPanel> panel);
 	void initialize(const Entity& entity, Ref<HierarchyPanel> panel);
+	void update();
+	const Entity& getEntity() const { return m_entity; }
 
 	void render();
 

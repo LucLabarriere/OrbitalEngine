@@ -25,10 +25,13 @@ namespace Orbital
 		{
 			bool value = batch->isFull();
 
-			if (!batch->isFull() && batch->meshFits(mr))
+			if (!batch->isFull())
 			{
-				batch->registerMesh(mr, t);
-				return;
+				if (batch->meshFits(mr))
+				{
+					batch->registerMesh(mr, t);
+					return;
+				}
 			}
 		}
 		auto batch = CreateRef<Batch>(mr.Material, batchsize);

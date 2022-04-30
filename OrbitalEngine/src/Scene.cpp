@@ -33,6 +33,7 @@ namespace Orbital
 		auto& hierarchy = e.add<Components::Hierarchy>(shared_from_this(), e, getSceneEntity());
 
 		e.add<LayerID>(layerId);
+		m_createdEntities.push_back(e);
 		
 		return e;
 	}
@@ -140,6 +141,7 @@ namespace Orbital
 			entity.destroy();
 		}
 		m_deleteRequired.resize(0);
+		m_createdEntities.resize(0);
 	}
 
 	Entity Scene::getEntity(const Components::Tag& tag)

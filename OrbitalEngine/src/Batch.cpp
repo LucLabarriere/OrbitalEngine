@@ -94,8 +94,9 @@ namespace Orbital
 
 	void Batch::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
-		auto& vertices = mr.Mesh.lock()->getVertices();
-		auto& indices = mr.Mesh.lock()->getIndices();
+		auto mesh = mr.Mesh.lock();
+		auto& vertices = mesh->getVertices();
+		auto& indices = mesh->getIndices();
 
 		if (!t.isDirty())
 			return;

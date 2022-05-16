@@ -21,6 +21,8 @@ namespace Orbital
 	{
 		size_t firstIndex;
 		size_t lastIndex;
+
+		size_t getStride() const { return lastIndex - firstIndex + 1; }
 	};
 
 	class Batch : public std::enable_shared_from_this<Batch>
@@ -39,7 +41,7 @@ namespace Orbital
 
 		const BasicVertexContainer& getVertices() const { return m_vertices; }
 		const std::vector<bool>& getFreeVerticesList() const { return m_freeVertices; }
-		std::tuple<int, int> getAvailableSlot(size_t vertexCount, size_t indexCount);
+		std::tuple<int, int> getAvailableSlot(size_t vertexCount, size_t indexCount, bool record = true);
 		bool isFull() const { return m_full; }
 
 	private:
@@ -55,9 +57,8 @@ namespace Orbital
 		IndexContainer m_indices;
 		
 		std::vector<bool> m_freeVertices;
-		std::vector<bool> m_modifiedVertices;
-		std::vector<bool> m_freeIndices;
-		std::vector<bool> m_modifiedIndices;
+		std::vector<BufferSubData> m_subDataFreeVertices;
+		std::vector<BufferSubData> m_subDataFreeIndices;
 		std::vector<BufferSubData> m_subDataVertices;
 		std::vector<BufferSubData> m_subDataIndices;
 		BufferSubData* m_currentSubDataVertices = nullptr;

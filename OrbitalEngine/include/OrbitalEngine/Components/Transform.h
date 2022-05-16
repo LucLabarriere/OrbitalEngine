@@ -24,6 +24,7 @@ namespace Orbital
 
 			bool isDirty() const { return m_dirty; }
 			void cleanUp() { m_dirty = false; }
+			void dirty() { m_dirty = true; }
 
 		private:
 			Vec3 m_position = { 0.0f, 0.0f, 0.0f};

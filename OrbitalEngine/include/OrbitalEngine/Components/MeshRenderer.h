@@ -19,10 +19,19 @@ namespace Orbital
 			Ref<Batch> Batch = nullptr;
 			int vertexPointer = -1;
 			int indexPointer = -1;
+			Components::Transform* Transform = nullptr;
 
-			MeshRenderer(const std::string& meshTag) : Mesh(MeshManager::Get(meshTag)) { }
-
+			MeshRenderer(const std::string& meshTag, Components::Transform* transform)
+				: Mesh(MeshManager::Get(meshTag)), Transform(transform) { }
 			void destroy() { Renderer::DeleteMesh(*this); }
+
+			void setMesh(const std::string& tag)
+			{
+				destroy();
+				Transform->dirty();
+				this->Mesh = MeshManager::Get(tag);
+			}
+
 		};
 	}
 }

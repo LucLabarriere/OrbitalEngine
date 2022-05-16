@@ -13,14 +13,14 @@ namespace Orbital
 		, m_vertices(vertexCount)
 		, m_indices(indexCount == 0 ? int(vertexCount - 2) * 3 : indexCount)
 		, m_freeVertices(m_vertices.getCount(), true)
-		, m_modifiedVertices(m_vertices.getCount(), false)
-		, m_freeIndices(m_indices.getCount(), true)
-		, m_modifiedIndices(m_indices.getCount(), false)
 		, m_renderMode(OE_DYNAMIC_DRAW)
 	{
 		m_vao = Ref<VertexArray>(VertexArray::Create());
 		m_vbo = Ref<VertexBuffer>(VertexBuffer::Create(m_renderMode));
 		m_ibo = Ref<IndexBuffer>(IndexBuffer::Create(m_renderMode));
+		
+		m_subDataFreeVertices.push_back(BufferSubData(0, m_vertices.getCount() - 1));
+		m_subDataFreeIndices.push_back(BufferSubData(0, m_indices.getCount() - 1));
 	}
 
 	void Batch::bind() const
@@ -147,7 +147,6 @@ namespace Orbital
 			m_vertices[i + vertexPointer].position = model * Vec4(m_vertices[i + vertexPointer].position, 1.0f);
 			m_vertices[i + vertexPointer].normal = Mat3(glm::transpose(glm::inverse(model))) * m_vertices[i + vertexPointer].normal;
 			m_freeVertices[i + vertexPointer] = false;
-			m_modifiedVertices[i + vertexPointer] = true;
 		}
 
 		if (m_currentSubDataIndices == nullptr || m_currentSubDataIndices->lastIndex  + 1 != indexPointer)
@@ -163,8 +162,6 @@ namespace Orbital
 		for (size_t i = 0; i < indices.getCount(); i++)
 		{
 			m_indices[i + indexPointer] = vertexPointer + indices[i];
-			m_freeIndices[i + indexPointer] = false;
-			m_modifiedIndices[i + indexPointer] = true;
 		}
 
 		updateFullStatus();
@@ -175,25 +172,53 @@ namespace Orbital
 
 	void Batch::deleteMesh(Components::MeshRenderer& mr)
 	{
+		// TODO: make it work
 		size_t vertexPointer = mr.vertexPointer;
 		size_t indexPointer = mr.indexPointer;
+		auto mesh = mr.Mesh.lock();
 
-		auto& vertices = mr.Mesh.lock()->getVertices();
-		auto& indices = mr.Mesh.lock()->getIndices();
+		auto& vertices = mesh->getVertices();
+		auto& indices = mesh->getIndices();
+
+		// Updating free vertices
+		for (auto& subData : m_subDataFreeVertices)
+		{
+			if (subData.lastIndex + 1 == vertexPointer)
+			{
+				subData.lastIndex += vertices.getCount();
+			}
+			else if (vertexPointer + vertices.getCount() - 1 == subData.firstIndex)
+			{
+				subData.firstIndex -= vertices.getCount();
+			}
+		}
+
+		// Updating free indices
+		for (auto& subData : m_subDataFreeIndices)
+		{
+			if (subData.lastIndex + 1 == indexPointer)
+			{
+				subData.lastIndex += indices.getCount();
+			}
+			else if (vertexPointer + indices.getCount() - 1 == subData.firstIndex)
+			{
+				subData.firstIndex -= indices.getCount();
+			}
+		}
 
 		for (size_t i = vertexPointer; i < vertices.getCount() + vertexPointer; i++)
 		{
 			m_vertices[i] = BasicVertex::Empty();
 			m_freeVertices[i] = true;
-			m_modifiedVertices[i] = true;
 		}
 
 		for (size_t i = indexPointer; i < indices.getCount() + indexPointer; i++)
 		{
 			m_indices[i] = 0;
-			m_freeIndices[i] = true;
-			m_modifiedIndices[i] = true;
 		}
+
+		m_subDataVertices.push_back(BufferSubData(vertexPointer, vertexPointer + vertices.getCount() - 1));
+		m_subDataIndices.push_back(BufferSubData(indexPointer, indexPointer + indices.getCount() - 1));
 
 		mr.Batch = nullptr;
 		mr.vertexPointer = -1;
@@ -207,7 +232,7 @@ namespace Orbital
 		auto& vertices = mr.Mesh.lock()->getVertices();
 		auto& indices = mr.Mesh.lock()->getIndices();
 
-		auto [vertexPointer, indexPointer] = getAvailableSlot(vertices.getCount(), indices.getCount());
+		auto [vertexPointer, indexPointer] = getAvailableSlot(vertices.getCount(), indices.getCount(), false);
 
 		if (vertexPointer != -1 && indexPointer != -1)
 			return true;
@@ -215,63 +240,37 @@ namespace Orbital
 		return false;
 	}
 
-	std::tuple<int, int> Batch::getAvailableSlot(size_t vertexCount, size_t indexCount)
+	std::tuple<int, int> Batch::getAvailableSlot(size_t vertexCount, size_t indexCount, bool record)
 	{
-		size_t availableVertices = 0;
-		size_t emptyVertices = 0;
-		size_t availableIndices = 0;
-		size_t emptyIndices = 0;
-
 		int vertexPointer = -1;
 		int indexPointer = -1;
 
-		// Vertices
-		for (int i = 0; i < m_freeVertices.size(); i++)
+		for (auto& subData : m_subDataFreeVertices)
 		{
-			if (availableVertices == vertexCount)
+			if (vertexCount <= subData.getStride())
 			{
-				vertexPointer = i - vertexCount;
+				vertexPointer = subData.firstIndex;
+				if (record) subData.firstIndex += vertexCount;
 				break;
-			}
-			else if (m_freeVertices[i])
-			{
-				availableVertices += 1;
-				emptyVertices += 1;
-			}
-			else
-			{
-				availableVertices = 0;
 			}
 		}
 
-		// Indices
-		for (int i = 0; i < m_freeIndices.size(); i++)
+		for (auto& subData : m_subDataFreeIndices)
 		{
-			if (availableIndices == indexCount)
+			if (indexCount <= subData.getStride())
 			{
-				indexPointer = i - indexCount;
+				indexPointer = subData.firstIndex;
+				if (record) subData.firstIndex += indexCount;
 				break;
 			}
-			else if (m_freeIndices[i])
-			{
-				availableIndices += 1;
-				emptyIndices += 1;
-			}
-			else
-			{
-				availableIndices = 0;
-			}
 		}
-
-		if (emptyVertices > 50 || emptyIndices > 50)
-			OE_RAISE_SIGSEGV("The batch is holed, remake it from scratch");
 
 		return std::make_tuple(vertexPointer, indexPointer);
 	}
 
 	void Batch::updateFullStatus()
 	{
-		auto [ vertexPointer, indexPointer ] = getAvailableSlot(24, 36);
+		auto [ vertexPointer, indexPointer ] = getAvailableSlot(24, 36, false);
 
 		if (vertexPointer == -1 || indexPointer == -1)
 			m_full = true;

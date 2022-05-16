@@ -105,7 +105,11 @@ void Inspector::renderEntity()
 				}
 
 				ImGui::Combo("Mesh", &currentItem, meshTags.data(), meshTags.size());
-				meshRenderer->Mesh = MeshManager::Get(meshTags[currentItem]);
+
+				if (meshTags[currentItem] != meshRenderer->Mesh.lock()->getTag())
+				{
+					meshRenderer->setMesh(meshTags[currentItem]);
+				}
 				if (ImGui::Button("X"))
 				{
 					entity.remove<Components::MeshRenderer>();
@@ -183,9 +187,9 @@ void Inspector::renderEntity()
 			{
 				if (ImGui::Selectable("MeshRenderer"))
 				{
-					entity.add<Components::MeshRenderer>("Cube");
 					if (!transform)
 						entity.add<Components::Transform>();
+					entity.add<Components::MeshRenderer>("Cube", transform);
 				}
 			}
 			if (!transform)

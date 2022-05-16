@@ -21,7 +21,7 @@ void EditorApplication::onStart()
 {
 	unsigned int size_x = 2;
 	unsigned int size_y = 2;
-	float width = 0.02f;
+	float width = 0.61f;
 	for (unsigned int i = 0; i <= size_x; i++)
 	{
 		for (unsigned int j = 0; j <= size_y; j++)
@@ -44,7 +44,7 @@ void EditorApplication::onStart()
 			t.Rotation() = Vec3(rotation, rotation, rotation);
 
 			entity.add<Components::Transform>(t);
-			entity.add<Components::MeshRenderer>("Cube");
+			entity.add<Components::MeshRenderer>("Quad", &t);
 		}
 	}
 
@@ -57,7 +57,7 @@ void EditorApplication::onStart()
 	};
 
 	entity.add<Components::Transform>(t);
-	entity.add<Components::MeshRenderer>("Quad");
+	entity.add<Components::MeshRenderer>("Quad", &t);
 
 	auto sun = m_scene->createEntity("Sun");
 	sun.add<Components::DirectionalLight>();
@@ -139,11 +139,12 @@ void EditorApplication::onUpdate(Time dt)
 
 	m_scene->beginScene();
 	{
-		auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer>();
+		auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer, Components::Tag>();
 		for (auto entity : view)
 		{
 			auto& transform = view.get<Components::Transform>(entity);
 			auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
+			auto& tag = view.get<Components::Tag>(entity);
 
 			if (!meshRenderer.Hidden)
 			{

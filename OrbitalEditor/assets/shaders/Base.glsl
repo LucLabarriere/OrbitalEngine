@@ -133,10 +133,10 @@ LightResult CalculatePointLight(PointLight light, vec3 viewDirection)
     vec3 direction = normalize(directionNonNormalized);
 
 	// Ambient
-	result.Ambient
-		= light.Ambient
-		* u_Material.DiffuseTint
-		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
+	// result.Ambient
+	// 	= light.Ambient
+	// 	* u_Material.DiffuseTint
+	// 	* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
 
     // Diffuse
     result.Diffuse
@@ -146,7 +146,7 @@ LightResult CalculatePointLight(PointLight light, vec3 viewDirection)
 		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
 
     // Specular
-	vec3 reflectionDirection = reflect(- light.Position, v_Normal);
+	vec3 reflectionDirection = reflect(- direction, v_Normal);
 	result.Specular
 		= light.Specular
 		* u_Material.SpecularTint
@@ -157,7 +157,7 @@ LightResult CalculatePointLight(PointLight light, vec3 viewDirection)
     float dist = length(directionNonNormalized);
     float attenuation = 1.0 / (light.Constant + light.Linear * dist + light.Quadratic * dist * dist);    
     // combine results
-    result.Ambient *= attenuation;
+    // result.Ambient *= attenuation;
     result.Diffuse *= attenuation;
     result.Specular *= attenuation;
 
@@ -184,7 +184,7 @@ LightResult CalculateSpotLight(SpotLight light, vec3 viewDirection)
 		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
 
     // Specular
-	vec3 reflectionDirection = reflect(- light.Position, v_Normal);
+	vec3 reflectionDirection = reflect(- direction, v_Normal);
 	result.Specular
 		= light.Specular
 		* u_Material.SpecularTint
@@ -201,7 +201,7 @@ LightResult CalculateSpotLight(SpotLight light, vec3 viewDirection)
     float intensity = clamp((theta - light.OuterCutOff) / epsilon, 0.0, 1.0);
 
     // combine results
-    result.Ambient *= attenuation * intensity;
+    result.Ambient *= attenuation;
     result.Diffuse *= attenuation * intensity;
     result.Specular *= attenuation * intensity;
 
@@ -224,7 +224,7 @@ void main()
     for(int i = 0; i < u_nPointLights; i++)
 	{
 		LightResult tempResult = CalculatePointLight(u_PointLights[i], viewDirection);
-        result.Ambient += tempResult.Ambient;
+        // result.Ambient += tempResult.Ambient;
 		result.Diffuse += tempResult.Diffuse;
 		result.Specular += tempResult.Specular;
 	}

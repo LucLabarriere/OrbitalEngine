@@ -5,7 +5,7 @@
 
 namespace Orbital
 {
-	constexpr size_t batchsize = 5000;
+	constexpr size_t batchsize = 20000;
 
 	BatchContainer::BatchContainer(const WeakRef<Material>& material)
 		: m_material(material.lock())

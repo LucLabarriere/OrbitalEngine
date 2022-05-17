@@ -28,7 +28,7 @@ namespace Orbital
 	private:
 		friend MaterialManager;
 
-		Ref<Shader> m_shader;
+		WeakRef<Shader> m_shader;
 
 		float m_ambient = 1.0f;
 		Ref<Texture> m_diffuseMap;

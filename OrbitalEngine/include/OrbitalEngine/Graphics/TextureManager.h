@@ -19,7 +19,7 @@ namespace Orbital
 		}
 
 	private:
-		TextureManager()
+		TextureManager() : AssetManager<Texture>()
 		{
 			s_managerName = "TextureManager";
 			load("Blank", Settings::GetAssetPath("textures/blank.png"));

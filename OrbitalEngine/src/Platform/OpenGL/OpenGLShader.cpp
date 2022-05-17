@@ -143,6 +143,7 @@ namespace Orbital
 	OpenGLShader::Sources OpenGLShader::parseSourceCode(const std::string& filepath)
 	{
 		std::ifstream sourceFile;
+		Logger::Debug("Loading shader: '{}'", filepath);
 		OE_ASSERT(fileExists(filepath), "OpenGLShader: '{}': no such file", filepath);
 
 		sourceFile.open(filepath, std::ios::out);
@@ -166,5 +167,16 @@ namespace Orbital
 		sourceFile.close();
 
 		return { vs, fs };
+	}
+
+	void OpenGLShader::reload()
+	{
+		unbind();
+		glad_glDeleteProgram(m_rendererId);
+
+		Sources sources = parseSourceCode(m_filepath);
+		m_content = "#Vertex Shader\n" + sources.vs + "\n#Fragment Shader\n" + sources.fs;
+
+		createShader(sources.vs, sources.fs);
 	}
 }

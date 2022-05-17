@@ -9,3 +9,6 @@
 [submodule "vendor/entt"]
 	path = vendor/entt
 	url = git@github.com:skypjack/entt.git
+[submodule "vendor/assimp"]
+	path = vendor/assimp
+	url = git@github.com:assimp/assimp.git

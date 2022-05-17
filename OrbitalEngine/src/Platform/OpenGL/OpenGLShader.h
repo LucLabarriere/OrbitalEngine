@@ -36,6 +36,7 @@ namespace Orbital
 		void createShader(const std::string& vertexShader, const std::string& fragmentShader);
 		unsigned int compileShader(unsigned int type, const std::string& source);
 		Sources parseSourceCode(const std::string& filepath);
+		virtual void reload();
 
 	private:
 		friend Shader;

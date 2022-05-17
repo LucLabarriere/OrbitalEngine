@@ -12,6 +12,10 @@ void AssetManagerPanel::render()
 {
 	if (ImGui::Begin("Assets"))
 	{
+		if (ImGui::Button("Reload shaders"))
+		{
+			ShaderManager::ReloadShaders();
+		}
 		ImGui::BeginChild("Files", ImVec2(0, 0), true);
 
 		int i = 0;

@@ -21,6 +21,14 @@ namespace Orbital
 		return shader;
     }
 
+	void ShaderManager::reloadShaders()
+	{
+		for (auto& shader : m_assets)
+		{
+			shader->reload();
+		}
+	}
+
 	const WeakRef<Shader> ShaderManager::get(size_t id) const
 	{
 		for (const auto& shader : m_assets)
@@ -34,7 +42,7 @@ namespace Orbital
 	{
 		for (const auto& shader : m_assets)
 			if (shader->getTag() == tag)
-				return shader;
+				//return shader;
 
 		OE_RAISE_SIGSEGV("ShaderManager: {} is not stored in the ShaderManager", tag);
 	}

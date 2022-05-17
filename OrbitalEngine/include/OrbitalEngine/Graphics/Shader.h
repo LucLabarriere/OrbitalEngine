@@ -25,11 +25,13 @@ namespace
 		virtual void setUniformMat4f(const std::string& name, const glm::mat4& value) const = 0;
 
 		const std::string& getContent() const { return m_content; }
+		const std::string& getFilePath() const { return m_filepath; }
 
 	protected:
 		Shader(const std::string& name, const std::string& filepath)
 			: Asset(s_id, name), m_rendererId(0), m_filepath(filepath) { s_id += 1; }
 		static Shader* Create(const std::string& name, const std::string& filepath);
+		virtual void reload() = 0;
 
 	protected:
 		friend ShaderManager;

@@ -26,6 +26,7 @@ target_include_directories(${PROJECT_NAME}
 		${CMAKE_SOURCE_DIR}/vendor/imgui/
 		${CMAKE_SOURCE_DIR}/vendor/entt/single_include
 		${CMAKE_SOURCE_DIR}/vendor/fmt/include
+		${CMAKE_SOURCE_DIR}/vendor/assimp/include
 	PRIVATE
 		src
 )
@@ -38,4 +39,5 @@ target_link_libraries(${PROJECT_NAME}
 		glfw
 		imgui
 		fmt::fmt
+		assimp::assimp
 )

@@ -1,37 +1,66 @@
 #pragma once
-
-#include "OrbitalEngine/Graphics/Batch.h"
-#include "OrbitalEngine/Graphics/MaterialManager.h"
 #include "OrbitalEngine/Graphics/MeshManager.h"
-#include "OrbitalEngine/Graphics/Renderer.h"
+#include "OrbitalEngine/Graphics/MaterialManager.h"
+
 
 namespace Orbital
 {
+	class Transform;
+	class Batch;
+
 	namespace Components
 	{
-		struct MeshRenderer
+		class Transform;
+
+		class MeshRenderer
 		{
-			WeakRef<Mesh> Mesh;
-			WeakRef<Material> Material = MaterialManager::Get("Blank");
-			bool StaticDraw = false;
-			bool BatchedDraw = true;
-			bool Hidden = false;
-			Ref<Batch> Batch = nullptr;
-			int vertexPointer = -1;
-			int indexPointer = -1;
-			Components::Transform* Transform = nullptr;
-
-			MeshRenderer(const std::string& meshTag, Components::Transform* transform)
-				: Mesh(MeshManager::Get(meshTag)), Transform(transform) { }
-			void destroy() { Renderer::DeleteMesh(*this); }
-
-			void setMesh(const std::string& tag)
+		public:
+			struct DrawData
 			{
-				destroy();
-				Transform->dirty();
-				this->Mesh = MeshManager::Get(tag);
-			}
+				bool staticDraw = false;
+				bool batchDraw = true;
+				bool hidden = false;
 
+				bool operator==(const DrawData& other);
+				bool operator!=(const DrawData& other);
+			};
+
+			struct BatchData
+			{
+				Ref<Batch> batch = nullptr;
+				int vertexPointer = -1;
+				int indexPointer = -1;
+			};
+
+		public:
+			MeshRenderer(const std::string& meshTag, Components::Transform* transform);
+			MeshRenderer(const std::string& meshTag, Components::Transform* transform, bool batchedDraw);
+			MeshRenderer(
+				const std::string& meshTag, Components::Transform* transform,
+				bool batchedDraw, const std::string& materialName
+			);
+
+			void destroy();
+			void setMesh(const std::string& tag);
+
+			DrawData getDrawData() const;
+			BatchData getBatchData() const;
+			WeakRef<Material> getMaterial() const;
+			WeakRef<Mesh> getMesh() const;
+
+			void setBatchData(const BatchData& data);
+			void resetBatchData(const BatchData& data);
+			void setDrawData(const DrawData& data);
+			void setHidden(bool value);
+			void setMaterial(const std::string& materialTag);
+
+		private:
+			WeakRef<Mesh> m_mesh;
+			WeakRef<Material> m_material;
+			Components::Transform* m_transform;
+
+			DrawData m_drawData;
+			BatchData m_batchData;
 		};
 	}
 }

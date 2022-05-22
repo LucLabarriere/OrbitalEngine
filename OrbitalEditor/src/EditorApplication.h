@@ -37,7 +37,7 @@ public:
 
 private:
 	Ref<Scene> m_scene;
-	Scope<CameraController> m_cameraController;
+	Ref<CameraController> m_cameraController;
 
 	unsigned int m_renderAreaWidth;
 	unsigned int m_renderAreaHeight;

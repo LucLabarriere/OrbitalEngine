@@ -16,6 +16,8 @@
 #include "OrbitalEngine/Graphics/MaterialManager.h"
 #include "OrbitalEngine/Graphics/Batch.h"
 #include "OrbitalEngine/Graphics/BatchManager.h"
+#include "OrbitalEngine/Graphics/BufferUnit.h"
+#include "OrbitalEngine/Graphics/BufferUnitManager.h"
 
 #include "OrbitalEngine/Graphics/Vertices.h"
 #include "OrbitalEngine/Graphics/IndexContainer.h"

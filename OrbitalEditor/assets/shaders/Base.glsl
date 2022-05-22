@@ -6,21 +6,23 @@ layout (location = 1) in vec4 a_Color;
 layout (location = 2) in vec3 a_Normal;
 layout (location = 3) in vec2 a_TexCoords;
 
-out vec3 v_FragmentPosition;  
+out vec3 v_FragmentPosition;
 out vec4 v_Color;
 out vec3 v_Normal;
 out vec2 v_TexCoords;
 
 uniform mat4 u_VPMatrix;
+uniform mat4 u_MMatrix;
 
 void main()
 {
-	v_FragmentPosition = a_Position;
     v_Color = a_Color;
-	v_Normal = normalize(a_Normal);
+    v_Normal = normalize(mat3(transpose(inverse(u_MMatrix))) * a_Normal);
     v_TexCoords = a_TexCoords;
 
-    gl_Position = u_VPMatrix * vec4(a_Position, 1.0);
+    gl_Position = u_MMatrix * vec4(a_Position, 1.0);
+    v_FragmentPosition = vec3(gl_Position);
+    gl_Position = u_VPMatrix * gl_Position;
 }
 
 // Fragment shader
@@ -105,6 +107,7 @@ LightResult CalculateDirectionalLight(DirectionalLight light, vec3 viewDirection
 	// Ambient
 	result.Ambient 
 		= light.Ambient
+		* u_Material.Ambient
 		* u_Material.DiffuseTint
 		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
 
@@ -171,10 +174,10 @@ LightResult CalculateSpotLight(SpotLight light, vec3 viewDirection)
     vec3 direction = normalize(directionNonNormalized);
 
 	// Ambient
-	result.Ambient
-		= light.Ambient
-		* u_Material.DiffuseTint
-		* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
+	// result.Ambient
+	// 	= light.Ambient
+	// 	* u_Material.DiffuseTint
+	// 	* vec3(texture(u_Material.DiffuseMap, v_TexCoords));
 
     // Diffuse
     result.Diffuse
@@ -210,7 +213,7 @@ LightResult CalculateSpotLight(SpotLight light, vec3 viewDirection)
   
 void main()
 {
-	vec3 viewDirection = normalize(u_ViewPosition - vec3(0.0));
+	vec3 viewDirection = normalize(u_ViewPosition - v_FragmentPosition);
 	LightResult result = { vec3(0.0), vec3(0.0), vec3(0.0) };
 
     for(int i = 0; i < u_nDirectionalLights; i++)
@@ -224,7 +227,7 @@ void main()
     for(int i = 0; i < u_nPointLights; i++)
 	{
 		LightResult tempResult = CalculatePointLight(u_PointLights[i], viewDirection);
-        // result.Ambient += tempResult.Ambient;
+        result.Ambient += tempResult.Ambient;
 		result.Diffuse += tempResult.Diffuse;
 		result.Specular += tempResult.Specular;
 	}

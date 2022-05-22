@@ -1,7 +1,28 @@
 #include "OrbitalEngine/Graphics.h"
+#include "OrbitalEngine/Components/MeshRenderer.h"
+#include "OrbitalEngine/Components/Transform.h"
 
 namespace Orbital
 {
+	void Renderer::InitializeFramebuffer()
+	{
+		s_instance->m_frameBuffer = Scope<FrameBuffer>(FrameBuffer::Create());
+	}
+	void Renderer::InitializeBatchManager()
+	{
+		s_instance->m_batchManager = CreateRef<BatchManager>();
+	}
+
+	void Renderer::PushBufferUnit(WeakRef<Mesh> mesh)
+	{
+		s_instance->m_unitManager->push(mesh);
+	}
+
+	void Renderer::PushBufferUnit(WeakRef<Material> material, bool fill)
+	{
+		s_instance->m_unitManager->push(material, fill);
+	}
+
 	void Renderer::OnWindowResized()
 	{
 		s_instance->onWindowResized();
@@ -22,8 +43,9 @@ namespace Orbital
 	}
 
 	Renderer::Renderer()
-		: m_frameBuffer(FrameBuffer::Create())
-		, m_BatchManager(new BatchManager)
+		: m_frameBuffer(nullptr)
+		, m_batchManager(nullptr)
+		, m_unitManager(new BufferUnitManager)
 	{
 		RenderCommands::Initialize();
 	}
@@ -35,16 +57,35 @@ namespace Orbital
 
 	void Renderer::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
-		m_BatchManager->registerMesh(mr, t);
+		auto drawData = mr.getDrawData();
+
+		if (drawData.batchDraw)
+		{
+			m_batchManager->registerMesh(mr, t);
+		}
+		else
+		{
+			m_unitManager->registerMesh(mr, t);
+		}
 	}
 
 	void Renderer::deleteMesh(Components::MeshRenderer& mr)
 	{
-		m_BatchManager->deleteMesh(mr);
+		auto drawData = mr.getDrawData();
+
+		if (drawData.batchDraw)
+		{
+			m_batchManager->deleteMesh(mr);
+		}
 	}
 
 	void Renderer::renderBatches()
 	{
-		m_BatchManager->renderBatches();
+		m_batchManager->renderBatches();
+	}
+
+	void Renderer::renderUnits()
+	{
+		m_unitManager->renderUnits();
 	}
 }

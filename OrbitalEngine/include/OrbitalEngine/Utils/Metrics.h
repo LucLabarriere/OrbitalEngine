@@ -15,7 +15,7 @@ namespace Orbital
 		TimePerFrame,
 		ApproximateTimePerFrame,
 		BatchCount,
-		VSyncEnabled,
+		VSyncEnabled
 	};
 
 	static inline std::map<Metric, std::string> MetricNames = {

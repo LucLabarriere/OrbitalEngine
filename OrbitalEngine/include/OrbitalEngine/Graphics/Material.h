@@ -12,6 +12,12 @@ namespace Orbital
 	{
 	public:
 		void bind() const;
+		WeakRef<Shader> getShader() const;
+
+		float& getAmbient() { return m_ambient; }
+		Vec3& getDiffuseTint() { return m_diffuseTint; }
+		Vec3& getSpecularTint() { return m_specularTint; }
+		float& getShininess() { return m_shininess; }
 
 	private:
 		Material(const std::string& tag);

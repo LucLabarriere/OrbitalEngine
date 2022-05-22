@@ -6,16 +6,17 @@ namespace Orbital
 {
 	void Material::bind() const
 	{
-		m_diffuseMap->bind(0);
-		m_specularMap->bind(1);
+		this;
 		auto shader = m_shader.lock();
 		shader->bind();
-		shader->setUniform1f("u_Material.Ambient", m_ambient);
-		shader->setUniform1i("u_Material.DiffuseMap", m_diffuseMap->getRendererId());
+		m_diffuseMap->bind(0);
+		m_specularMap->bind(1);
+		shader->setUniform1i("u_Material.DiffuseMap", 0);
 		shader->setUniform3f("u_Material.DiffuseTint", m_diffuseTint);
-		shader->setUniform1i("u_Material.SpecularMap", m_specularMap->getRendererId());
+		shader->setUniform1i("u_Material.SpecularMap", 1);
 		shader->setUniform3f("u_Material.SpecularTint", m_specularTint);
 		shader->setUniform1f("u_Material.Shininess", m_shininess);
+		shader->setUniform1f("u_Material.Ambient", m_ambient);
 	}
 
 	Material::Material(const std::string& tag)
@@ -43,5 +44,10 @@ namespace Orbital
 		m_diffuseMap = TextureManager::Get(diffuseMapName).lock();
 		m_specularMap = TextureManager::Get(specularMapName).lock();
 		m_shader = ShaderManager::Get(0);
+	}
+
+	WeakRef<Shader> Material::getShader() const
+	{
+		return m_shader;
 	}
 }

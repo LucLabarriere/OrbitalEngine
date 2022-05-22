@@ -26,6 +26,11 @@ void Inspector::render()
 			renderText();
 			break;
 		}
+		case InspectedObjectTag::Material:
+		{
+			renderMaterial();
+			break;
+		}
 	}
 	ImGui::End();
 }
@@ -85,14 +90,21 @@ void Inspector::renderEntity()
 		{
 			if (ImGui::CollapsingHeader("MeshRenderer"))
 			{
+				Components::MeshRenderer::DrawData drawData = meshRenderer->getDrawData();
 
-				ImGui::Checkbox("Static", &meshRenderer->StaticDraw);
-				ImGui::Checkbox("Batched", &meshRenderer->BatchedDraw);
-				ImGui::Checkbox("Hidden", &meshRenderer->Hidden);
+				ImGui::Checkbox("Static", &drawData.staticDraw);
+				ImGui::Checkbox("Batched", &drawData.batchDraw);
+				ImGui::Checkbox("Hidden", &drawData.hidden);
 
-				for (auto child : hiearchy)
+				if (drawData != meshRenderer->getDrawData())
 				{
-					child.get<Components::MeshRenderer>().Hidden = meshRenderer->Hidden;
+					meshRenderer->setDrawData(drawData);
+
+					// TODO correct here, set hidden should be done for the children of the children
+					for (auto child : hiearchy)
+					{
+						child.get<Components::MeshRenderer>().setHidden(drawData.hidden);
+					}
 				}
 
 				int currentItem = 0;
@@ -100,13 +112,15 @@ void Inspector::renderEntity()
 
 				for (size_t i = 0; i < meshTags.size(); i++)
 				{
-					if (meshTags[i] == meshRenderer->Mesh.lock()->getTag().c_str())
+					if (meshTags[i] == meshRenderer->getMesh().lock()->getTag().c_str())
 						currentItem = i;
 				}
+				
+				ImGui::Text("Material: %s", meshRenderer->getMaterial().lock()->getTag().c_str());
 
 				ImGui::Combo("Mesh", &currentItem, meshTags.data(), meshTags.size());
 
-				if (meshTags[currentItem] != meshRenderer->Mesh.lock()->getTag())
+				if (meshTags[currentItem] != meshRenderer->getMesh().lock()->getTag())
 				{
 					meshRenderer->setMesh(meshTags[currentItem]);
 				}
@@ -188,7 +202,9 @@ void Inspector::renderEntity()
 				if (ImGui::Selectable("MeshRenderer"))
 				{
 					if (!transform)
-						entity.add<Components::Transform>();
+					{
+						transform = &entity.add<Components::Transform>();
+					}
 					entity.add<Components::MeshRenderer>("Cube", transform);
 				}
 			}
@@ -244,7 +260,7 @@ void Inspector::renderEntity()
 
 void Inspector::renderTexture()
 {
-	auto& texture = std::get<Ref<Texture>>(m_object.Value);
+	auto texture = std::get<WeakRef<Texture>>(m_object.Value).lock();
 
 	float maxSize = 256.0f;
 	float width = (float)texture->getWidth();
@@ -265,9 +281,9 @@ void Inspector::renderTexture()
 	}
 
 	ImGui::Text("Texture");
-	ImGui::Text("name: %s", texture->getTag().c_str());
-	ImGui::Text("width: %u", texture->getWidth());
-	ImGui::Text("height: %u", texture->getHeight());
+	ImGui::Text("Name: %s", texture->getTag().c_str());
+	ImGui::Text("Width: %u", texture->getWidth());
+	ImGui::Text("Height: %u", texture->getHeight());
 	ImGui::Image(
 		(void*)(intptr_t)texture->getRendererId(),
 		ImVec2(width, height),
@@ -280,4 +296,15 @@ void Inspector::renderText()
 {
 	auto& text = std::get<std::string>(m_object.Value);
 	ImGui::Text(text.c_str());
+}
+
+void Inspector::renderMaterial()
+{
+	auto material = std::get<WeakRef<Material>>(m_object.Value).lock();
+	ImGui::Text("Material");
+	ImGui::Text("Name: %s", material->getTag().c_str());
+	ImGui::DragFloat("Ambient", &material->getAmbient(), 0.02f, 0.0, 1.0f);
+	ImGui::ColorEdit3("Diffuse", &material->getDiffuseTint()[0]);
+	ImGui::ColorEdit3("Specular", &material->getSpecularTint()[0]);
+	ImGui::DragFloat("shininess", &material->getShininess());
 }

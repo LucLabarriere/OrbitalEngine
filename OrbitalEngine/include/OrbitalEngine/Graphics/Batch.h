@@ -13,7 +13,7 @@ namespace Orbital
 
 	namespace Components
 	{
-		struct MeshRenderer;
+		class MeshRenderer;
 		class Transform;
 	}
 

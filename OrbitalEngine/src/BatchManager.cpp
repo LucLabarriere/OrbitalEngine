@@ -5,7 +5,7 @@
 
 namespace Orbital
 {
-	constexpr size_t batchsize = 20000;
+	constexpr size_t batchsize = 1000;
 
 	BatchContainer::BatchContainer(const WeakRef<Material>& material)
 		: m_material(material.lock())
@@ -16,9 +16,10 @@ namespace Orbital
 
 	void BatchContainer::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
-		if (mr.Batch)
+		auto batchData = mr.getBatchData();
+		if (batchData.batch)
 		{
-			mr.Batch->registerMesh(mr, t);
+			batchData.batch->registerMesh(mr, t);
 			return;
 		}
 		for (auto& batch : m_batches)
@@ -34,7 +35,8 @@ namespace Orbital
 				}
 			}
 		}
-		auto batch = CreateRef<Batch>(mr.Material, batchsize);
+
+		auto batch = CreateRef<Batch>(mr.getMaterial(), batchsize);
 		m_batches.push_back(batch);
 		batch->allocateMemory();
 		batch->registerMesh(mr, t);
@@ -43,9 +45,10 @@ namespace Orbital
 	void BatchContainer::renderBatches()
 	{
 		m_material->bind();
+
+
 		for (auto& batch : m_batches)
 		{
-			//batch->submitData();
 			batch->render();
 		}
 	}
@@ -58,23 +61,22 @@ namespace Orbital
 
 	BatchManager::BatchManager()
 	{
-		auto material = MaterialManager::Get(0);
 		m_batchContainers.resize(MaterialManager::GetCount());
 
-		for (auto& material2 : *MaterialManager::GetInstance())
+		for (auto& material : *MaterialManager::GetInstance())
 		{
-			m_batchContainers[material2->getId()] = CreateRef<BatchContainer>(material);
+			m_batchContainers[material->getId()] = CreateRef<BatchContainer>(material);
 		}
 	}
 
 	void BatchManager::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
-		m_batchContainers[mr.Material.lock()->getId()]->registerMesh(mr, t);
+		m_batchContainers[mr.getMaterial().lock()->getId()]->registerMesh(mr, t);
 	}
 
 	void BatchManager::deleteMesh(Components::MeshRenderer& mr)
 	{
-		m_batchContainers[mr.Material.lock()->getId()]->deleteMesh(mr);
+		m_batchContainers[mr.getMaterial().lock()->getId()]->deleteMesh(mr);
 	}
 
 	void BatchManager::renderBatches()
@@ -83,10 +85,5 @@ namespace Orbital
 		{
 			batch->renderBatches();
 		}
-	}
-
-	void BatchManager::onUpdate()
-	{
-		// Create and remove batchContainers here depending on changing on materials
 	}
 }

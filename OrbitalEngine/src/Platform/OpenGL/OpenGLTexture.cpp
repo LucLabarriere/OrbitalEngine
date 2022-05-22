@@ -49,13 +49,13 @@ namespace Orbital
 
 	void OpenGLTexture::bind() const
 	{
-		glActiveTexture(GL_TEXTURE0);
+		glad_glActiveTexture(GL_TEXTURE0);
 		glad_glBindTexture(GL_TEXTURE_2D, m_rendererId);
 	}
 
 	void OpenGLTexture::bind(unsigned int slot) const
 	{
-		glActiveTexture(GL_TEXTURE0 + slot);
+		glad_glActiveTexture(GL_TEXTURE0 + slot);
 		glad_glBindTexture(GL_TEXTURE_2D, m_rendererId);
 	}
 

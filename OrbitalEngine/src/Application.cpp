@@ -27,12 +27,14 @@ namespace Orbital
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
 
 		Inputs::Initialize(m_window);
-		ShaderManager::Initialize();
 		TextureManager::Initialize();
+		ShaderManager::Initialize();
+		Renderer::Initialize();
 		MaterialManager::Initialize();
 		MeshManager::Initialize();
+		Renderer::InitializeBatchManager();
+		Renderer::InitializeFramebuffer();
 		Metrics::Initialize();
-		Renderer::Initialize();
 	}
 
 	Application::~Application()

@@ -7,14 +7,11 @@ namespace Orbital
 	class MaterialManager : public AssetManager<Material>
 	{
 	public:
-		static void Initialize() { s_instance = new MaterialManager(); }
+		static void Initialize();
 
 	private:
-		MaterialManager()
-		{
-			s_managerName = "MaterialManager";
-			m_assets.push_back(Material::Create("Blank", "Blank"));
-			m_assets.push_back(Material::Create("Damier", "Damier"));
-		}
+		MaterialManager();
+
+		void push(Ref<Material>&& material);
 	};
 }

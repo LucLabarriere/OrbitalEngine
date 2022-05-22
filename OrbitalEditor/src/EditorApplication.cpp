@@ -7,7 +7,7 @@ EditorApplication::EditorApplication() : Application()
 {
 	m_scene = CreateRef<Scene>();
 	m_scene->initialize();
-	m_cameraController = CreateScope<CameraController>(m_scene->getCamera());
+	m_cameraController = CreateRef<CameraController>(m_scene->getCamera());
 }
 
 EditorApplication::~EditorApplication()
@@ -19,48 +19,55 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::onStart()
 {
-	unsigned int size_x = 2;
-	unsigned int size_y = 2;
-	float width = 0.61f;
-	for (unsigned int i = 0; i <= size_x; i++)
-	{
-		for (unsigned int j = 0; j <= size_y; j++)
-		{
-			Components::Tag tag(fmt::format("Cube_{}_{}", i, j).c_str());
-			auto entity = m_scene->createEntity(tag);
+	auto floor = m_scene->createEntity("Floor");
+	auto& tFloor = floor.add<Components::Transform>(Components::Transform({
+		{ 0.0f,  0.0f, 0.0f },
+		{ 90.0f, 0.0f, 0.0f },
+		{ 10.0f, 10.0f, 1.0f }
+	}));
 
-			Components::Transform t = {
-				{ -1.0f, -1.0f, 0.6f },
-				{  0.0f,  0.0f, 0.0f },
-				{  width,  width, width }
-			};
+	floor.add<Components::MeshRenderer>("Quad", &tFloor, true, "Blank");
 
-			float positionX = (float)i / size_x * 2;
-			float positionY = (float)j / size_y * 2;
-			//float rotation = (float)j / size_x * 2 * 180.0f;
-			float rotation = 0;
-
-			t.Position() += Vec3(positionX, positionY, 0.0f);
-			t.Rotation() = Vec3(rotation, rotation, rotation);
-
-			entity.add<Components::Transform>(t);
-			entity.add<Components::MeshRenderer>("Quad", &t);
-		}
-	}
-
-	auto entity = m_scene->createEntity("Quad");
-
-	Components::Transform t = {
+	auto cube = m_scene->createEntity("Cube");
+	auto& tCube = cube.add<Components::Transform>(Components::Transform({
+		{ 0.0f, 0.5f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f },
-		{ 0.0f, 0.0f, 0.0f },
-		{ 0.2f, 0.2f, 0.2f }
-	};
+		{ 1.0f, 1.0f, 1.0f }
+	}));
 
-	entity.add<Components::Transform>(t);
-	entity.add<Components::MeshRenderer>("Quad", &t);
+	auto& mr = cube.add<Components::MeshRenderer>("Cube", &tCube, true, "Damier");
+
+	auto pointLight = m_scene->createEntity("Point Light");
+	auto& tPointLight = pointLight.add<Components::Transform>(Components::Transform({
+		{ 0.0f, 0.5f, 1.3f },
+		{ 0.0f, 0.0f, 0.0f },
+		{ 0.1f, 0.1f, 0.1f }
+	}));
+
+	auto& lPointLight = pointLight.add<Components::PointLight>();
+	lPointLight.Position = &tPointLight.Position();
+	lPointLight.Diffuse = { 0.0f, 0.0f, 1.0f };
+	lPointLight.Specular = { 0.0f, 0.0f, 1.0f };
+	pointLight.add<Components::MeshRenderer>("Cube", &tPointLight);
+
+	auto pointLight2 = m_scene->createEntity("Point Light2");
+	auto& tPointLight2 = pointLight2.add<Components::Transform>(Components::Transform({
+		{ 1.3f, 0.5f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f },
+		{ 0.1f, 0.1f, 0.1f }
+	}));
+
+	auto& lPointLight2 = pointLight2.add<Components::PointLight>();
+	lPointLight2.Position = &tPointLight2.Position();
+	lPointLight2.Diffuse = { 1.0f, 0.0f, 0.0f };
+	lPointLight2.Specular = { 1.0f, 0.0f, 0.0f };
+	pointLight2.add<Components::MeshRenderer>("Cube", &tPointLight2);
 
 	auto sun = m_scene->createEntity("Sun");
 	sun.add<Components::DirectionalLight>();
+
+	m_scene->getCamera()->setPosition({ 1.5f, 1.5f, 1.5f });
+	m_scene->getCamera()->rotate({ -30.0f, 130.f });
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().Fonts->AddFontFromFileTTF(Settings::GetAssetPath("fonts/NotoSans-Regular.ttf").c_str(), 32);
@@ -84,13 +91,14 @@ void EditorApplication::onStart()
 	mainStyle.ScrollbarRounding = 9.0f;
 	mainStyle.GrabMinSize = 5.0f;
 	mainStyle.GrabRounding = 3.0f;
+
 	ImGui::GetStyle() = mainStyle;
 
 	ImGui::GetIO().FontGlobalScale = 0.55;
 
 	m_hierarchyPanel = CreateRef<HierarchyPanel>(m_scene);
 	m_hierarchyPanel->initialize();
-	m_metricsPanel = CreateScope<MetricsPanel>();
+	m_metricsPanel = CreateScope<MetricsPanel>(m_cameraController);
 	m_batchesPanel = CreateScope<BatchesPanel>();
 	m_assetManagerPanel = CreateScope<AssetManagerPanel>();
 	m_fileExplorerPanel = CreateScope<FileExplorerPanel>();
@@ -134,9 +142,6 @@ void EditorApplication::onUpdate(Time dt)
 
 	m_cameraController->onUpdate(dt);
 
-	TextureManager::Bind("Damier");
-	auto shader = ShaderManager::Get("Base").lock();
-
 	m_scene->beginScene();
 	{
 		auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer, Components::Tag>();
@@ -146,7 +151,7 @@ void EditorApplication::onUpdate(Time dt)
 			auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
 			auto& tag = view.get<Components::Tag>(entity);
 
-			if (!meshRenderer.Hidden)
+			if (!meshRenderer.getDrawData().hidden)
 			{
 				Renderer::RegisterMesh(meshRenderer, transform);
 			}
@@ -154,6 +159,8 @@ void EditorApplication::onUpdate(Time dt)
 	}
 
 	Renderer::RenderBatches();
+	Renderer::RenderUnits();
+
 	Renderer::Get()->displayFrame();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

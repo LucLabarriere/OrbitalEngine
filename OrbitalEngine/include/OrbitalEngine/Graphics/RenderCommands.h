@@ -10,6 +10,6 @@ namespace Orbital
 		static void NewFrame();
 		static void ReadyFrame();
 		static void DisableDepthTest();
-		static void DrawIndexed(unsigned int drawType, size_t indexCount);
+		static void DrawIndexed(unsigned int drawType, size_t size);
 	};
 }

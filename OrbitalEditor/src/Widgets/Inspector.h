@@ -9,7 +9,8 @@ enum class InspectedObjectTag
 {
 	Entity = 0,
 	Texture,
-	Text
+	Text,
+	Material
 };
 
 class Inspector
@@ -20,8 +21,9 @@ private:
 		InspectedObjectTag Tag = InspectedObjectTag::Entity;
 		std::variant<
 			Entity,
-			Ref<Texture>,
-			std::string
+			WeakRef<Texture>,
+			std::string,
+			WeakRef<Material>
 		> Value = Entity();
 	};
 
@@ -34,7 +36,7 @@ public:
 		s_instance->m_object.Value = entity;
 		s_instance->m_object.Tag = InspectedObjectTag::Entity;
 	}
-	static inline void SetTexture(const Ref<Texture>& texture)
+	static inline void SetTexture(WeakRef<Texture> texture)
 	{
 		s_instance->m_object.Value = texture;
 		s_instance->m_object.Tag = InspectedObjectTag::Texture;
@@ -44,6 +46,11 @@ public:
 		s_instance->m_object.Value = text;
 		s_instance->m_object.Tag = InspectedObjectTag::Text;
 	}
+	static inline void SetMaterial(WeakRef<Material> material)
+	{
+		s_instance->m_object.Value = material;
+		s_instance->m_object.Tag = InspectedObjectTag::Material;
+	}
 
 private:
 	Inspector(Ref<Scene>& scene);
@@ -52,6 +59,7 @@ private:
 	void renderEntity();
 	void renderTexture();
 	void renderText();
+	void renderMaterial();
 
 private:
 	static inline Inspector* s_instance = nullptr;

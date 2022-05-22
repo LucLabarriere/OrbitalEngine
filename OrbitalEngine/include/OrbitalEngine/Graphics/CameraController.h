@@ -15,9 +15,12 @@ namespace Orbital
 		void onKeyPressed(const KeyPressedEvent& e);
 		void onMouseScrolled(const MouseScrolledEvent& e);
 
+		float& getRotationSpeed() { return m_rotationSpeed; }
+		float& getTranslationSpeed() { return m_translationSpeed; }
+
 	private:
-		float m_translationSpeed = 2.0f;
-		float m_rotationSpeed = 10.0f;
+		float m_translationSpeed = 10.0f;
+		float m_rotationSpeed = 35.0f;
 		float m_zoomSpeed = 0.1f;
 		glm::vec2 m_formerMousePosition;
 		Ref<Camera> m_camera;

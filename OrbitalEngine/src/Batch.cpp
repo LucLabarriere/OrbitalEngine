@@ -86,27 +86,32 @@ namespace Orbital
 				stride * sizeof(unsigned int));
 		}
 		m_currentSubDataIndices = nullptr;
-		m_subDataIndices.resize(0);
 
 		RenderCommands::DrawIndexed(OE_TRIANGLES, m_indices.getSize());
 		Metrics::IncrementBatchCount();
+
+		m_subDataIndices.resize(0);
 	}
 
 	void Batch::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
-		auto mesh = mr.Mesh.lock();
+		auto mesh = mr.getMesh().lock();
 		auto& vertices = mesh->getVertices();
 		auto& indices = mesh->getIndices();
+		auto batchData = mr.getBatchData();
 
-		if (!t.isDirty())
-			return;
-
-		int vertexPointer = mr.vertexPointer;
-		int indexPointer = mr.indexPointer;
+		int vertexPointer = batchData.vertexPointer;
+		int indexPointer = batchData.indexPointer;
 
 		if (vertexPointer == -1 || indexPointer == -1)
 		{
 			std::tie(vertexPointer, indexPointer) = getAvailableSlot(vertices.getCount(), indices.getCount());
+
+			batchData.vertexPointer = vertexPointer;
+			batchData.indexPointer = indexPointer;
+			batchData.batch = shared_from_this();
+
+			mr.setBatchData(batchData);
 		}
 
 		if (vertexPointer == -1 || indexPointer == -1)
@@ -114,10 +119,6 @@ namespace Orbital
 			Logger::Error("Error not enough available space, Vertex: {} Index: {}", vertexPointer, indexPointer);
 			return;
 		}
-
-		mr.vertexPointer = vertexPointer;
-		mr.indexPointer = indexPointer;
-		mr.Batch = shared_from_this();
 
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, t.Position());
@@ -173,9 +174,10 @@ namespace Orbital
 	void Batch::deleteMesh(Components::MeshRenderer& mr)
 	{
 		// TODO: make it work
-		size_t vertexPointer = mr.vertexPointer;
-		size_t indexPointer = mr.indexPointer;
-		auto mesh = mr.Mesh.lock();
+		auto batchData = mr.getBatchData();
+		size_t vertexPointer = batchData.vertexPointer;
+		size_t indexPointer = batchData.indexPointer;
+		auto mesh = mr.getMesh().lock();
 
 		auto& vertices = mesh->getVertices();
 		auto& indices = mesh->getIndices();
@@ -220,17 +222,16 @@ namespace Orbital
 		m_subDataVertices.push_back(BufferSubData(vertexPointer, vertexPointer + vertices.getCount() - 1));
 		m_subDataIndices.push_back(BufferSubData(indexPointer, indexPointer + indices.getCount() - 1));
 
-		mr.Batch = nullptr;
-		mr.vertexPointer = -1;
-		mr.indexPointer = -1;
+		mr.setBatchData(Components::MeshRenderer::BatchData());
 
 		updateFullStatus();
 	}
 
 	bool Batch::meshFits(Components::MeshRenderer& mr)
 	{
-		auto& vertices = mr.Mesh.lock()->getVertices();
-		auto& indices = mr.Mesh.lock()->getIndices();
+		auto mesh = mr.getMesh();
+		auto& vertices = mesh.lock()->getVertices();
+		auto& indices = mesh.lock()->getIndices();
 
 		auto [vertexPointer, indexPointer] = getAvailableSlot(vertices.getCount(), indices.getCount(), false);
 

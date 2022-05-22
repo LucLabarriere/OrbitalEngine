@@ -23,6 +23,7 @@ namespace Orbital
 		void setOrthographic() { m_orthographic = true; updateMatrices(); }
 		void setPerspective() { m_orthographic = false; updateMatrices(); }
 		void setAspectRatio(float value) { m_aspectRatio = value; updateMatrices(); }
+		void setPosition(const Vec3& position) { m_position = position; };
 
 	private:
 		bool m_orthographic = false;

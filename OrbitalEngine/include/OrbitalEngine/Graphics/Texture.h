@@ -44,7 +44,6 @@ namespace Orbital
 	protected:
 		friend TextureManager;
 
-		std::string m_tag;
 		unsigned int m_rendererId;
 		unsigned int m_width;
 		unsigned int m_height;

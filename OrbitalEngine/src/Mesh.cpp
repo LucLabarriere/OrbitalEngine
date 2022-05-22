@@ -19,12 +19,12 @@ namespace Orbital
 			BasicVertex({  0.5f,  0.5f,  offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f,  1.0f }, { 1.0f, 1.0f }),
 
 			BasicVertex({ -0.5f, -0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f }),
-			BasicVertex({  0.5f, -0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f }),
 			BasicVertex({ -0.5f,  0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 1.0f }),
+			BasicVertex({  0.5f, -0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f }),
 			BasicVertex({  0.5f,  0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f })
 		);
 
-		IndexContainer indices({ 0, 1, 2, 1, 2, 3, 4, 5, 6, 5, 6, 7 });
+		IndexContainer indices({ 0, 1, 2, 2, 1, 3, 4, 5, 6, 6, 5, 7});
 
 		return Ref<Mesh>(new Mesh(tag, vertices, indices));
 	}
@@ -34,8 +34,8 @@ namespace Orbital
 		BasicVertexContainer vertices(
 			// Same X
 			BasicVertex({ -0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { -1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }),
-			BasicVertex({ -0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { -1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }),
 			BasicVertex({ -0.5f, -0.5f,  0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { -1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }),
+			BasicVertex({ -0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { -1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }),
 			BasicVertex({ -0.5f,  0.5f,  0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { -1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }),
 
 			BasicVertex({ 0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }),
@@ -50,14 +50,14 @@ namespace Orbital
 			BasicVertex({  0.5f, -0.5f,  0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, -1.0f, 0.0f }, { 1.0f, 1.0f }),
 
 			BasicVertex({ -0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f,  1.0f, 0.0f }, { 0.0f, 0.0f }),
-			BasicVertex({  0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f,  1.0f, 0.0f }, { 1.0f, 0.0f }),
 			BasicVertex({ -0.5f,  0.5f,  0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f,  1.0f, 0.0f }, { 0.0f, 1.0f }),
+			BasicVertex({  0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f,  1.0f, 0.0f }, { 1.0f, 0.0f }),
 			BasicVertex({  0.5f,  0.5f,  0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f,  1.0f, 0.0f }, { 1.0f, 1.0f }),
 
 			// Same Z
 			BasicVertex({ -0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f }),
-			BasicVertex({  0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f }),
 			BasicVertex({ -0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 1.0f }),
+			BasicVertex({  0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f }),
 			BasicVertex({  0.5f,  0.5f, -0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f }),
 
 			BasicVertex({ -0.5f, -0.5f,  0.5f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f,  1.0f }, { 0.0f, 0.0f }),
@@ -67,12 +67,12 @@ namespace Orbital
 		);
 
 		IndexContainer indices({
-			0,  1,  2,  1,  2,  3,
-			4,  5,  6,  5,  6,  7,
-			8,  9, 10,  9, 10, 11,
-			12, 13, 14, 13, 14, 15,
-			16, 17, 18, 17, 18, 19,
-			20, 21, 22, 21, 22, 23
+			 0,  1,  2,  2,  1,  3,
+			 4,  5,  6,  6,  5,  7,
+			 8,  9, 10, 10,  9, 11,
+			12, 13, 14, 14, 13, 15,
+			16, 17, 18, 18, 17, 19,
+			20, 21, 22, 22, 21, 23
 		});
 
 		return Ref<Mesh>(new Mesh(tag, vertices, indices));
@@ -81,12 +81,13 @@ namespace Orbital
 	Ref<Mesh> Mesh::Triangle(const std::string& tag)
 	{
 		BasicVertexContainer vertices(
-			BasicVertex({ -0.5f, -0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f }),
-			BasicVertex({  0.5f, -0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f }),
-			BasicVertex({ -0.5f,  0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 1.0f }),
 			BasicVertex({ -0.5f, -0.5f,  offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f,  1.0f }, { 0.0f, 0.0f }),
 			BasicVertex({  0.5f, -0.5f,  offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f,  1.0f }, { 1.0f, 0.0f }),
-			BasicVertex({ -0.5f,  0.5f,  offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f,  1.0f }, { 0.0f, 1.0f })
+			BasicVertex({  0.0f,  0.5f,  offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f,  1.0f }, { 0.5f, 1.0f }),
+
+			BasicVertex({ -0.5f, -0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f }),
+			BasicVertex({  0.0f,  0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 0.5f, 1.0f }),
+			BasicVertex({  0.5f, -0.5f, -offset }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f })
 		);
 
 		IndexContainer indices({ 0, 1, 2, 3, 4, 5 });

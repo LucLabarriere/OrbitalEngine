@@ -2,14 +2,14 @@
 
 namespace Orbital
 {
-	class FrameBuffer
+	class MultisampledFrameBuffer
 	{
 	public:
-		static FrameBuffer* Create();
-		virtual ~FrameBuffer() {};
+		static MultisampledFrameBuffer* Create();
+		virtual ~MultisampledFrameBuffer() {};
 
 		virtual void bind() const = 0;
-		virtual void bindDraw() const = 0;
+		virtual void bindRead() const = 0;
 		virtual void unbind() const = 0;
 
 		virtual void renderFrame() = 0;
@@ -17,7 +17,7 @@ namespace Orbital
 
 
 	protected:
-		FrameBuffer() { }
+		MultisampledFrameBuffer() { }
 
 	protected:
 		unsigned int m_rendererId = 0;

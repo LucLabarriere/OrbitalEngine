@@ -1,4 +1,5 @@
 #include "OrbitalEngine/Graphics/RenderCommands.h"
+#include "OrbitalEngine/Utils/Settings.h"
 
 namespace Orbital
 {
@@ -34,5 +35,17 @@ namespace Orbital
 	void RenderCommands::DrawIndexed(unsigned int drawType, size_t size)
 	{
 		glad_glDrawElements(drawType, size, GL_UNSIGNED_INT, nullptr);
+	}
+
+	void RenderCommands::BlitFramebuffer()
+	{
+		glad_glBlitFramebuffer(0, 0,
+			Settings::Get(Settings::UIntSetting::WindowWidth),
+			Settings::Get(Settings::UIntSetting::WindowHeight),
+			0, 0,
+			Settings::Get(Settings::UIntSetting::WindowWidth),
+			Settings::Get(Settings::UIntSetting::WindowHeight),
+			GL_COLOR_BUFFER_BIT, GL_NEAREST
+		);
 	}
 }

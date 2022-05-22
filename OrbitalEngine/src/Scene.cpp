@@ -91,6 +91,7 @@ namespace Orbital
 		shader->setUniform3f("u_ViewPosition", getCamera()->getPosition());
 		shader->setUniformMat4f("u_VPMatrix", getCamera()->getVPMatrix());
 		shader->setUniformMat4f("u_MMatrix", Mat4(1.0f));
+		shader->setUniform2f("u_TexCoordsMultiplicator", Vec2(1.0f));
 
 		{
 			auto view = getRegistry()->view<Components::DirectionalLight>();

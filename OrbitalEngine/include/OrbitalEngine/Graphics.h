@@ -5,6 +5,7 @@
 #include "OrbitalEngine/Graphics/RenderCommands.h"
 #include "OrbitalEngine/Graphics/Renderer.h"
 #include "OrbitalEngine/Graphics/FrameBuffer.h"
+#include "OrbitalEngine/Graphics/MultisampledFrameBuffer.h"
 
 #include "OrbitalEngine/Graphics/Mesh.h"
 #include "OrbitalEngine/Graphics/MeshManager.h"

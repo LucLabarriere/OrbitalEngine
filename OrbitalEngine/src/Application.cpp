@@ -33,7 +33,7 @@ namespace Orbital
 		MaterialManager::Initialize();
 		MeshManager::Initialize();
 		Renderer::InitializeBatchManager();
-		Renderer::InitializeFramebuffer();
+		Renderer::InitializeFramebuffers();
 		Metrics::Initialize();
 	}
 

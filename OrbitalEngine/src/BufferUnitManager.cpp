@@ -15,7 +15,7 @@ namespace Orbital
 		auto material = mr.getMaterial().lock();
 
 		m_data[material->getId()][mesh->getId()].push_back(
-			CreateRef<RenderData>(&t, material->getId(), mesh->getId())
+			CreateRef<RenderData>(&t, mr.getTexCoordsMultiplicator(), material->getId(), mesh->getId())
 		);
 	}
 
@@ -36,6 +36,8 @@ namespace Orbital
 				for (auto renderData : meshTree)
 				{
 					unit->setModelMatrixUniform(material->getShader(), *(renderData->transform));
+					material->getShader().lock()
+						->setUniform2f("u_TexCoordsMultiplicator", renderData->texCoordsMultiplicator);
 					RenderCommands::DrawIndexed(OE_TRIANGLES, mesh->getIndices().getSize());
 					Metrics::IncrementBatchCount();
 				}

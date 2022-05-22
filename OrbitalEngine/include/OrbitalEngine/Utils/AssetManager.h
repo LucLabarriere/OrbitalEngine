@@ -12,6 +12,11 @@ namespace Orbital
 		static void Terminate() { delete s_instance; }
 		static AssetManager<T>* GetInstance() { return s_instance; }
 
+		static std::vector<const char*> GetAvailable()
+		{
+			return s_instance->getAvailable();
+		}
+
 		static WeakRef<T> Get(const std::string& assetName)
 		{
 			for (const auto& asset: s_instance->m_assets)
@@ -45,6 +50,19 @@ namespace Orbital
 
 	protected:
 		AssetManager<T>() { }
+
+		std::vector<const char*> getAvailable()
+		{
+			std::vector<const char*> assetNames;
+			assetNames.reserve(m_assets.size());
+
+			for (size_t i = 0; i < m_assets.size(); i++)
+			{
+				assetNames.push_back(m_assets[i]->getTag().c_str());
+			}
+
+			return assetNames;
+		}
 
 	protected:
 		inline static std::string s_managerName = "AssetManager";

@@ -1,5 +1,5 @@
 #pragma once
-#include "OrbitalEngine/Graphics/FrameBuffer.h"
+#include "OrbitalEngine/Graphics/MultisampledFrameBuffer.h"
 #include "OrbitalEngine/Components/Transform.h"
 #include "OrbitalEngine/Components/MeshRenderer.h"
 
@@ -9,22 +9,22 @@ namespace Orbital
 	class VertexBuffer;
 	class IndexBuffer;
 
-	class OpenGLFrameBuffer: public FrameBuffer
+	class OpenGLMultisampledFrameBuffer: public MultisampledFrameBuffer
 	{
 	public:
-		virtual ~OpenGLFrameBuffer() override;
+		virtual ~OpenGLMultisampledFrameBuffer() override;
 
 		virtual void bind() const override;
-		virtual void bindDraw() const override;
+		virtual void bindRead() const override;
 		virtual void unbind() const override;
 
 		virtual void renderFrame() override;
 
 	private:
-		OpenGLFrameBuffer();
+		OpenGLMultisampledFrameBuffer();
 
 	private:
-		friend FrameBuffer;
+		friend MultisampledFrameBuffer;
 
 		unsigned int m_renderBufferId;
 		Scope<VertexArray> m_vao;

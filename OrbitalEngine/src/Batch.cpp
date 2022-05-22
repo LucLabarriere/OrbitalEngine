@@ -98,6 +98,7 @@ namespace Orbital
 		auto mesh = mr.getMesh().lock();
 		auto& vertices = mesh->getVertices();
 		auto& indices = mesh->getIndices();
+		auto drawData = mr.getDrawData();
 		auto batchData = mr.getBatchData();
 
 		int vertexPointer = batchData.vertexPointer;
@@ -147,6 +148,7 @@ namespace Orbital
 			m_vertices[i + vertexPointer] = vertices[i];
 			m_vertices[i + vertexPointer].position = model * Vec4(m_vertices[i + vertexPointer].position, 1.0f);
 			m_vertices[i + vertexPointer].normal = Mat3(glm::transpose(glm::inverse(model))) * m_vertices[i + vertexPointer].normal;
+			m_vertices[i + vertexPointer].texCoords = mr.getTexCoordsMultiplicator() * vertices[i].texCoords;
 			m_freeVertices[i + vertexPointer] = false;
 		}
 

@@ -1,4 +1,4 @@
-#include "OpenGLFrameBuffer.h"
+#include "OpenGLMultisampledFrameBuffer.h"
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics.h"
 #include "VertexArray.h"
@@ -7,73 +7,76 @@
 
 namespace Orbital
 {
-	FrameBuffer* FrameBuffer::Create()
+	MultisampledFrameBuffer* MultisampledFrameBuffer::Create()
 	{
-		return new OpenGLFrameBuffer();
+		return new OpenGLMultisampledFrameBuffer();
 	}
 
-	OpenGLFrameBuffer::~OpenGLFrameBuffer()
+	OpenGLMultisampledFrameBuffer::~OpenGLMultisampledFrameBuffer()
 	{
 		glad_glDeleteFramebuffers(1, &m_rendererId);
 		glad_glDeleteTextures(1, &m_textureId);
 		glad_glDeleteRenderbuffers(1, &m_renderBufferId);
 	}
 
-	void OpenGLFrameBuffer::bind() const
+	void OpenGLMultisampledFrameBuffer::bind() const
 	{
 		glad_glBindFramebuffer(GL_FRAMEBUFFER, m_rendererId);
 	}
 
-	void OpenGLFrameBuffer::bindDraw() const
+	void OpenGLMultisampledFrameBuffer::bindRead() const
 	{
-		glad_glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_rendererId);
+		glad_glBindFramebuffer(GL_READ_FRAMEBUFFER, m_rendererId);
 	}
 
-	void OpenGLFrameBuffer::unbind() const
+	void OpenGLMultisampledFrameBuffer::unbind() const
 	{
 		glad_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFrameBuffer::renderFrame()
+	void OpenGLMultisampledFrameBuffer::renderFrame()
 	{
 		auto shader = ShaderManager::Get("PostProcess").lock();
 		shader->bind();
 		glad_glDisable(GL_DEPTH_TEST);
 		glad_glActiveTexture(GL_TEXTURE0);
-		glad_glBindTexture(GL_TEXTURE_2D, m_textureId);
+		glad_glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textureId);
 		shader->setUniform1i("u_ScreenTexture", 0);
 
 		m_vao->bind();
 		m_ibo->bind();
 
-		RenderCommands::DrawIndexed(OE_TRIANGLES, 6);
+		RenderCommands::DrawIndexed(
+			OE_TRIANGLES, 6
+		);
 	}
 
-	OpenGLFrameBuffer::OpenGLFrameBuffer()
+	OpenGLMultisampledFrameBuffer::OpenGLMultisampledFrameBuffer()
 	{
 		unsigned int width = Settings::Get(Settings::UIntSetting::RenderingAreaWidth);
 		unsigned int height = Settings::Get(Settings::UIntSetting::RenderingAreaHeight);
+		unsigned int samples = 8;
 
 		glad_glGenFramebuffers(1, &m_rendererId);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererId);
 		glad_glActiveTexture(GL_TEXTURE0);
 		glad_glGenTextures(1, &m_textureId);
-		glad_glBindTexture(GL_TEXTURE_2D, m_textureId);
+		glad_glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textureId);
 
-		glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glad_glTexImage2DMultisample(
+			GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB,
+			width, height, GL_TRUE
+		);
 
-		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glad_glBindTexture(GL_TEXTURE_2D, 0);
-		glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureId, 0);
+		glad_glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glad_glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glad_glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+		glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_textureId, 0);
 
 		glad_glGenRenderbuffers(1, &m_renderBufferId);
 		glad_glBindRenderbuffer(GL_RENDERBUFFER, m_renderBufferId);
 
-		glad_glRenderbufferStorage(
-			GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
-			width, height
-		);
+		glad_glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH24_STENCIL8, width, height );
 
 		glad_glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_renderBufferId);
 		glad_glBindRenderbuffer(GL_RENDERBUFFER, 0);

@@ -4,9 +4,10 @@
 
 namespace Orbital
 {
-	void Renderer::InitializeFramebuffer()
+	void Renderer::InitializeFramebuffers()
 	{
 		s_instance->m_frameBuffer = Scope<FrameBuffer>(FrameBuffer::Create());
+		s_instance->m_msFrameBuffer = Scope<MultisampledFrameBuffer>(MultisampledFrameBuffer::Create());
 	}
 	void Renderer::InitializeBatchManager()
 	{
@@ -31,12 +32,16 @@ namespace Orbital
 	void Renderer::newFrame()
 	{
 		Metrics::ReinitializeBatchCount();
-		m_frameBuffer->bind();
+		m_msFrameBuffer->bind();
 		RenderCommands::NewFrame();
 	}
 
 	void Renderer::displayFrame()
 	{
+		m_frameBuffer->unbind();
+		m_msFrameBuffer->bindRead();
+		m_frameBuffer->bindDraw();
+		RenderCommands::BlitFramebuffer();
 		m_frameBuffer->unbind();
 		RenderCommands::ReadyFrame();
 		m_frameBuffer->renderFrame();

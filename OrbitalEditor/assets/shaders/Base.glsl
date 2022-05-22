@@ -13,12 +13,13 @@ out vec2 v_TexCoords;
 
 uniform mat4 u_VPMatrix;
 uniform mat4 u_MMatrix;
+uniform vec2 u_TexCoordsMultiplicator;
 
 void main()
 {
     v_Color = a_Color;
     v_Normal = normalize(mat3(transpose(inverse(u_MMatrix))) * a_Normal);
-    v_TexCoords = a_TexCoords;
+    v_TexCoords = u_TexCoordsMultiplicator * a_TexCoords;
 
     gl_Position = u_MMatrix * vec4(a_Position, 1.0);
     v_FragmentPosition = vec3(gl_Position);

@@ -3,6 +3,7 @@
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/RenderCommands.h"
 #include "OrbitalEngine/Graphics/FrameBuffer.h"
+#include "OrbitalEngine/Graphics/MultisampledFrameBuffer.h"
 #include "OrbitalEngine/Graphics/BatchManager.h"
 #include "OrbitalEngine/Graphics/BufferUnitManager.h"
 
@@ -26,7 +27,7 @@ namespace Orbital
 			else
 				OE_RAISE_SIGSEGV("Renderer: You're trying to initialize the Renderer again");
 		}
-		static void InitializeFramebuffer();
+		static void InitializeFramebuffers();
 		static void InitializeBatchManager();
 
 		static void inline Terminate() { delete s_instance; RenderCommands::Terminate(); }
@@ -60,6 +61,7 @@ namespace Orbital
 	private:
 		static inline Renderer* s_instance = nullptr;
 		Scope<FrameBuffer> m_frameBuffer;
+		Scope<MultisampledFrameBuffer> m_msFrameBuffer;
 		Ref<BatchManager> m_batchManager;
 		Ref<BufferUnitManager> m_unitManager;
 	};

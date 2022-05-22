@@ -17,11 +17,13 @@ namespace Orbital
 	void BatchContainer::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
 	{
 		auto batchData = mr.getBatchData();
+
 		if (batchData.batch)
 		{
 			batchData.batch->registerMesh(mr, t);
 			return;
 		}
+
 		for (auto& batch : m_batches)
 		{
 			bool value = batch->isFull();

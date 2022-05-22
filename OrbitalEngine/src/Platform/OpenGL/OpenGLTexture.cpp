@@ -31,12 +31,13 @@ namespace Orbital
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glad_glGenTextures(1, &m_rendererId);
+		glad_glGenSamplers(1, &m_samplerId);
 		bind();
 
-		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		setWrapS(GL_REPEAT);
+		setWrapT(GL_REPEAT);
+		setMinFilter(GL_LINEAR);
+		setMagFilter(GL_LINEAR);
 
 		glad_glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
 		glad_glGenerateMipmap(GL_TEXTURE_2D);
@@ -45,22 +46,54 @@ namespace Orbital
 	OpenGLTexture::~OpenGLTexture()
 	{
 		glad_glDeleteTextures(1, &m_rendererId);
+		glad_glDeleteSamplers(1, &m_samplerId);
 	}
 
 	void OpenGLTexture::bind() const
 	{
 		glad_glActiveTexture(GL_TEXTURE0);
 		glad_glBindTexture(GL_TEXTURE_2D, m_rendererId);
+		glad_glBindSampler(0, m_samplerId);
 	}
 
 	void OpenGLTexture::bind(unsigned int slot) const
 	{
 		glad_glActiveTexture(GL_TEXTURE0 + slot);
 		glad_glBindTexture(GL_TEXTURE_2D, m_rendererId);
+		glad_glBindSampler(slot, m_samplerId);
 	}
 
 	void OpenGLTexture::unbind() const
 	{
 		glad_glBindTexture(GL_TEXTURE_2D, 0);
+		glad_glBindSampler(0, 0);
+	}
+
+	void OpenGLTexture::setWrapS(unsigned int value)
+	{
+		bind();
+		m_wrapS = value;
+		glad_glSamplerParameteri(m_samplerId, GL_TEXTURE_WRAP_S, value);
+	}
+
+	void OpenGLTexture::setWrapT(unsigned int value)
+	{
+		bind();
+		m_wrapT = value;
+		glad_glSamplerParameteri(m_samplerId, GL_TEXTURE_WRAP_T, value);
+	}
+
+	void OpenGLTexture::setMinFilter(unsigned int value)
+	{
+		bind();
+		m_minFilter = value;
+		glad_glSamplerParameteri(m_samplerId, GL_TEXTURE_MIN_FILTER, value);
+	}
+
+	void OpenGLTexture::setMagFilter(unsigned int value)
+	{
+		bind();
+		m_magFilter = value;
+		glad_glSamplerParameteri(m_samplerId, GL_TEXTURE_MAG_FILTER, value);
 	}
 }

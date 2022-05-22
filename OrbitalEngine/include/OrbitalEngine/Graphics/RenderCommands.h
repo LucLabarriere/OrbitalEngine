@@ -11,5 +11,6 @@ namespace Orbital
 		static void ReadyFrame();
 		static void DisableDepthTest();
 		static void DrawIndexed(unsigned int drawType, size_t size);
+		static void BlitFramebuffer();
 	};
 }

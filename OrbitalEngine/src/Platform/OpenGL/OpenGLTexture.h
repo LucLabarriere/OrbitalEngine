@@ -12,6 +12,11 @@ namespace Orbital
 		virtual void bind(unsigned int slot) const override;
 		virtual void unbind() const override;
 
+		virtual void setWrapS(unsigned int value) override;
+		virtual void setWrapT(unsigned int value) override;
+		virtual void setMinFilter(unsigned int value) override;
+		virtual void setMagFilter(unsigned int value) override;
+
 	private:
 		OpenGLTexture(
 			const std::string& tag, unsigned int width,
@@ -21,5 +26,7 @@ namespace Orbital
 
 	private:
 		friend Texture;
+
+		unsigned int m_samplerId;
 	};
 }

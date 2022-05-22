@@ -13,11 +13,6 @@ namespace Orbital
 		LoadMesh(Settings::GetAssetPath("models/backpack/backpack.obj"), "Backpack");
 	}
 
-	std::vector<const char*> MeshManager::GetAvailableMeshes()
-	{
-		return static_cast<MeshManager*>(s_instance)->getAvailableMeshes();
-	}
-
 	bool MeshManager::LoadMesh(const std::string filepath, const std::string& meshName)
 	{
 		Assimp::Importer importer;
@@ -99,18 +94,6 @@ namespace Orbital
 	{
 		m_assets.push_back(mesh);
 		Renderer::PushBufferUnit(mesh);
-	}
-
-	std::vector<const char*> MeshManager::getAvailableMeshes()
-	{
-		std::vector<const char*> meshNames;
-		meshNames.reserve(m_assets.size());
-
-		for (size_t i = 0; i < m_assets.size(); i++)
-		{
-			meshNames.push_back(m_assets[i]->getTag().c_str());
-		}
-		return meshNames;
 	}
 
 	std::string MeshManager::GetUniqueTag(const std::string& tag)

@@ -47,6 +47,8 @@ namespace Orbital
 			BatchData getBatchData() const;
 			WeakRef<Material> getMaterial() const;
 			WeakRef<Mesh> getMesh() const;
+			Vec2& getTexCoordsMultiplicator() { return m_texCoordsMultiplicator; }
+			const Vec2& getTexCoordsMultiplicator() const { return m_texCoordsMultiplicator; }
 
 			void setBatchData(const BatchData& data);
 			void resetBatchData(const BatchData& data);
@@ -58,6 +60,7 @@ namespace Orbital
 			WeakRef<Mesh> m_mesh;
 			WeakRef<Material> m_material;
 			Components::Transform* m_transform;
+			Vec2 m_texCoordsMultiplicator = { 1.0f, 1.0f };
 
 			DrawData m_drawData;
 			BatchData m_batchData;

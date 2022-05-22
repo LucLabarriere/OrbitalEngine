@@ -11,7 +11,8 @@ namespace Orbital
 	private:
 		struct RenderData
 		{
-			Components::Transform* transform;
+			const Components::Transform* transform;
+			const Vec2& texCoordsMultiplicator;
 			size_t materialId;
 			size_t meshId;
 		};

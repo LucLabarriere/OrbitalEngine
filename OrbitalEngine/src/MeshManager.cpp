@@ -77,14 +77,16 @@ namespace Orbital
 			lastIndex = rawIndices[indexCount - 1] + 1;
 		}
 		IndexContainer indexContainer(rawIndices);
-		((MeshManager*)s_instance)->push(Ref<Mesh>(new Mesh(GetUniqueTag(meshName), vertexContainer, indexContainer)));
+
+		((MeshManager*)s_instance)->push(Ref<Mesh>(
+			new Mesh(GetUniqueTag(meshName), vertexContainer, indexContainer)));
 
 		return true;
 	}
 
-	MeshManager::MeshManager() : AssetManager<Mesh>()
+	MeshManager::MeshManager()
+		: AssetManager<Mesh>("MeshManager")
 	{
-		s_managerName = "MeshManager";
 		push(Mesh::Quad());
 		push(Mesh::Cube());
 		push(Mesh::Triangle());
@@ -94,35 +96,5 @@ namespace Orbital
 	{
 		m_assets.push_back(mesh);
 		Renderer::PushBufferUnit(mesh);
-	}
-
-	std::string MeshManager::GetUniqueTag(const std::string& tag)
-	{
-		return ((MeshManager*)s_instance)->getUniqueTag(tag);
-	}
-
-	std::string MeshManager::getUniqueTag(const std::string& tag)
-	{
-		size_t count = 0;
-
-		std::string newTag(tag);
-		bool changedName = true;
-
-		while (changedName)
-		{
-			changedName = false;
-
-			for (auto& mesh : m_assets)
-			{
-				if (newTag == mesh->getTag())
-				{
-					count += 1;
-					newTag = tag + "_" + std::to_string(count);
-					changedName = true;
-				}
-			}
-		}
-
-		return newTag;
 	}
 }

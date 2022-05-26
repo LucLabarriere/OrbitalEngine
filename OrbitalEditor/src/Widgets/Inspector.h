@@ -7,25 +7,28 @@ using namespace Orbital;
 
 enum class InspectedObjectTag
 {
-	Entity = 0,
+	None = 0,
+	Entity,
 	Texture,
 	Text,
 	Material
 };
 
+struct InspectedObject
+{
+	InspectedObjectTag Tag = InspectedObjectTag::Entity;
+	std::variant<
+		bool,
+		Entity,
+		WeakRef<Texture>,
+		std::string,
+		WeakRef<Material>
+	> Value = Entity();
+};
+
 class Inspector
 {
-private:
-	struct InspectedObject
-	{
-		InspectedObjectTag Tag = InspectedObjectTag::Entity;
-		std::variant<
-			Entity,
-			WeakRef<Texture>,
-			std::string,
-			WeakRef<Material>
-		> Value = Entity();
-	};
+public:
 
 public:
 	static inline void Initialize(Ref<Scene>& scene) { s_instance = new Inspector(scene); }
@@ -51,6 +54,8 @@ public:
 		s_instance->m_object.Value = material;
 		s_instance->m_object.Tag = InspectedObjectTag::Material;
 	}
+
+	static const InspectedObject& GetInspectedObject() { return s_instance->m_object; }
 
 private:
 	Inspector(Ref<Scene>& scene);

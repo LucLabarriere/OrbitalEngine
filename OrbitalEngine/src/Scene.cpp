@@ -38,6 +38,51 @@ namespace Orbital
 		return e;
 	}
 
+	Entity Scene::duplicateEntity(Entity& e)
+	{
+		// TODO correct bug when copy pasting a child entity with children /
+		auto& tag = e.get<Components::Tag>();
+		auto& layerId = e.get<LayerID>();
+		auto& hiearchy = e.get<Components::Hierarchy>();
+		auto* transform = e.tryGet<Components::Transform>();
+		auto* meshRenderer = e.tryGet<Components::MeshRenderer>();
+		auto* directionalLight = e.tryGet<Components::DirectionalLight>();
+		auto* pointLight = e.tryGet<Components::PointLight>();
+		auto* spotLight = e.tryGet<Components::SpotLight>();
+
+		auto newTag = getUniqueTag(tag);
+
+		auto newEntity = createEntity(newTag, layerId);
+		if (transform)
+		{
+			auto& newTransform = newEntity.add<Components::Transform>(*transform);
+
+			if (meshRenderer)
+				newEntity.add<Components::MeshRenderer>(*meshRenderer, &newTransform);
+		}
+
+		if (directionalLight)
+			newEntity.add<Components::DirectionalLight>(*directionalLight);
+
+		if (pointLight)
+			newEntity.add<Components::PointLight>(*pointLight);
+
+		if (spotLight)
+			newEntity.add<Components::SpotLight>(*spotLight);
+
+		newEntity.get<Components::Hierarchy>().setParent(hiearchy.getParent());
+
+		auto& children = hiearchy.getChildren();
+
+		for (auto& child : children)
+		{
+			auto newChild = duplicateEntity(child);
+			newChild.get<Components::Hierarchy>().setParent(newEntity);
+		}
+
+		return newEntity;
+	}
+
 	void Scene::requireDelete(const Entity& entity)
 	{
 		m_deleteRequired.push_back(entity);
@@ -132,6 +177,23 @@ namespace Orbital
 
 				light.bind(shader, i);
 				i++;
+			}
+		}
+	}
+
+	void Scene::render()
+	{
+		auto view = getRegistry()->view<Components::Transform, Components::MeshRenderer, Components::Tag>();
+
+		for (auto entity : view)
+		{
+			auto& transform = view.get<Components::Transform>(entity);
+			auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
+			auto& tag = view.get<Components::Tag>(entity);
+
+			if (!meshRenderer.getDrawData().hidden)
+			{
+				Renderer::RegisterMesh(meshRenderer, transform);
 			}
 		}
 	}

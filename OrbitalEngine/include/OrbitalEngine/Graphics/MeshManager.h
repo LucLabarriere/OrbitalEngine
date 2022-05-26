@@ -13,8 +13,5 @@ namespace Orbital
 		MeshManager();
 
 		void push(Ref<Mesh>&& mesh);
-		std::string getUniqueTag(const std::string& tag);
-
-		static std::string GetUniqueTag(const std::string& tag);
 	};
 }

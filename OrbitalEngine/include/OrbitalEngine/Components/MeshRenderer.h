@@ -39,6 +39,7 @@ namespace Orbital
 				const std::string& meshTag, Components::Transform* transform,
 				bool batchedDraw, const std::string& materialName
 			);
+			MeshRenderer(const MeshRenderer& other, Transform* transform);
 
 			void destroy();
 			void setMesh(const std::string& tag);

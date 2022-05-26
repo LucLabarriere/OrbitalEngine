@@ -40,6 +40,7 @@ namespace Orbital
 		shader->bind();
 		glad_glDisable(GL_DEPTH_TEST);
 		glad_glActiveTexture(GL_TEXTURE0);
+		glad_glBindSampler(0, 0);
 		glad_glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textureId);
 		shader->setUniform1i("u_ScreenTexture", 0);
 

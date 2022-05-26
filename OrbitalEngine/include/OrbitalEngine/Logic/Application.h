@@ -3,10 +3,12 @@
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/Window.h"
 #include "OrbitalEngine/Graphics/CameraController.h"
+#include "OrbitalEngine/Components/NativeScript.h"
 
 namespace Orbital
 {
 	class Camera;
+	class Scene;
 
 	class Application
 	{
@@ -23,13 +25,15 @@ namespace Orbital
 		virtual bool onMouseButtonReleased(MouseButtonReleasedEvent& e) { return false; }
 		virtual bool onWindowResized(WindowResizedEvent& e) { return false; }
 
+		virtual void onLoad() = 0;
 		virtual void onStart() = 0;
 		virtual void onUpdate(Time dt) = 0;
+
 		void run();
-		
 
 	protected:
 		Scope<Window> m_window;
+		Ref<Scene> m_scene;
 
 		Time m_averageTimePerFrame;
 		Time m_timeAtLastUpdate;

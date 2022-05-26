@@ -1,8 +1,6 @@
 #include "OrbitalEngine/Events.h"
-#include "OrbitalEngine/Utils.h"
-#include "OrbitalEngine/Logic.h"
 #include "OrbitalEngine/Graphics.h"
-#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Logic.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"
@@ -21,7 +19,7 @@ namespace Orbital
 		m_window = Scope<Window>(Window::Create(
 			Settings::Get(Settings::UIntSetting::WindowWidth),
 			Settings::Get(Settings::UIntSetting::WindowHeight),
-			"Application"
+			"Orbital"
 		));
 
 		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
@@ -35,6 +33,10 @@ namespace Orbital
 		Renderer::InitializeBatchManager();
 		Renderer::InitializeFramebuffers();
 		Metrics::Initialize();
+		NativeScriptManager::Initialize();
+
+		m_scene = CreateRef<Scene>();
+		m_scene->initialize();
 	}
 
 	Application::~Application()
@@ -46,18 +48,25 @@ namespace Orbital
 		TextureManager::Terminate();
 		ShaderManager::Terminate();
 		MaterialManager::Terminate();
+		NativeScriptManager::Terminate();
 	}
 
 	void Application::onEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
+
+		dispatcher.dispatch<KeyPressedEvent>([this](KeyPressedEvent& e) -> bool {
+			return onKeyPressed(e);
+		});
 	}
 
 	void Application::run()
 	{
-		onStart();
+		onLoad();
+		NativeScriptManager::OnLoad();
 
 		Time dt;
+
 		while (!m_window->shouldClose())
 		{
 			dt = Time() - m_timeAtLastUpdate;
@@ -70,8 +79,10 @@ namespace Orbital
 			{
 				m_window->setVSyncEnabled(vsyncEnabled);
 			}
+
 			onUpdate(dt);
 		}
+
 		Logger::Trace("Leaving Application");
 	}
 }

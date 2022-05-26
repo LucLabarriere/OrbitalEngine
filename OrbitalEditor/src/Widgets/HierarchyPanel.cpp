@@ -1,6 +1,7 @@
 #include "HierarchyPanel.h"
 #include "OrbitalEngine/Logic/Scene.h"
 #include "Inspector.h"
+#include "Tools.h"
 
 static void renderTreeNode(Entity& entity, Ref<HierarchyPanel> panel)
 {
@@ -103,6 +104,7 @@ void HierarchyPanel::update()
 
 void HierarchyPanel::render()
 {
+	auto texture = TextureManager::Get("Icons").lock();
 	Entity entity = m_scene->getSceneEntity();
 
 	auto& hierarchy = entity.get<Components::Hierarchy>();
@@ -113,15 +115,14 @@ void HierarchyPanel::render()
 
     if (ImGui::BeginMenuBar())
     {
-		if (ImGui::Button("+"))
-		{
-			m_scene->createEntity("Entity");
-		}
+		bool createEntityButton = Tools::RenderIconButton(TextureIconIndex::Plus);
+
+		if (createEntityButton)
+			m_scene->createEntity("Entity");		
+
         ImGui::EndMenuBar();
     }
 
-	/*for (auto& node : m_treeNodes)
-		node.render();*/
 	renderTreeNode(entity, shared_from_this());
 
 	ImGui::End();

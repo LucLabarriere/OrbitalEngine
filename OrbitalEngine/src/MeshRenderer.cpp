@@ -44,6 +44,16 @@ namespace Orbital
 			m_drawData.batchDraw = batchedDraw;
 		}
 
+		MeshRenderer::MeshRenderer(const MeshRenderer& other, Transform* transform)
+			: m_mesh(other.getMesh())
+			, m_transform(transform)
+			, m_material(other.getMaterial())
+		{
+			m_drawData.hidden = other.getDrawData().hidden;
+			m_drawData.batchDraw = other.getDrawData().batchDraw;
+			m_drawData.staticDraw = other.getDrawData().staticDraw;
+		}
+
 		void MeshRenderer::destroy()
 		{
 			Renderer::DeleteMesh(*this);

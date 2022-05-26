@@ -2,6 +2,7 @@
 
 #include "OrbitalEngine/Utils/Misc.h"
 #include "OrbitalEngine/Utils/Asset.h"
+#include "OrbitalEngine/Utils/Logger.h"
 
 namespace Orbital
 {
@@ -19,7 +20,7 @@ namespace Orbital
 
 		static WeakRef<T> Get(const std::string& assetName)
 		{
-			for (const auto& asset: s_instance->m_assets)
+			for (auto& asset : s_instance->m_assets)
 			{
 				if (asset->getTag() == assetName)
 				{
@@ -32,7 +33,7 @@ namespace Orbital
 
 		static WeakRef<T> Get(size_t assetId)
 		{
-			for (const auto& asset : s_instance->m_assets)
+			for (Ref<T>& asset : s_instance->m_assets)
 			{
 				if (asset->getId() == assetId)
 				{
@@ -48,8 +49,13 @@ namespace Orbital
 		std::vector<Ref<T>>::iterator begin() { return m_assets.begin(); }
 		std::vector<Ref<T>>::iterator end() { return m_assets.end(); }
 
+		static std::string GetUniqueTag(const std::string& tag)
+		{
+			return s_instance->getUniqueTag(tag);
+		}
+
 	protected:
-		AssetManager<T>() { }
+		AssetManager<T>(const std::string managerName) { s_managerName = managerName; }
 
 		std::vector<const char*> getAvailable()
 		{
@@ -62,6 +68,31 @@ namespace Orbital
 			}
 
 			return assetNames;
+		}
+
+		std::string getUniqueTag(const std::string& tag)
+		{
+			size_t count = 0;
+
+			std::string newTag(tag);
+			bool changedName = true;
+
+			while (changedName)
+			{
+				changedName = false;
+
+				for (Ref<T>& asset : m_assets)
+				{
+					if (newTag == asset->getTag())
+					{
+						count += 1;
+						newTag = tag + "_" + std::to_string(count);
+						changedName = true;
+					}
+				}
+			}
+
+			return newTag;
 		}
 
 	protected:

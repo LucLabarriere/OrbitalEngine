@@ -10,6 +10,7 @@ namespace Orbital
 	{
 	public:
 		Entity();
+		Entity(const Entity& e);
 		~Entity();
 
 		template <class T, typename ...Args>
@@ -17,6 +18,11 @@ namespace Orbital
 		{
 			return m_registry->emplace<T>(m_handle, args...);
 		}
+
+		/*T& addScript()
+		{
+			return add<Components::NativeScript<T>>(NativeScriptManager::Create<T>(e));
+		}*/
 
 		template <class T>
 		bool has()
@@ -50,7 +56,7 @@ namespace Orbital
 
 		bool operator==(const Entity& e) { return (e.getHandle() == m_handle) ? true : false; }
 
-	private:
+	protected:
 		Entity(Ref<entt::registry>& registry);
 		Entity(entt::entity handle, Ref<entt::registry>& registry);
 

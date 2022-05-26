@@ -2,11 +2,12 @@
 #include "OrbitalEngine/Components.h"
 #include "OrbitalEngine/Graphics.h"
 #include "OrbitalEngine/Logic.h"
+#include "Clipboard.h"
+#include "Scripts/PlayerController.h"
+#include "Tools.h"
 
 EditorApplication::EditorApplication() : Application()
 {
-	m_scene = CreateRef<Scene>();
-	m_scene->initialize();
 	m_cameraController = CreateRef<CameraController>(m_scene->getCamera());
 }
 
@@ -15,10 +16,12 @@ EditorApplication::~EditorApplication()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+	Tools::Terminate();
 }
 
-void EditorApplication::onStart()
+void EditorApplication::onLoad()
 {
+	Tools::Initialize();
 	auto floor = m_scene->createEntity("Floor");
 	auto& tFloor = floor.add<Components::Transform>(Components::Transform({
 		{ 0.0f,  0.0f, 0.0f },
@@ -34,6 +37,10 @@ void EditorApplication::onStart()
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f }
 	}));
+	//cube.addScript<PlayerController>();
+	cube.add<Components::NativeScript<PlayerController>>(
+		NativeScriptManager::Create<PlayerController>(cube)
+	);
 
 	auto& mr = cube.add<Components::MeshRenderer>("Cube", &tCube, true, "Damier");
 
@@ -96,6 +103,7 @@ void EditorApplication::onStart()
 
 	ImGui::GetIO().FontGlobalScale = 0.55;
 
+	m_viewport = CreateRef<Viewport>(this);
 	m_hierarchyPanel = CreateRef<HierarchyPanel>(m_scene);
 	m_hierarchyPanel->initialize();
 	m_metricsPanel = CreateScope<MetricsPanel>(m_cameraController);
@@ -103,6 +111,7 @@ void EditorApplication::onStart()
 	m_assetManagerPanel = CreateScope<AssetManagerPanel>();
 	m_fileExplorerPanel = CreateScope<FileExplorerPanel>();
 	Inspector::Initialize(m_scene);
+	Clipboard::Initialize(m_scene);
 }
 
 void EditorApplication::onUpdate(Time dt)
@@ -114,22 +123,19 @@ void EditorApplication::onUpdate(Time dt)
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-
-	ImGui::GetStyle().WindowPadding = ImVec2(0, 0);
-	ImGui::Begin("Scene Viewport");
-	checkRenderAreaSize(ImGui::GetWindowSize()[0], ImGui::GetWindowSize()[1]);
-	ImGui::Image(
-		(void*)Renderer::GetFrame(), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0)
-	);
-	ImGui::End();
-	ImGui::GetStyle().WindowPadding = ImVec2(12, 12);
-
+	
+	m_viewport->render();
 	m_hierarchyPanel->update();
 	m_hierarchyPanel->render();
 	m_metricsPanel->render();
 	m_batchesPanel->render();
 	m_assetManagerPanel->render();
 	m_fileExplorerPanel->render();
+
+	if (m_state == EditorState::Playing)
+		NativeScriptManager::OnUpdate(dt);
+	else
+		m_cameraController->onUpdate(dt);
 
 	Inspector::Render();
 
@@ -140,23 +146,9 @@ void EditorApplication::onUpdate(Time dt)
 
 	Renderer::Get()->newFrame();
 
-	m_cameraController->onUpdate(dt);
 
 	m_scene->beginScene();
-	{
-		auto view = m_scene->getRegistry()->view<Components::Transform, Components::MeshRenderer, Components::Tag>();
-		for (auto entity : view)
-		{
-			auto& transform = view.get<Components::Transform>(entity);
-			auto& meshRenderer = view.get<Components::MeshRenderer>(entity);
-			auto& tag = view.get<Components::Tag>(entity);
-
-			if (!meshRenderer.getDrawData().hidden)
-			{
-				Renderer::RegisterMesh(meshRenderer, transform);
-			}
-		}
-	}
+	m_scene->render();
 
 	Renderer::RenderBatches();
 	Renderer::RenderUnits();
@@ -171,6 +163,28 @@ void EditorApplication::onUpdate(Time dt)
 
 bool EditorApplication::onMouseScrolled(MouseScrolledEvent& e)
 {
-	m_cameraController->onMouseScrolled(e);
+	// TODO dispatch events to NativeScriptManager
+	if (m_state != EditorState::Playing)
+		m_cameraController->onMouseScrolled(e);
+
+	return false;
+}
+
+bool EditorApplication::onKeyPressed(KeyPressedEvent& e)
+{
+	// TODO dispatch events to NativeScriptManager
+	if (m_state != EditorState::Playing)
+	{
+		if (e.getKeyCode() == OE_KEY_C && Inputs::IsKeyDown(OE_KEY_LEFT_CONTROL))
+		{
+			Clipboard::Copy(Inspector::GetInspectedObject());
+		}
+
+		else if (e.getKeyCode() == OE_KEY_V && Inputs::IsKeyDown(OE_KEY_LEFT_CONTROL))
+		{
+			Clipboard::Paste();
+		}
+	}
+
 	return false;
 }

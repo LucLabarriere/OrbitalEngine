@@ -9,6 +9,7 @@ namespace Orbital
 	{
 	public:
 		static void Initialize() { s_instance = new TextureManager(); }
+		static void Terminate() { delete s_instance; }
 
 		bool load(const std::string& tag, const std::string& filepath,
 			unsigned int internalFormat = OE_RGB8, unsigned int format = OE_RGB);
@@ -19,9 +20,8 @@ namespace Orbital
 		}
 
 	private:
-		TextureManager() : AssetManager<Texture>()
+		TextureManager() : AssetManager<Texture>("TextureManager")
 		{
-			s_managerName = "TextureManager";
 			load("Blank", Settings::GetAssetPath("textures/blank.png"));
 			load("Damier", Settings::GetAssetPath("textures/damier.jpeg"));
 			load("Icons", Settings::GetAssetPath("textures/icons.png"), OE_RGBA8, OE_RGBA);

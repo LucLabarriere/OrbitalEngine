@@ -6,3 +6,4 @@
 #include "Widgets/BatchesPanel.h"
 #include "Widgets/FileExplorerPanel.h"
 #include "Widgets/AssetManagerPanel.h"
+#include "Widgets/Viewport.h"

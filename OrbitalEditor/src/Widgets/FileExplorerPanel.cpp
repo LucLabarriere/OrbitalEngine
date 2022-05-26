@@ -1,5 +1,6 @@
 #include "FileExplorerPanel.h"
-#include "OrbitalEngine/Graphics/TextureManager.h"
+#include "Tools.h"
+#include "OrbitalEngine/Utils/Logger.h"
 
 FileExplorerPanel::FileExplorerPanel()
 {
@@ -27,14 +28,16 @@ void FileExplorerPanel::changeFolder()
 	std::filesystem::path newPath = m_currentDirectory / m_fileNames[m_selected];
 	Logger::Trace("Path: {}", newPath.string());
 	bool isDirectory = std::filesystem::is_directory(newPath);
+
 	if (isDirectory)
 	{
 		m_currentDirectory = newPath;
 	}
+
 	updateFiles();
 }
 
-unsigned int FileExplorerPanel::getIconIndex(const std::string& fileName)
+TextureIconIndex FileExplorerPanel::getIconIndex(const std::string& fileName)
 {
 	std::filesystem::path filePath(std::filesystem::path(m_currentDirectory / fileName));
 	std::string extension = filePath.extension().string();
@@ -42,13 +45,13 @@ unsigned int FileExplorerPanel::getIconIndex(const std::string& fileName)
 		extension = "folder";*/
 	
 	if (extension == "folder")
-		return 1;
+		return TextureIconIndex::Folder;
 	else if (extension == ".png" || extension == ".jpeg")
-		return 2;
+		return TextureIconIndex::Image;
 	else if (extension == ".txt")
-		return 3;
+		return TextureIconIndex::Text;
 
-	return 0;
+	return TextureIconIndex::File;
 }
 
 void FileExplorerPanel::render()
@@ -62,7 +65,6 @@ void FileExplorerPanel::render()
 		}
 		ImGui::Text(m_currentDirectory.parent_path().string().c_str());
 
-		auto texture = TextureManager::Get("Icons").lock();
 		ImGuiTableFlags tableFlags = ImGuiTableFlags_SizingFixedFit | 
 			ImGuiTableFlags_ContextMenuInBody | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_RowBg;
 	
@@ -72,25 +74,23 @@ void FileExplorerPanel::render()
 		{
 			ImGui::TableSetupColumn("AAA", ImGuiTableColumnFlags_WidthFixed);
 			ImGui::TableSetupColumn("BBB", ImGuiTableColumnFlags_WidthStretch);
+
 			for (size_t i = 0; i < m_fileNames.size(); i++)
 			{
-				unsigned int iconIndex = getIconIndex(m_fileNames[i]);
+				auto iconIndex = getIconIndex(m_fileNames[i]);
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
-				ImGui::Image(
-					(void*)(intptr_t)texture->getRendererId(),
-					ImVec2(16, 16),
-					ImVec2(0.2f * (float)iconIndex, 0),
-					ImVec2(0.2f * ((float)iconIndex + 1), 1)
-				);
+
+				Tools::RenderIcon(iconIndex);
 				ImGui::TableNextColumn();
 
 				bool selected = ImGui::Selectable(m_fileNames[i].c_str(), m_selected == i, selectableFlags);
 
-				if (iconIndex == 2 && ImGui::BeginPopupContextItem(fmt::format("Load Texture {}", i).c_str()))
+				if (iconIndex == TextureIconIndex::Image && ImGui::BeginPopupContextItem(fmt::format("Load Texture {}", i).c_str()))
 				{
 					if (ImGui::Button("Load as Texture"))
 						ImGui::OpenPopup(fmt::format("Load Texture Window {}", i).c_str());
+
 					if (ImGui::BeginPopupModal(fmt::format("Load Texture Window {}", i).c_str()))
 					{
 						ImGui::Text("test");
@@ -102,6 +102,7 @@ void FileExplorerPanel::render()
 				if (selected)
 				{
 					m_selected = i;
+
 					if (ImGui::IsMouseDoubleClicked(0))
 					{
 						changeFolder();

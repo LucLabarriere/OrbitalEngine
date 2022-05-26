@@ -27,6 +27,7 @@ target_include_directories(${PROJECT_NAME}
                 ${CMAKE_SOURCE_DIR}/vendor/entt/single_include
 	PRIVATE
 		include
+		src
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE OrbitalEngine imgui)
@@ -40,6 +41,7 @@ target_include_directories(${PROJECT_NAME}NV
 		${CMAKE_SOURCE_DIR}/vendor/entt/single_include
 	PRIVATE
 		include
+		src
 )
 
 target_link_libraries(${PROJECT_NAME}NV PRIVATE OrbitalEngine)

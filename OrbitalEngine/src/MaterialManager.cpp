@@ -8,8 +8,8 @@ namespace Orbital
 	}
 
 	MaterialManager::MaterialManager()
+		: AssetManager<Material>("MaterialManager")
 	{
-		s_managerName = "MaterialManager";
 		push(Material::Create("Blank", "Blank"));
 		push(Material::Create("Damier", "Damier"));
 	}

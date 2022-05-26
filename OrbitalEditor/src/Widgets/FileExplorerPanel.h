@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Constants.h"
+
 using namespace Orbital;
 
 class FileExplorerPanel
@@ -9,9 +11,8 @@ public:
 
 	void updateFiles();
 	void changeFolder();
-	unsigned int getIconIndex(const std::string& fileName);
+	TextureIconIndex getIconIndex(const std::string& fileName);
 	void render();
-
 
 private:
 	struct BoolSelect

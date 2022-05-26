@@ -13,11 +13,14 @@ namespace Orbital
 		Scene();
 
 		void initialize();
+
 		Entity createEntity(const Components::Tag& tag, LayerID layerId = 0);
+		Entity duplicateEntity(Entity& e);
 		void requireDelete(const Entity& entity);
 		std::string getUniqueTag(const std::string& tag, Entity* entity = nullptr);
 		void renameEntity(Entity& e, const Components::Tag& newTag);
 		void beginScene();
+		void render();
 		void endScene();
 
 		Entity getEntity(const Components::Tag& tag);

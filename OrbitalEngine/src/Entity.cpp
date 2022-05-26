@@ -8,6 +8,12 @@ namespace Orbital
 
 	}
 
+	Entity::Entity(const Entity& e)
+	{
+		m_registry = e.m_registry;
+		m_handle = e.m_handle;
+	}
+
 	void Entity::changeLayer(LayerID layerId)
 	{
 		OE_NOT_IMPLEMENTED();

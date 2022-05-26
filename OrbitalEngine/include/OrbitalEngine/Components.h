@@ -4,6 +4,7 @@
 #include "OrbitalEngine/Components/Hierarchy.h"
 #include "OrbitalEngine/Components/MeshRenderer.h"
 #include "OrbitalEngine/Components/Lights.h"
+#include "OrbitalEngine/Components/NativeScript.h"
 
 namespace Orbital
 {

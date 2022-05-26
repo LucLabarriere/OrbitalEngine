@@ -3,9 +3,8 @@
 
 namespace Orbital
 {
-	ShaderManager::ShaderManager() : AssetManager<Shader>()
+	ShaderManager::ShaderManager() : AssetManager<Shader>("ShaderManager")
 	{
-		s_managerName = "ShaderManager";
 		load("Base", "shaders/Base.glsl");
 		load("PostProcess", "shaders/PostProcess.glsl");
 	}

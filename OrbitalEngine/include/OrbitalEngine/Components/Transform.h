@@ -10,6 +10,8 @@ namespace Orbital
 		{
 		public:
 			Transform() { }
+			Transform(const Transform& other) : m_position(other.Position())
+				, m_rotation(other.Rotation()), m_scale(other.Scale()) { }
 			Transform(const Vec3& position) : m_position(position) { }
 			Transform(const Vec3& position, const Vec3& rotation) : m_position(position), m_rotation(rotation) { }
 			Transform(const Vec3& position, const Vec3& rotation, const Vec3& scale) : m_position(position), m_rotation(rotation), m_scale(scale) { }

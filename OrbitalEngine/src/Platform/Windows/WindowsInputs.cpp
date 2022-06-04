@@ -6,42 +6,42 @@ namespace Orbital
 {
 	void Inputs::Initialize(Scope<Window>& window)
 	{
-		s_instance = new WindowsInputs(static_cast<GLFWwindow*>(window->getNativeWindow()));
+		sInstance = new WindowsInputs(static_cast<GLFWwindow*>(window->GetNativeWindow()));
 	}
 
 	WindowsInputs::WindowsInputs(GLFWwindow* glfwWindow)
-		: Inputs(), m_glfwWindow(glfwWindow)
+		: Inputs(), mGlfwWindow(glfwWindow)
 	{
 	}
 
-	bool WindowsInputs::isKeyDown(int keyCode) const
+	bool WindowsInputs::IsKeyDownImpl(int keyCode) const
 	{
-		if (OE_EVENT_PRESS == glfwGetKey(m_glfwWindow, keyCode)
-			|| OE_EVENT_REPEAT == glfwGetKey(m_glfwWindow, keyCode))
+		if (OE_EVENT_PRESS == glfwGetKey(mGlfwWindow, keyCode)
+			|| OE_EVENT_REPEAT == glfwGetKey(mGlfwWindow, keyCode))
 			return true;
 		return false;
 	}
 
-	bool WindowsInputs::isMouseButtonDown(int buttonCode) const
+	bool WindowsInputs::IsMouseButtonDownImpl(int buttonCode) const
 	{
-		if (OE_EVENT_PRESS == glfwGetMouseButton(m_glfwWindow, buttonCode))
+		if (OE_EVENT_PRESS == glfwGetMouseButton(mGlfwWindow, buttonCode))
 			return true;
 		return false;
 	}
 
-	void WindowsInputs::lockCursor(bool value)
+	void WindowsInputs::LockCursorImpl(bool value)
 	{
 		if (value)
-			glfwSetInputMode(m_glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			glfwSetInputMode(mGlfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		else
-			glfwSetInputMode(m_glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			glfwSetInputMode(mGlfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	const glm::vec2 WindowsInputs::getMousePosition() const
+	const glm::vec2 WindowsInputs::GetMousePositionImpl() const
 	{
 		double xPos;
 		double yPos;
-		glfwGetCursorPos(m_glfwWindow, &xPos, &yPos);
+		glfwGetCursorPos(mGlfwWindow, &xPos, &yPos);
 		return glm::vec2(xPos, yPos);
 	}
 }

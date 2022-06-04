@@ -6,91 +6,91 @@ namespace Orbital
 {
 	void Renderer::InitializeFramebuffers()
 	{
-		s_instance->m_frameBuffer = Scope<FrameBuffer>(FrameBuffer::Create());
-		s_instance->m_msFrameBuffer = Scope<MultisampledFrameBuffer>(MultisampledFrameBuffer::Create());
+		sInstance->mFrameBuffer = Scope<FrameBuffer>(FrameBuffer::Create());
+		sInstance->mMSFrameBuffer = Scope<MultisampledFrameBuffer>(MultisampledFrameBuffer::Create());
 	}
 	void Renderer::InitializeBatchManager()
 	{
-		s_instance->m_batchManager = CreateRef<BatchManager>();
+		sInstance->mBatchManager = CreateRef<BatchManager>();
 	}
 
 	void Renderer::PushBufferUnit(WeakRef<Mesh> mesh)
 	{
-		s_instance->m_unitManager->push(mesh);
+		sInstance->mUnitManager->Push(mesh);
 	}
 
 	void Renderer::PushBufferUnit(WeakRef<Material> material, bool fill)
 	{
-		s_instance->m_unitManager->push(material, fill);
+		sInstance->mUnitManager->Push(material, fill);
 	}
 
 	void Renderer::OnWindowResized()
 	{
-		s_instance->onWindowResized();
+		sInstance->OnWindowResizedImpl();
 	}
 
-	void Renderer::newFrame()
+	void Renderer::NewFrame()
 	{
 		Metrics::ReinitializeBatchCount();
-		m_msFrameBuffer->bind();
+		mMSFrameBuffer->Bind();
 		RenderCommands::NewFrame();
 	}
 
-	void Renderer::displayFrame()
+	void Renderer::DisplayFrame()
 	{
-		m_frameBuffer->unbind();
-		m_msFrameBuffer->bindRead();
-		m_frameBuffer->bindDraw();
+		mFrameBuffer->Unbind();
+		mMSFrameBuffer->bindRead();
+		mFrameBuffer->BindDraw();
 		RenderCommands::BlitFramebuffer();
-		m_frameBuffer->unbind();
+		mFrameBuffer->Unbind();
 		RenderCommands::ReadyFrame();
-		m_frameBuffer->renderFrame();
+		mFrameBuffer->RenderFrame();
 	}
 
 	Renderer::Renderer()
-		: m_frameBuffer(nullptr)
-		, m_batchManager(nullptr)
-		, m_unitManager(new BufferUnitManager)
+		: mFrameBuffer(nullptr)
+		, mBatchManager(nullptr)
+		, mUnitManager(new BufferUnitManager)
 	{
 		RenderCommands::Initialize();
 	}
 
-	void Renderer::onWindowResized()
+	void Renderer::OnWindowResizedImpl()
 	{
-		m_frameBuffer.reset(FrameBuffer::Create());
+		mFrameBuffer.reset(FrameBuffer::Create());
 	}
 
-	void Renderer::registerMesh(MeshRenderer& mr, Transform& t)
+	void Renderer::RegisterMeshImpl(MeshRenderer& mr, Transform& t)
 	{
-		auto drawData = mr.getDrawData();
+		auto drawData = mr.GetDrawData();
 
 		if (drawData.batchDraw)
 		{
-			m_batchManager->registerMesh(mr, t);
+			mBatchManager->RegisterMesh(mr, t);
 		}
 		else
 		{
-			m_unitManager->registerMesh(mr, t);
+			mUnitManager->RegisterMesh(mr, t);
 		}
 	}
 
-	void Renderer::deleteMesh(MeshRenderer& mr)
+	void Renderer::DeleteMeshImpl(MeshRenderer& mr)
 	{
-		auto drawData = mr.getDrawData();
+		auto drawData = mr.GetDrawData();
 
 		if (drawData.batchDraw)
 		{
-			m_batchManager->deleteMesh(mr);
+			mBatchManager->DeleteMesh(mr);
 		}
 	}
 
-	void Renderer::renderBatches()
+	void Renderer::RenderBatchesImpl()
 	{
-		m_batchManager->renderBatches();
+		mBatchManager->RenderBatches();
 	}
 
-	void Renderer::renderUnits()
+	void Renderer::RenderUnitsImpl()
 	{
-		m_unitManager->renderUnits();
+		mUnitManager->RenderUnits();
 	}
 }

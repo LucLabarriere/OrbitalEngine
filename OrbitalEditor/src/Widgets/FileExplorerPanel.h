@@ -10,10 +10,10 @@ class FileExplorerPanel : public Widget
 public:
 	FileExplorerPanel();
 
-	void updateFiles();
-	void changeFolder();
-	TextureIconIndex getIconIndex(const std::string& fileName);
-	void render();
+	void UpdateFiles();
+	void ChangeFolder();
+	TextureIconIndex GetIconIndex(const std::string& fileName);
+	void Render();
 
 private:
 	struct BoolSelect
@@ -21,8 +21,8 @@ private:
 		bool value = false;
 	};
 
-	std::filesystem::path m_currentDirectory = std::filesystem::absolute(".");
-	std::vector<std::string> m_fileNames;
-	int m_selected = -1;
-	int m_fileCount;
+	std::filesystem::path mCurrentDirectory = std::filesystem::absolute(".");
+	std::vector<std::string> mFileNames;
+	int mSelected = -1;
+	int mFileCount;
 };

@@ -4,19 +4,19 @@ namespace Orbital
 {
 	void MaterialManager::Initialize()
 	{
-		s_instance = new MaterialManager();
+		sInstance = new MaterialManager();
 	}
 
 	MaterialManager::MaterialManager()
 		: AssetManager<Material>("MaterialManager")
 	{
-		push(Material::Create("Blank", "Blank"));
-		push(Material::Create("Damier", "Damier"));
+		Push(Material::Create("Blank", "Blank"));
+		Push(Material::Create("Damier", "Damier"));
 	}
 
-	void MaterialManager::push(Ref<Material>&& material)
+	void MaterialManager::Push(Ref<Material>&& material)
 	{
-		m_assets.push_back(material);
+		mAssets.push_back(material);
 		Renderer::PushBufferUnit(material, false);
 	}
 

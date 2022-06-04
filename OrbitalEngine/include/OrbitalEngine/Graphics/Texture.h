@@ -22,29 +22,29 @@ namespace Orbital
 		virtual ~Texture() {};
 
 		static TextureData Load(const std::string& filename);
-		virtual void bind() const = 0;
-		virtual void bind(unsigned int slot) const = 0;
-		virtual void unbind() const = 0;
+		virtual void Bind() const = 0;
+		virtual void Bind(unsigned int slot) const = 0;
+		virtual void Unbind() const = 0;
 
-		virtual void setWrapS(unsigned int value) = 0;
-		virtual void setWrapT(unsigned int value) = 0;
-		virtual void setMinFilter(unsigned int value) = 0;
-		virtual void setMagFilter(unsigned int value) = 0;
+		virtual void SetWrapS(unsigned int value) = 0;
+		virtual void SetWrapT(unsigned int value) = 0;
+		virtual void SetMinFilter(unsigned int value) = 0;
+		virtual void SetMagFilter(unsigned int value) = 0;
 
-		unsigned int getRendererId() const { return m_rendererId; }
-		unsigned int getWidth() const { return m_width; }
-		unsigned int getHeight() const { return m_height; }
-		unsigned int getWrapS() const { return m_wrapS; }
-		unsigned int getWrapT() const { return m_wrapT; }
-		unsigned int getMinFilter() const { return m_minFilter; }
-		unsigned int getMagFilter() const { return m_magFilter; }
+		unsigned int GetRendererId() const { return mRendererId; }
+		unsigned int GetWidth() const { return mWidth; }
+		unsigned int GetHeight() const { return mHeight; }
+		unsigned int GetWrapS() const { return mWrapS; }
+		unsigned int GetWrapT() const { return mWrapT; }
+		unsigned int GetMinFilter() const { return mMinFilter; }
+		unsigned int GetMagFilter() const { return mMagFilter; }
 
 	protected:
 		Texture(const std::string& tag, unsigned int width, unsigned int height)
-			: Asset(s_id,  tag), m_rendererId(0), m_width(width), m_height(height)
-			, m_wrapS(0), m_wrapT(0), m_minFilter(0), m_magFilter(0)
+			: Asset(sId,  tag), mRendererId(0), mWidth(width), mHeight(height)
+			, mWrapS(0), mWrapT(0), mMinFilter(0), mMagFilter(0)
 		{
-			s_id += 1;
+			sId += 1;
 		}
 		static Texture* Create(
 			const std::string& tag, unsigned int width, unsigned int height, unsigned char* data);
@@ -54,14 +54,14 @@ namespace Orbital
 	protected:
 		friend TextureManager;
 
-		unsigned int m_rendererId;
-		unsigned int m_width;
-		unsigned int m_height;
-		unsigned int m_wrapS;
-		unsigned int m_wrapT;
-		unsigned int m_minFilter;
-		unsigned int m_magFilter;
+		unsigned int mRendererId;
+		unsigned int mWidth;
+		unsigned int mHeight;
+		unsigned int mWrapS;
+		unsigned int mWrapT;
+		unsigned int mMinFilter;
+		unsigned int mMagFilter;
 
-		static inline size_t s_id = 0;
+		static inline size_t sId = 0;
 	};
 }

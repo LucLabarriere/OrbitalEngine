@@ -7,7 +7,7 @@ static void renderTreeNode(Entity& entity, Ref<HierarchyPanel> panel)
 {
 	auto& hierarchy = entity.GetComponent<Hierarchy>();
 	auto& tag = entity.GetComponent<Tag>();
-	auto& children = hierarchy.getChildren();
+	auto& children = hierarchy.GetChildren();
 
 	bool nodeOpen = false;
 	ImGuiTreeNodeFlags nodeFlags =
@@ -15,7 +15,7 @@ static void renderTreeNode(Entity& entity, Ref<HierarchyPanel> panel)
 		ImGuiTreeNodeFlags_OpenOnDoubleClick |
 		ImGuiTreeNodeFlags_SpanAvailWidth;
 
-	if (panel->getSelectedEntityHandle() == entity.GetHandle())
+	if (panel->GetSelectedEntityHandle() == entity.GetHandle())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
@@ -44,14 +44,14 @@ static void renderTreeNode(Entity& entity, Ref<HierarchyPanel> panel)
 		if (payload)
 		{
 			Entity e = *static_cast<Entity*>(payload->Data);
-			e.GetComponent<Hierarchy>().setParent(entity);
+			e.GetComponent<Hierarchy>().SetParent(entity);
 		}
 		ImGui::EndDragDropTarget();
 	}
 
 	if (ImGui::IsItemClicked())
 	{
-		panel->setSelectedEntity(entity);
+		panel->SetSelectedEntity(entity);
 		Inspector::SetEntity(entity);
 	}
 
@@ -69,45 +69,45 @@ HierarchyPanel::HierarchyPanel()
 
 }
 
-void HierarchyPanel::initialize()
+void HierarchyPanel::Initialize()
 {
 	Entity entity = (*sActiveScene)->GetSceneEntity();
 
 	auto& hierarchy = entity.GetComponent<Hierarchy>();
-	m_sceneChildren = &hierarchy.getChildren();
+	mSceneChildren = &hierarchy.GetChildren();
 
-	m_treeNodes.resize(m_sceneChildren->size());
+	mTreeNodes.resize(mSceneChildren->size());
 
-	for (size_t i = 0; i < m_sceneChildren->size(); i++)
+	for (size_t i = 0; i < mSceneChildren->size(); i++)
 	{
-		m_treeNodes[i].initialize((*m_sceneChildren)[i], shared_from_this());
+		mTreeNodes[i].Initialize((*mSceneChildren)[i], shared_from_this());
 	}
 }
 
-void HierarchyPanel::update()
+void HierarchyPanel::Update()
 {
-	/*for (size_t i = m_treeNodes.size() - 1; i >= 0; i++)
+	/*for (size_t i = mTreeNodes.size() - 1; i >= 0; i++)
 	{
-		if (!m_treeNodes[i].getEntity().isValid())
-			m_treeNodes.erase(m_treeNodes.begin() + i);
+		if (!mTreeNodes[i].GetEntity().isValid())
+			mTreeNodes.erase(mTreeNodes.begin() + i);
 	}
 
-	for (auto& e : m_scene->getCreatedEntities())
+	for (auto& e : mScene->getCreatedEntities())
 	{
-		m_treeNodes.push_back(TreeNode(e, shared_from_this()));
+		mTreeNodes.push_back(TreeNode(e, shared_from_this()));
 	}*/
 
-	for (auto& treeNode : m_treeNodes)
-		treeNode.update();
+	for (auto& treeNode : mTreeNodes)
+		treeNode.Update();
 }
 
-void HierarchyPanel::render()
+void HierarchyPanel::Render()
 {
 	auto texture = TextureManager::Get("Icons").lock();
 	Entity entity = (*sActiveScene)->GetSceneEntity();
 
 	auto& hierarchy = entity.GetComponent<Hierarchy>();
-	m_sceneChildren = &hierarchy.getChildren();
+	mSceneChildren = &hierarchy.GetChildren();
 
 	bool p_open = true;
 	ImGui::Begin("Hierarchy Panel", &p_open, ImGuiWindowFlags_MenuBar);

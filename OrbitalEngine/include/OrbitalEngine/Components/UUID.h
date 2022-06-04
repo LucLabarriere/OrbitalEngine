@@ -2,31 +2,32 @@
 
 #include <endianness.h>
 #include <uuid_v4.h>
+#include "OrbitalEngine/Components/Component.h"
 
 namespace Orbital
 {
-	class UUID
+	class UUID : public Component
 	{
 	public:
-		UUID() : m_uuid(s_uuidGenerator.getUUID())
+		UUID() : mUUID(sUUIDGenerator.getUUID())
 		{
 			
 		}
 
-		UUID(const UUID& uuid) : m_uuid(uuid.getValue())
+		UUID(const UUID& uuid) : mUUID(uuid.GetValue())
 		{
 
 		}
 
-		const UUIDv4::UUID& getValue() const { return m_uuid; }
+		const UUIDv4::UUID& GetValue() const { return mUUID; }
 		operator size_t() const
 		{
-			return m_uuid.hash();
+			return mUUID.hash();
 		}
 
 	private:
-		static inline UUIDv4::UUIDGenerator<std::mt19937_64> s_uuidGenerator;
-		UUIDv4::UUID m_uuid;
+		static inline UUIDv4::UUIDGenerator<std::mt19937_64> sUUIDGenerator;
+		UUIDv4::UUID mUUID;
 	};
 }
 

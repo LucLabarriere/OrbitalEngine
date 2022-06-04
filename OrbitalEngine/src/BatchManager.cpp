@@ -8,84 +8,84 @@ namespace Orbital
 	constexpr size_t batchsize = 1000;
 
 	BatchContainer::BatchContainer(const WeakRef<Material>& material)
-		: m_material(material.lock())
+		: mMaterial(material.lock())
 	{
-		m_batches.push_back(CreateRef<Batch>(material, batchsize));
-		m_batches[0]->allocateMemory();
+		mBatches.push_back(CreateRef<Batch>(material, batchsize));
+		mBatches[0]->AllocateMemory();
 	}
 
-	void BatchContainer::registerMesh(MeshRenderer& mr, Transform& t)
+	void BatchContainer::RegisterMesh(MeshRenderer& mr, Transform& t)
 	{
-		auto batchData = mr.getBatchData();
+		auto batchData = mr.GetBatchData();
 
 		if (batchData.batch)
 		{
-			batchData.batch->registerMesh(mr, t);
+			batchData.batch->RegisterMesh(mr, t);
 			return;
 		}
 
-		for (auto& batch : m_batches)
+		for (auto& batch : mBatches)
 		{
-			bool value = batch->isFull();
+			bool value = batch->IsFull();
 
-			if (!batch->isFull())
+			if (!batch->IsFull())
 			{
-				if (batch->meshFits(mr))
+				if (batch->MeshFits(mr))
 				{
-					batch->registerMesh(mr, t);
+					batch->RegisterMesh(mr, t);
 					return;
 				}
 			}
 		}
 
-		auto batch = CreateRef<Batch>(mr.getMaterial(), batchsize);
-		m_batches.push_back(batch);
-		batch->allocateMemory();
-		batch->registerMesh(mr, t);
+		auto batch = CreateRef<Batch>(mr.GetMaterial(), batchsize);
+		mBatches.push_back(batch);
+		batch->AllocateMemory();
+		batch->RegisterMesh(mr, t);
 	}
 
-	void BatchContainer::renderBatches()
+	void BatchContainer::RenderBatches()
 	{
-		m_material->bind();
+		mMaterial->Bind();
 
 
-		for (auto& batch : m_batches)
+		for (auto& batch : mBatches)
 		{
-			batch->render();
+			batch->Render();
 		}
 	}
 
-	void BatchContainer::deleteMesh(MeshRenderer& mr)
+	void BatchContainer::DeleteMesh(MeshRenderer& mr)
 	{
-		for (auto& batch : m_batches)
-			batch->deleteMesh(mr);
+		for (auto& batch : mBatches)
+			batch->DeleteMesh(mr);
 	}
 
 	BatchManager::BatchManager()
 	{
-		m_batchContainers.resize(MaterialManager::GetCount());
+		mBatchContainers.resize(MaterialManager::GetCount());
 
 		for (auto& material : *MaterialManager::GetInstance())
 		{
-			m_batchContainers[material->getId()] = CreateRef<BatchContainer>(material);
+			mBatchContainers[material->GetId()] = CreateRef<BatchContainer>(material);
 		}
 	}
 
-	void BatchManager::registerMesh(MeshRenderer& mr, Transform& t)
+	void BatchManager::RegisterMesh(MeshRenderer& mr, Transform& t)
 	{
-		m_batchContainers[mr.getMaterial().lock()->getId()]->registerMesh(mr, t);
+		mBatchContainers[mr.GetMaterial().lock()->GetId()]->RegisterMesh(mr, t);
 	}
 
-	void BatchManager::deleteMesh(MeshRenderer& mr)
+	void BatchManager::DeleteMesh(MeshRenderer& mr)
 	{
-		m_batchContainers[mr.getMaterial().lock()->getId()]->deleteMesh(mr);
+		mBatchContainers[mr.GetMaterial().lock()->GetId()]->DeleteMesh(mr);
 	}
 
-	void BatchManager::renderBatches()
+	void BatchManager::RenderBatches()
 	{
-		for (auto& batch : m_batchContainers)
+		for (auto& batch : mBatchContainers)
 		{
-			batch->renderBatches();
+			batch->RenderBatches();
 		}
 	}
 }

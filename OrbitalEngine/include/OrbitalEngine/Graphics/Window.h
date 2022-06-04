@@ -9,32 +9,32 @@ namespace Orbital
 	{
 	public:
 		Window(unsigned int width, unsigned int height, const std::string& title)
-			: m_width(width), m_height(height), m_title(title) { }
+			: mWidth(width), mHeight(height), mTitle(title) { }
 		virtual ~Window() {};
 
-		virtual bool shouldClose() = 0;
-		virtual void onUpdate() = 0;
-		virtual void shutdown() = 0;
-		virtual void enableCursor() = 0;
-		virtual void disableCursor() = 0;
-		void applicationCallback(Event& e) { m_eventCallback(e); }
+		virtual bool ShouldClose() = 0;
+		virtual void OnUpdate() = 0;
+		virtual void Shutdown() = 0;
+		virtual void EnableCursor() = 0;
+		virtual void DisableCursor() = 0;
+		void ApplicationCallback(Event& e) { mEventCallback(e); }
 
-		unsigned int getWidth() { return m_width; }
-		unsigned int getHeight() { return m_height; }
-		virtual void* getNativeWindow() const = 0;
-		bool isVSyncEnabled() { return m_vsyncEnabled; }
+		unsigned int GetWidth() { return mWidth; }
+		unsigned int GetHeight() { return mHeight; }
+		virtual void* GetNativeWindow() const = 0;
+		bool IsVSyncEnabled() { return mVsyncEnabled; }
 
-		virtual void setVSyncEnabled(bool value) = 0;
-		void setApplicationCallBack(std::function<void(Event& e)> callback) { m_eventCallback = callback; };
+		virtual void SetVSyncEnabled(bool value) = 0;
+		void SetApplicationCallBack(std::function<void(Event& e)> callback) { mEventCallback = callback; };
 
 		static Window* Create(unsigned int width, unsigned int height, const std::string& title);
 
 	protected:
-		bool m_initialized = false;
-		unsigned int m_width;
-		unsigned int m_height;
-		std::string m_title;
-		std::function<void(Event& e)> m_eventCallback;
-		bool m_vsyncEnabled = false;
+		bool mInitialized = false;
+		unsigned int mWidth;
+		unsigned int mHeight;
+		std::string mTitle;
+		std::function<void(Event& e)> mEventCallback;
+		bool mVsyncEnabled = false;
 	};
 }

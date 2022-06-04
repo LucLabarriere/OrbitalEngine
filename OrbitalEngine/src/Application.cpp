@@ -6,8 +6,8 @@
 #include "IndexBuffer.h"
 
 #define OE_DISPATCH_EVENT(eventType)\
-dispatcher.dispatch< ## eventType ## Event>([this]( ## eventType ## Event e) -> bool {\
-	return on##eventType(e);\
+dispatcher.Dispatch< ## eventType ## Event>([this]( ## eventType ## Event e) -> bool {\
+	return On##eventType(e);\
 });
 
 namespace Orbital
@@ -20,15 +20,15 @@ namespace Orbital
 	
 		Settings::Initialize();
 
-		m_window = Scope<Window>(Window::Create(
+		mWindow = Scope<Window>(Window::Create(
 			Settings::Get(Settings::UIntSetting::WindowWidth),
 			Settings::Get(Settings::UIntSetting::WindowHeight),
 			"Orbital"
 		));
 
-		m_window->setApplicationCallBack(std::bind(&Application::onEvent, this, std::placeholders::_1));
+		mWindow->SetApplicationCallBack(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
-		Inputs::Initialize(m_window);
+		Inputs::Initialize(mWindow);
 		TextureManager::Initialize();
 		ShaderManager::Initialize();
 		Renderer::Initialize();
@@ -37,26 +37,24 @@ namespace Orbital
 		Renderer::InitializeBatchManager();
 		Renderer::InitializeFramebuffers();
 		Metrics::Initialize();
-		NativeScriptManager::Initialize();
 
-		m_activeScene = &m_scene;
-		Entity::SetSceneReference(&m_activeScene);
-		m_scene.Initialize();
+		mActiveScene = &mScene;
+		Entity::SetSceneReference(&mActiveScene);
+		mScene.Initialize();
 	}
 
 	Application::~Application()
 	{
 		Logger::Info("Application: Terminating");
-		m_window.reset();
+		mWindow.reset();
 		Renderer::Terminate();
 		MeshManager::Terminate();
 		TextureManager::Terminate();
 		ShaderManager::Terminate();
 		MaterialManager::Terminate();
-		NativeScriptManager::Terminate();
 	}
 
-	void Application::onEvent(Event& e)
+	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
 
@@ -65,27 +63,26 @@ namespace Orbital
 		OE_DISPATCH_EVENT(MouseScrolled);
 	}
 
-	void Application::run()
+	void Application::Run()
 	{
-		onLoad();
-		NativeScriptManager::OnLoad();
+		OnLoad();
 
 		Time dt;
 
-		while (!m_window->shouldClose())
+		while (!mWindow->ShouldClose())
 		{
-			dt = Time() - m_timeAtLastUpdate;
-			m_timeAtLastUpdate = Time();
+			dt = Time() - mTimeAtLastUpdate;
+			mTimeAtLastUpdate = Time();
 
 			Metrics::OnUpdate(dt);
 
 			bool vsyncEnabled = Metrics::Get<bool>(Metric::VSyncEnabled);
-			if (vsyncEnabled != m_window->isVSyncEnabled())
+			if (vsyncEnabled != mWindow->IsVSyncEnabled())
 			{
-				m_window->setVSyncEnabled(vsyncEnabled);
+				mWindow->SetVSyncEnabled(vsyncEnabled);
 			}
 
-			onUpdate(dt);
+			OnUpdate(dt);
 		}
 
 		Logger::Trace("Leaving Application");

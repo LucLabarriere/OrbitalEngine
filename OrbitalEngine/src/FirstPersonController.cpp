@@ -8,19 +8,19 @@ namespace Orbital
 		mCamera = &GetComponent<Camera>();
 	}
 
-	void FirstPersonController::onLoad()
+	void FirstPersonController::OnLoad()
 	{
 		mCamera = &GetComponent<Camera>();
 	}
 
-	void FirstPersonController::onStart()
+	void FirstPersonController::OnStart()
 	{
 		mCamera = &GetComponent<Camera>();
 		Inputs::LockCursor(true);
 		
 	}
 
-	void FirstPersonController::onUpdate(Time dt)
+	void FirstPersonController::OnUpdate(Time dt)
 	{
 		const Vec2 mousePosition = Inputs::GetMousePosition();
 
@@ -28,33 +28,33 @@ namespace Orbital
 
 		if (Inputs::IsKeyDown(OE_KEY_A))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(-1.0f, 0.0f, 0.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(-1.0f, 0.0f, 0.0f);
 		}
 		if (Inputs::IsKeyDown(OE_KEY_D))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(1.0f, 0.0f, 0.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(1.0f, 0.0f, 0.0f);
 		}
 		if (Inputs::IsKeyDown(OE_KEY_W))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(0.0f, 0.0f, 1.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(0.0f, 0.0f, 1.0f);
 		}
 		if (Inputs::IsKeyDown(OE_KEY_S))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(0.0f, 0.0f, -1.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(0.0f, 0.0f, -1.0f);
 		}
 
-		auto position = mCamera->getPosition();
-		position += direction.x * mCamera->getRight() * Vec3(1.0f, 0.0f, 1.0f);
-		position += direction.z * mCamera->getFront() * Vec3(1.0f, 0.0f, 1.0f);
-		mCamera->setPosition(position);
+		auto position = mCamera->GetPosition();
+		position += direction.x * mCamera->GetRight() * Vec3(1.0f, 0.0f, 1.0f);
+		position += direction.z * mCamera->GetFront() * Vec3(1.0f, 0.0f, 1.0f);
+		mCamera->SetPosition(position);
 
 		float deltaX = mFormerMousePosition.x - mousePosition.x;
 		float deltaY = mFormerMousePosition.y - mousePosition.y;
 
 		Vec2 rotation(deltaY, -deltaX);
-		rotation *= mRotationSpeed * dt.seconds();
+		rotation *= mRotationSpeed * dt.Seconds();
 
-		mCamera->rotate(rotation);
+		mCamera->Rotate(rotation);
 
 		mFormerMousePosition.x = mousePosition.x;
 		mFormerMousePosition.y = mousePosition.y;
@@ -65,22 +65,22 @@ namespace Orbital
 		Inputs::LockCursor(false);
 	}
 
-	bool FirstPersonController::onMouseScrolled(const MouseScrolledEvent& e)
+	bool FirstPersonController::OnMouseScrolled(const MouseScrolledEvent& e)
 	{
-		mCamera->zoom(mZoomSpeed * e.getYOffset());
+		mCamera->Zoom(mZoomSpeed * e.GetYOffset());
 		return false;
 	}
 
-	void FirstPersonController::setPosition(const Vec3& position)
+	void FirstPersonController::SetPosition(const Vec3& position)
 	{
-		mCamera->setPosition(position);
+		mCamera->SetPosition(position);
 	}
 
-	void FirstPersonController::rotate(const Vec2& rotation)
+	void FirstPersonController::Rotate(const Vec2& rotation)
 	{
-		mCamera->rotate(rotation);
+		mCamera->Rotate(rotation);
 	}
 
-	float& FirstPersonController::getRotationSpeed() { return mRotationSpeed; }
-	float& FirstPersonController::getTranslationSpeed() { return mTranslationSpeed; }
+	float& FirstPersonController::GetRotationSpeed() { return mRotationSpeed; }
+	float& FirstPersonController::GetTranslationSpeed() { return mTranslationSpeed; }
 }

@@ -11,35 +11,35 @@ namespace Orbital
 	public:
 		virtual ~Shader() {};
 
-		virtual void bind() const = 0;
-		virtual void unbind() const = 0;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		virtual void setUniform1i(const std::string& name, int value) const = 0;
-		virtual void setUniform1f(const std::string& name, float value) const = 0;
-		virtual void setUniform2f(const std::string& name, const glm::vec2& value) const = 0;
-		virtual void setUniform2f(const std::string& name, float v1, float v2) const = 0;
-		virtual void setUniform3f(const std::string& name, const glm::vec3& value) const = 0;
-		virtual void setUniform3f(const std::string& name, float v1, float v2, float v3) const = 0;
-		virtual void setUniform4f(const std::string& name, const glm::vec4& value) const = 0;
-		virtual void setUniform4f(const std::string& name, float v1, float v2, float v3, float v4) const = 0;
-		virtual void setUniformMat4f(const std::string& name, const glm::mat4& value) const = 0;
+		virtual void SetUniform1i(const std::string& name, int value) const = 0;
+		virtual void SetUniform1f(const std::string& name, float value) const = 0;
+		virtual void SetUniform2f(const std::string& name, const glm::vec2& value) const = 0;
+		virtual void SetUniform2f(const std::string& name, float v1, float v2) const = 0;
+		virtual void SetUniform3f(const std::string& name, const glm::vec3& value) const = 0;
+		virtual void SetUniform3f(const std::string& name, float v1, float v2, float v3) const = 0;
+		virtual void SetUniform4f(const std::string& name, const glm::vec4& value) const = 0;
+		virtual void SetUniform4f(const std::string& name, float v1, float v2, float v3, float v4) const = 0;
+		virtual void SetUniformMat4f(const std::string& name, const glm::mat4& value) const = 0;
 
-		const std::string& getContent() const { return m_content; }
-		const std::string& getFilePath() const { return m_filepath; }
+		const std::string& GetContent() const { return mContent; }
+		const std::string& GetFilePath() const { return mFilepath; }
 
 	protected:
 		Shader(const std::string& name, const std::string& filepath)
-			: Asset(s_id, name), m_rendererId(0), m_filepath(filepath) { s_id += 1; }
+			: Asset(sId, name), mRendererId(0), mFilepath(filepath) { sId += 1; }
 		static Shader* Create(const std::string& name, const std::string& filepath);
-		virtual void reload() = 0;
+		virtual void Reload() = 0;
 
 	protected:
 		friend ShaderManager;
 
-		unsigned int m_rendererId;
-		std::string m_filepath;
-		std::string m_content = "";
+		unsigned int mRendererId;
+		std::string mFilepath;
+		std::string mContent = "";
 
-		static inline size_t s_id = 0;
+		static inline size_t sId = 0;
 	};
 }

@@ -5,16 +5,16 @@ namespace Orbital
 	class Asset
 	{
 	public:
-		size_t getId() const { return m_id; }
-		const std::string& getTag() const { return m_tag; }
+		size_t GetId() const { return mId; }
+		const std::string& GetTag() const { return mTag; }
 
-		void setTag(const std::string& tag) { m_tag = tag; }
-
-	protected:
-		Asset(size_t id, const std::string& tag) : m_id(id), m_tag(tag) { }
+		void SetTag(const std::string& tag) { mTag = tag; }
 
 	protected:
-		size_t m_id;
-		std::string m_tag;
+		Asset(size_t id, const std::string& tag) : mId(id), mTag(tag) { }
+
+	protected:
+		size_t mId;
+		std::string mTag;
 	};
 }

@@ -8,14 +8,14 @@ namespace Orbital
 		static VertexArray* Create();
 		virtual ~VertexArray() { }
 
-		virtual void bind() const = 0;
-		virtual void unbind() const = 0;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
 	protected:
-		VertexArray() : m_rendererId(0) { }
+		VertexArray() : mRendererId(0) { }
 
 	protected:
-			unsigned int m_rendererId;
+			unsigned int mRendererId;
 	};
 
 }

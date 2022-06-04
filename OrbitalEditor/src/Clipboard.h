@@ -7,30 +7,30 @@
 class Clipboard : public Widget
 {
 public:
-	static void Initialize() { s_instance = new Clipboard(); };
+	static void Initialize() { sInstance = new Clipboard(); };
 	static void Copy(const InspectedObject& object)
 	{
-		s_instance->m_object.Tag = object.Tag;
-		s_instance->m_object.Value = object.Value;
+		sInstance->mObject.Tag = object.Tag;
+		sInstance->mObject.Value = object.Value;
 	}
 
 	static void Paste()
 	{
-		if (s_instance->m_object.Tag == InspectedObjectTag::Entity)
+		if (sInstance->mObject.Tag == InspectedObjectTag::Entity)
 		{
-			(*s_instance->sActiveScene)->DuplicateEntity(std::get<Entity>(s_instance->m_object.Value));
+			(*sInstance->sActiveScene)->DuplicateEntity(std::get<Entity>(sInstance->mObject.Value));
 		}
 	};
 
 private:
-	Clipboard() : m_object()
+	Clipboard() : mObject()
 	{
-		m_object.Tag = InspectedObjectTag::None; m_object.Value = false;
+		mObject.Tag = InspectedObjectTag::None; mObject.Value = false;
 	}
 
 private:
-	static inline Clipboard* s_instance = nullptr;
+	static inline Clipboard* sInstance = nullptr;
 
-	InspectedObject m_object;
+	InspectedObject mObject;
 
 };

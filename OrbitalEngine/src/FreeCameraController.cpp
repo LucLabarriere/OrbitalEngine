@@ -11,17 +11,17 @@ namespace Orbital
 		mCamera = &GetComponent<Camera>();
 	}
 
-	void FreeCameraController::onLoad()
+	void FreeCameraController::OnLoad()
 	{
 		mCamera = &GetComponent<Camera>();
 	}
 
-	void FreeCameraController::onStart()
+	void FreeCameraController::OnStart()
 	{
 		mCamera = &GetComponent<Camera>();
 	}
 
-	void FreeCameraController::onUpdate(Time dt)
+	void FreeCameraController::OnUpdate(Time dt)
 	{
 		const Vec2 mousePosition = Inputs::GetMousePosition();
 
@@ -29,30 +29,30 @@ namespace Orbital
 
 		if (Inputs::IsKeyDown(OE_KEY_A))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(-1.0f, 0.0f, 0.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(-1.0f, 0.0f, 0.0f);
 		}
 		if (Inputs::IsKeyDown(OE_KEY_D))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(1.0f, 0.0f, 0.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(1.0f, 0.0f, 0.0f);
 		}
 		if (Inputs::IsKeyDown(OE_KEY_W))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(0.0f, 0.0f, 1.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(0.0f, 0.0f, 1.0f);
 		}
 		if (Inputs::IsKeyDown(OE_KEY_S))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(0.0f, 0.0f, -1.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(0.0f, 0.0f, -1.0f);
 		}
 		if (Inputs::IsKeyDown(OE_KEY_E))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(0.0f, 1.0f, 0.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(0.0f, 1.0f, 0.0f);
 		}
 		if (Inputs::IsKeyDown(OE_KEY_Q))
 		{
-			direction += mTranslationSpeed * dt.seconds() * Vec3(0.0f, -1.0f, 0.0f);
+			direction += mTranslationSpeed * dt.Seconds() * Vec3(0.0f, -1.0f, 0.0f);
 		}
 
-		mCamera->move(direction);
+		mCamera->Move(direction);
 
 		if (Inputs::IsMouseButtonDown(OE_MOUSE_BUTTON_2))
 		{
@@ -60,43 +60,43 @@ namespace Orbital
 			float deltaY = mFormerMousePosition.y - mousePosition.y;
 
 			Vec2 rotation(deltaY, -deltaX);
-			rotation *= mRotationSpeed * dt.seconds();
+			rotation *= mRotationSpeed * dt.Seconds();
 
-			mCamera->rotate(rotation);
+			mCamera->Rotate(rotation);
 		}
 
 		mFormerMousePosition.x = mousePosition.x;
 		mFormerMousePosition.y = mousePosition.y;
 	}
 
-	bool FreeCameraController::onKeyPressed(const KeyPressedEvent& e)
+	bool FreeCameraController::OnKeyPressed(const KeyPressedEvent& e)
 	{
-		if (e.getKeyCode() == OE_KEY_KP_0)
+		if (e.GetKeyCode() == OE_KEY_KP_0)
 		{
-			if (mCamera->isOrthographic())
-				mCamera->setPerspective();
+			if (mCamera->IsOrthographic())
+				mCamera->SetPerspective();
 			else
-				mCamera->setOrthographic();
+				mCamera->SetOrthographic();
 		}
 		return false;
 	}
 
-	bool FreeCameraController::onMouseScrolled(const MouseScrolledEvent& e)
+	bool FreeCameraController::OnMouseScrolled(const MouseScrolledEvent& e)
 	{
-		mCamera->zoom(mZoomSpeed * e.getYOffset());
+		mCamera->Zoom(mZoomSpeed * e.GetYOffset());
 		return false;
 	}
 
-	void FreeCameraController::setPosition(const Vec3& position)
+	void FreeCameraController::SetPosition(const Vec3& position)
 	{
-		mCamera->setPosition(position);
+		mCamera->SetPosition(position);
 	}
 
-	void FreeCameraController::rotate(const Vec2& rotation)
+	void FreeCameraController::Rotate(const Vec2& rotation)
 	{
-		mCamera->rotate(rotation);
+		mCamera->Rotate(rotation);
 	}
 
-	float& FreeCameraController::getRotationSpeed() { return mRotationSpeed; }
-	float& FreeCameraController::getTranslationSpeed() { return mTranslationSpeed; }
+	float& FreeCameraController::GetRotationSpeed() { return mRotationSpeed; }
+	float& FreeCameraController::GetTranslationSpeed() { return mTranslationSpeed; }
 }

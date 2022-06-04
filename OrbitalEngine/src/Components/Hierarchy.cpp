@@ -4,10 +4,10 @@
 namespace Orbital
 {
 	Hierarchy::Hierarchy(const Entity& entity, const Entity& parent)
-		: m_entity(entity), m_parent(parent)
+		: mEntity(entity), mParent(parent)
 	{
-		if (m_parent.IsValid())
-			m_parent.GetComponent<Hierarchy>().addChild(m_entity);
+		if (mParent.IsValid())
+			mParent.GetComponent<Hierarchy>().AddChild(mEntity);
 	}
 
 	Hierarchy::~Hierarchy()
@@ -15,46 +15,46 @@ namespace Orbital
 
 	}
 
-	void Hierarchy::setParent(const Entity& parent)
+	void Hierarchy::SetParent(const Entity& parent)
 	{
 		// Removing former parent
-		auto& parentHierarchy = m_parent.GetComponent<Hierarchy>();
-		parentHierarchy.removeChild(m_entity);
+		auto& parentHierarchy = mParent.GetComponent<Hierarchy>();
+		parentHierarchy.RemoveChild(mEntity);
 
 		// Setting new parent
-		m_parent = Entity(parent);
-		m_parent.GetComponent<Hierarchy>().addChild(m_entity);
+		mParent = Entity(parent);
+		mParent.GetComponent<Hierarchy>().AddChild(mEntity);
 	}
 
-	void Hierarchy::removeChild(const Entity& entity)
+	void Hierarchy::RemoveChild(const Entity& entity)
 	{
-		for (size_t i = 0; i < m_children.size(); i++)
-			if (m_children[i].GetComponent<UUID>() == entity.GetComponent<UUID>())
-				m_children.erase(m_children.begin() + i);
+		for (size_t i = 0; i < mChildren.size(); i++)
+			if (mChildren[i].GetComponent<UUID>() == entity.GetComponent<UUID>())
+				mChildren.erase(mChildren.begin() + i);
 	}
 
-	Entity& Hierarchy::getParent()
+	Entity& Hierarchy::GetParent()
 	{
-		return m_parent;
+		return mParent;
 	}
 
-	std::vector<Entity>& Hierarchy::getChildren()
+	std::vector<Entity>& Hierarchy::GetChildren()
 	{
-		return m_children;
+		return mChildren;
 	}
 
 	std::vector<Entity>::iterator Hierarchy::begin()
 	{
-		return m_children.begin();
+		return mChildren.begin();
 	}
 
 	std::vector<Entity>::iterator Hierarchy::end()
 	{
-		return m_children.end();
+		return mChildren.end();
 	}
 
-	void Hierarchy::addChild(const Entity& child)
+	void Hierarchy::AddChild(const Entity& child)
 	{
-		m_children.push_back(child);
+		mChildren.push_back(child);
 	}
 }

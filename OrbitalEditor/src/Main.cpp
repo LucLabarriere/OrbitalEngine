@@ -4,6 +4,6 @@
 int main()
 {
 	EditorApplication app;
-	app.run();
+	app.Run();
 	return 0;
 }

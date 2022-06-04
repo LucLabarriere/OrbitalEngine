@@ -4,50 +4,50 @@
 
 namespace Orbital
 {
-	void Material::bind() const
+	void Material::Bind() const
 	{
 		this;
-		auto shader = m_shader.lock();
-		shader->bind();
-		m_diffuseMap->bind(0);
-		m_specularMap->bind(1);
-		shader->setUniform1i("u_Material.DiffuseMap", 0);
-		shader->setUniform3f("u_Material.DiffuseTint", m_diffuseTint);
-		shader->setUniform1i("u_Material.SpecularMap", 1);
-		shader->setUniform3f("u_Material.SpecularTint", m_specularTint);
-		shader->setUniform1f("u_Material.Shininess", m_shininess);
-		shader->setUniform1f("u_Material.Ambient", m_ambient);
+		auto shader = mShader.lock();
+		shader->Bind();
+		mDiffuseMap->Bind(0);
+		mSpecularMap->Bind(1);
+		shader->SetUniform1i("u_Material.DiffuseMap", 0);
+		shader->SetUniform3f("u_Material.DiffuseTint", mDiffuseTint);
+		shader->SetUniform1i("u_Material.SpecularMap", 1);
+		shader->SetUniform3f("u_Material.SpecularTint", mSpecularTint);
+		shader->SetUniform1f("u_Material.Shininess", mShininess);
+		shader->SetUniform1f("u_Material.Ambient", mAmbient);
 	}
 
 	Material::Material(const std::string& tag)
-		: Asset(s_id, tag)
+		: Asset(sId, tag)
 	{
-		s_id += 1;
-		m_diffuseMap = TextureManager::Get(0).lock();
-		m_specularMap = TextureManager::Get(0).lock();
-		m_shader = ShaderManager::Get(0);
+		sId += 1;
+		mDiffuseMap = TextureManager::Get(0).lock();
+		mSpecularMap = TextureManager::Get(0).lock();
+		mShader = ShaderManager::Get(0);
 	}
 
 	Material::Material(const std::string& tag, const std::string& diffuseMapName)
-		: Asset(s_id, tag)
+		: Asset(sId, tag)
 	{
-		s_id += 1;
-		m_diffuseMap = TextureManager::Get(diffuseMapName).lock();
-		m_specularMap = TextureManager::Get(0).lock();
-		m_shader = ShaderManager::Get(0);
+		sId += 1;
+		mDiffuseMap = TextureManager::Get(diffuseMapName).lock();
+		mSpecularMap = TextureManager::Get(0).lock();
+		mShader = ShaderManager::Get(0);
 	}
 
 	Material::Material(const std::string& tag, const std::string& diffuseMapName, const std::string& specularMapName)
-		: Asset(s_id, tag)
+		: Asset(sId, tag)
 	{
-		s_id += 1;
-		m_diffuseMap = TextureManager::Get(diffuseMapName).lock();
-		m_specularMap = TextureManager::Get(specularMapName).lock();
-		m_shader = ShaderManager::Get(0);
+		sId += 1;
+		mDiffuseMap = TextureManager::Get(diffuseMapName).lock();
+		mSpecularMap = TextureManager::Get(specularMapName).lock();
+		mShader = ShaderManager::Get(0);
 	}
 
-	WeakRef<Shader> Material::getShader() const
+	WeakRef<Shader> Material::GetShader() const
 	{
-		return m_shader;
+		return mShader;
 	}
 }

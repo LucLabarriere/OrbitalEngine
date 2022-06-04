@@ -12,8 +12,8 @@ class Viewport
 {
 public:
 	Viewport(EditorApplication* app);
-	void render();
+	void Render();
 
 private:
-	EditorApplication* m_app;
+	EditorApplication* mApp;
 };

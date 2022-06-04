@@ -13,43 +13,43 @@ namespace Orbital
 	}
 
 	Metrics::Metrics()
-		: m_timePerFrameContainer(10)
+		: mTimePerFrameContainer(10)
 	{
-		m_metrics[Metric::FrameRate] = (float)0.0f;
-		m_metrics[Metric::ApproximateFrameRate] = (float)0.0f;
-		m_metrics[Metric::TimePerFrame] = Time();
-		m_metrics[Metric::ApproximateTimePerFrame] = Time();
-		m_metrics[Metric::BatchCount] = (unsigned int)0;
-		m_metrics[Metric::VSyncEnabled] = (bool)true;
+		mMetrics[Metric::FrameRate] = (float)0.0f;
+		mMetrics[Metric::ApproximateFrameRate] = (float)0.0f;
+		mMetrics[Metric::TimePerFrame] = Time();
+		mMetrics[Metric::ApproximateTimePerFrame] = Time();
+		mMetrics[Metric::BatchCount] = (unsigned int)0;
+		mMetrics[Metric::VSyncEnabled] = (bool)true;
 	}
 
-	void Metrics::onUpdate(Time dt)
+	void Metrics::OnUpdateImpl(Time dt)
 	{
-		m_lastUpdatedFrameRate += dt;
+		mLastUpdatedFrameRate += dt;
 
-		if (m_timeIndex == m_timePerFrameContainer.size())
-			m_timeIndex = 0;
+		if (mTimeIndex == mTimePerFrameContainer.size())
+			mTimeIndex = 0;
 
-		m_timePerFrameContainer[m_timeIndex] = dt;
+		mTimePerFrameContainer[mTimeIndex] = dt;
 
 		float average = 0;
-		for (auto& t : m_timePerFrameContainer)
+		for (auto& t : mTimePerFrameContainer)
 		{
-			average += t.seconds();
+			average += t.Seconds();
 		}
 
-		average = average / m_timePerFrameContainer.size();
+		average = average / mTimePerFrameContainer.size();
 
-		m_metrics[Metric::TimePerFrame] = dt;
-		m_metrics[Metric::FrameRate] = 1 / dt.seconds();
+		mMetrics[Metric::TimePerFrame] = dt;
+		mMetrics[Metric::FrameRate] = 1 / dt.Seconds();
 
-		if (m_lastUpdatedFrameRate.milliseconds() > 60.0f)
+		if (mLastUpdatedFrameRate.Milliseconds() > 60.0f)
 		{
-			m_metrics[Metric::ApproximateTimePerFrame] = Time::FromSeconds(average);
-			m_metrics[Metric::ApproximateFrameRate] = 1 / Metrics::Get<Time>(Metric::ApproximateTimePerFrame).seconds();
-			m_lastUpdatedFrameRate = Time(0);
+			mMetrics[Metric::ApproximateTimePerFrame] = Time::FromSeconds(average);
+			mMetrics[Metric::ApproximateFrameRate] = 1 / Metrics::Get<Time>(Metric::ApproximateTimePerFrame).Seconds();
+			mLastUpdatedFrameRate = Time(0);
 		}
 
-		m_timeIndex += 1;
+		mTimeIndex += 1;
 	}
 }

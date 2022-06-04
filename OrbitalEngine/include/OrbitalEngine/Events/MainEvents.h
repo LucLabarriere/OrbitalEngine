@@ -3,11 +3,11 @@
 #include <fmt/core.h>
 
 #define OE_EVENT_DEFINITION(type, categories, repr) \
-	static EventType GetType() { return EventType::type; } \
-	static unsigned int GetCategoryFlags() { return EventCategory::categories; } \
-	virtual EventType getType() const override { return EventType::type; } \
-	virtual unsigned int getCategoryFlags() const override { return EventCategory::categories; } \
-	virtual std::string toString() const override \
+	static EventType GetStaticType() { return EventType::type; } \
+	static unsigned int GetStaticCategoryFlags() { return EventCategory::categories; } \
+	virtual EventType GetType() const override { return EventType::type; } \
+	virtual unsigned int GetCategoryFlags() const override { return EventCategory::categories; } \
+	virtual std::string ToString() const override \
 	{ \
 		return "<" + std::string(#type) + ": " + repr + ">"; \
 	}
@@ -41,35 +41,35 @@ namespace Orbital
 	public:
 		Event() { };
 
-		virtual EventType getType() const = 0;
-		virtual unsigned int getCategoryFlags() const = 0;
-		virtual std::string toString() const = 0;
+		virtual EventType GetType() const = 0;
+		virtual unsigned int GetCategoryFlags() const = 0;
+		virtual std::string ToString() const = 0;
 
-		void setHandled(bool value) { m_handled = value; }
+		void SetHandled(bool value) { mHandled = value; }
 
 	private:
 		friend std::ostream& operator<<(std::ostream& os, const Event& e);
 
-		bool m_handled = false;
+		bool mHandled = false;
 	};
 
 	class EventDispatcher
 	{
 	public:
-		EventDispatcher(Event& e) : m_event(e) { }
+		EventDispatcher(Event& e) : mEvent(e) { }
 
 		template <typename T>
-		bool dispatch(std::function<bool(T&)> func)
+		bool Dispatch(std::function<bool(T&)> func)
 		{
-			if (m_event.getType() == T::GetType())
+			if (mEvent.GetType() == T::GetStaticType())
 			{
-				m_event.setHandled(func(*(T*)&m_event));
+				mEvent.SetHandled(func(*(T*)&mEvent));
 				return true;
 			}
 			return false;
 		}
 
 	private:
-		Event& m_event;
+		Event& mEvent;
 	};
 }

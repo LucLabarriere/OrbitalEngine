@@ -13,16 +13,16 @@ namespace Orbital
 	public:
 		FirstPersonController(const Entity& e);
 
-		virtual void onLoad() override;
-		virtual void onStart() override;
-		virtual void onUpdate(Time dt) override;
+		virtual void OnLoad() override;
+		virtual void OnStart() override;
+		virtual void OnUpdate(Time dt) override;
 		virtual void onExit() override;
-		virtual bool onMouseScrolled(const MouseScrolledEvent& e) override;
-		void setPosition(const Vec3& position);
-		void rotate(const Vec2& rotation);
+		virtual bool OnMouseScrolled(const MouseScrolledEvent& e) override;
+		void SetPosition(const Vec3& position);
+		void Rotate(const Vec2& rotation);
 
-		float& getRotationSpeed();
-		float& getTranslationSpeed();
+		float& GetRotationSpeed();
+		float& GetTranslationSpeed();
 
 	private:
 		Camera* mCamera = nullptr;

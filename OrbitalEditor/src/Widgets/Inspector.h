@@ -31,46 +31,46 @@ class Inspector : public Widget
 public:
 
 public:
-	static inline void Initialize() { s_instance = new Inspector(); }
-	static inline void Render() { s_instance->render(); };
+	static inline void Initialize() { sInstance = new Inspector(); }
+	static inline void Render() { sInstance->RenderImpl(); };
 
 	static inline void SetEntity(const Entity& entity)
 	{ 
-		s_instance->m_object.Value = entity;
-		s_instance->m_object.Tag = InspectedObjectTag::Entity;
+		sInstance->mObject.Value = entity;
+		sInstance->mObject.Tag = InspectedObjectTag::Entity;
 	}
 	static inline void SetTexture(WeakRef<Texture> texture)
 	{
-		s_instance->m_object.Value = texture;
-		s_instance->m_object.Tag = InspectedObjectTag::Texture;
+		sInstance->mObject.Value = texture;
+		sInstance->mObject.Tag = InspectedObjectTag::Texture;
 	}
 	static inline void SetText(const std::string& text)
 	{
-		s_instance->m_object.Value = text;
-		s_instance->m_object.Tag = InspectedObjectTag::Text;
+		sInstance->mObject.Value = text;
+		sInstance->mObject.Tag = InspectedObjectTag::Text;
 	}
 	static inline void SetMaterial(WeakRef<Material> material)
 	{
-		s_instance->m_object.Value = material;
-		s_instance->m_object.Tag = InspectedObjectTag::Material;
+		sInstance->mObject.Value = material;
+		sInstance->mObject.Tag = InspectedObjectTag::Material;
 	}
 
-	static const InspectedObject& GetInspectedObject() { return s_instance->m_object; }
+	static const InspectedObject& GetInspectedObject() { return sInstance->mObject; }
 
 private:
 	Inspector();
 
-	void render();
-	void renderEntity();
-	void renderTexture();
-	void renderText();
-	void renderMaterial();
+	void RenderImpl();
+	void RenderEntity();
+	void RenderTexture();
+	void RenderText();
+	void RenderMaterial();
 
 private:
-	static inline Inspector* s_instance = nullptr;
+	static inline Inspector* sInstance = nullptr;
 	
-	InspectedObject m_object;
-	inline static const char* m_layerRange[OE_LAST_LAYER + 1] = {
+	InspectedObject mObject;
+	inline static const char* mLayerRange[OE_LAST_LAYER + 1] = {
 		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
 		"17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
 	};

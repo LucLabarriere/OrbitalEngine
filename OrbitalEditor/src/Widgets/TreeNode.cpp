@@ -3,56 +3,56 @@
 #include "Inspector.h"
 
 TreeNode::TreeNode()
-	: m_entity(), m_panel(nullptr)
+	: mEntity(), mPanel(nullptr)
 {
 
 }
 
 TreeNode::TreeNode(const Entity& entity, Ref<HierarchyPanel> panel)
-	: m_entity(entity), m_panel(panel)
+	: mEntity(entity), mPanel(panel)
 {
-	auto& hierarchy = m_entity.GetComponent<Hierarchy>();
-	const auto& children = hierarchy.getChildren();
+	auto& hierarchy = mEntity.GetComponent<Hierarchy>();
+	const auto& children = hierarchy.GetChildren();
 	for (auto& child : children)
 	{
-		m_children.push_back(TreeNode(child, m_panel));
+		mChildren.push_back(TreeNode(child, mPanel));
 	}
 
-	m_title = m_entity.GetComponent<Tag>();
+	mTitle = mEntity.GetComponent<Tag>();
 }
 
-void TreeNode::initialize(const Entity& entity, Ref<HierarchyPanel> panel)
+void TreeNode::Initialize(const Entity& entity, Ref<HierarchyPanel> panel)
 {
-	m_entity = entity;
-	m_panel = panel;
+	mEntity = entity;
+	mPanel = panel;
 
-	auto& hierarchy = m_entity.GetComponent<Hierarchy>();
-	const auto& children = hierarchy.getChildren();
-	m_children.resize(children.size());
+	auto& hierarchy = mEntity.GetComponent<Hierarchy>();
+	const auto& children = hierarchy.GetChildren();
+	mChildren.resize(children.size());
 
 	for (size_t i = 0; i < children.size(); i++)
 	{
-		m_children[i].initialize(children[i], m_panel);
+		mChildren[i].Initialize(children[i], mPanel);
 	}
 
-	m_title = m_entity.GetComponent<Tag>();
+	mTitle = mEntity.GetComponent<Tag>();
 }
 
-void TreeNode::update()
+void TreeNode::Update()
 {
-	/*for (size_t i = m_children.size() - 1; i >= 0; i++)
+	/*for (size_t i = mChildren.size() - 1; i >= 0; i++)
 	{
-		if (!m_children[i].getEntity().isValid())
-			m_children.erase(m_children.begin() + i);
+		if (!mChildren[i].GetEntity().isValid())
+			mChildren.erase(mChildren.begin() + i);
 	}
 
-	for (auto& e : m_scene->getCreatedEntities())
+	for (auto& e : mScene->getCreatedEntities())
 	{
-		m_treeNodes.push_back(TreeNode(e, shared_from_this()));
+		mTreeNodes.push_back(TreeNode(e, shared_from_this()));
 	}*/
 }
 
-void TreeNode::render()
+void TreeNode::Render()
 {
 	bool nodeOpen = false;
 	ImGuiTreeNodeFlags nodeFlags = 
@@ -60,25 +60,25 @@ void TreeNode::render()
 		ImGuiTreeNodeFlags_OpenOnDoubleClick |
 		ImGuiTreeNodeFlags_SpanAvailWidth;
 
-	if (m_panel->getSelectedEntityHandle() == m_entity.GetHandle())
+	if (mPanel->GetSelectedEntityHandle() == mEntity.GetHandle())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
 
-	if (m_children.size() == 0)
+	if (mChildren.size() == 0)
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-		ImGui::TreeNodeEx(m_title.c_str(), nodeFlags);
+		ImGui::TreeNodeEx(mTitle.c_str(), nodeFlags);
 	}
 	else
 	{
-		nodeOpen = ImGui::TreeNodeEx(m_title.c_str(), nodeFlags);
+		nodeOpen = ImGui::TreeNodeEx(mTitle.c_str(), nodeFlags);
 	}
 
 	// Source
 	if (ImGui::BeginDragDropSource())
 	{
-		ImGui::SetDragDropPayload("TreeNode", (const void*)&m_entity, sizeof(m_entity));
+		ImGui::SetDragDropPayload("TreeNode", (const void*)&mEntity, sizeof(mEntity));
 		ImGui::EndDragDropSource();
 	}
 
@@ -89,21 +89,21 @@ void TreeNode::render()
 		if (payload)
 		{
 			Entity e = *static_cast<Entity*>(payload->Data);
-			e.GetComponent<Hierarchy>().setParent(m_entity);
+			e.GetComponent<Hierarchy>().SetParent(mEntity);
 		}
 		ImGui::EndDragDropTarget();
 	}
 
 	if (ImGui::IsItemClicked())
 	{
-		m_panel->setSelectedEntity(m_entity);
-		Inspector::SetEntity(m_entity);
+		mPanel->SetSelectedEntity(mEntity);
+		Inspector::SetEntity(mEntity);
 	}
 
 	if (nodeOpen)
 	{
-		for (auto& node : m_children)
-			node.render();
+		for (auto& node : mChildren)
+			node.Render();
 
 		ImGui::TreePop();
 	}

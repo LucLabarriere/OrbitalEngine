@@ -14,37 +14,37 @@ namespace Orbital
 
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
-		glad_glDeleteFramebuffers(1, &m_rendererId);
-		glad_glDeleteTextures(1, &m_textureId);
+		glad_glDeleteFramebuffers(1, &mRendererId);
+		glad_glDeleteTextures(1, &mTextureId);
 		glad_glDeleteRenderbuffers(1, &m_renderBufferId);
 	}
 
-	void OpenGLFrameBuffer::bind() const
+	void OpenGLFrameBuffer::Bind() const
 	{
-		glad_glBindFramebuffer(GL_FRAMEBUFFER, m_rendererId);
+		glad_glBindFramebuffer(GL_FRAMEBUFFER, mRendererId);
 	}
 
-	void OpenGLFrameBuffer::bindDraw() const
+	void OpenGLFrameBuffer::BindDraw() const
 	{
-		glad_glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_rendererId);
+		glad_glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mRendererId);
 	}
 
-	void OpenGLFrameBuffer::unbind() const
+	void OpenGLFrameBuffer::Unbind() const
 	{
 		glad_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFrameBuffer::renderFrame()
+	void OpenGLFrameBuffer::RenderFrame()
 	{
 		auto shader = ShaderManager::Get("PostProcess").lock();
-		shader->bind();
+		shader->Bind();
 		glad_glDisable(GL_DEPTH_TEST);
 		glad_glActiveTexture(GL_TEXTURE0);
-		glad_glBindTexture(GL_TEXTURE_2D, m_textureId);
-		shader->setUniform1i("u_ScreenTexture", 0);
+		glad_glBindTexture(GL_TEXTURE_2D, mTextureId);
+		shader->SetUniform1i("u_ScreenTexture", 0);
 
-		m_vao->bind();
-		m_ibo->bind();
+		mVao->Bind();
+		mIbo->Bind();
 
 		RenderCommands::DrawIndexed(OE_TRIANGLES, 6);
 	}
@@ -54,18 +54,18 @@ namespace Orbital
 		unsigned int width = Settings::Get(Settings::UIntSetting::RenderingAreaWidth);
 		unsigned int height = Settings::Get(Settings::UIntSetting::RenderingAreaHeight);
 
-		glad_glGenFramebuffers(1, &m_rendererId);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererId);
+		glad_glGenFramebuffers(1, &mRendererId);
+		glBindFramebuffer(GL_FRAMEBUFFER, mRendererId);
 		glad_glActiveTexture(GL_TEXTURE0);
-		glad_glGenTextures(1, &m_textureId);
-		glad_glBindTexture(GL_TEXTURE_2D, m_textureId);
+		glad_glGenTextures(1, &mTextureId);
+		glad_glBindTexture(GL_TEXTURE_2D, mTextureId);
 
 		glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glad_glBindTexture(GL_TEXTURE_2D, 0);
-		glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureId, 0);
+		glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
 
 		glad_glGenRenderbuffers(1, &m_renderBufferId);
 		glad_glBindRenderbuffer(GL_RENDERBUFFER, m_renderBufferId);
@@ -86,19 +86,19 @@ namespace Orbital
 		glad_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		const auto& screenMesh = MeshManager::Get("Quad");
-		const auto& vertices = screenMesh.lock()->getVertices();
+		const auto& vertices = screenMesh.lock()->GetVertices();
 		const auto& indices = screenMesh.lock()->getIndices();
 
-		m_vao = Scope<VertexArray>(VertexArray::Create());
-		m_vbo = Scope<VertexBuffer>(VertexBuffer::Create(OE_STATIC_DRAW));
-		m_vao->bind();
-		m_vbo->bind();
-		m_vbo->allocateMemory(vertices.getData(), vertices.getSize());
+		mVao = Scope<VertexArray>(VertexArray::Create());
+		mVbo = Scope<VertexBuffer>(VertexBuffer::Create(OE_STATIC_DRAW));
+		mVao->Bind();
+		mVbo->Bind();
+		mVbo->AllocateMemory(vertices.GetData(), vertices.GetSize());
 
-		m_ibo = Scope<IndexBuffer>(IndexBuffer::Create(OE_STATIC_DRAW));
-		m_ibo->allocateMemory(indices.getData(), indices.getSize());
+		mIbo = Scope<IndexBuffer>(IndexBuffer::Create(OE_STATIC_DRAW));
+		mIbo->AllocateMemory(indices.GetData(), indices.GetSize());
 
-		vertices.setLayout(*m_vbo);
+		vertices.SetLayout(*mVbo);
 
 		glad_glViewport(0, 0, width, height);
 	}

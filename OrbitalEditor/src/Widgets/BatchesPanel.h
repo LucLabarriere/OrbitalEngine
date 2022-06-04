@@ -3,7 +3,7 @@
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics.h"
 #include "Widget.h"
-#include "imgui.h"
+#include <imgui.h>
 
 using namespace Orbital;
 
@@ -12,7 +12,7 @@ class BatchesPanel : public Widget
 public:
 	BatchesPanel() { }
 
-	void render()
+	void Render()
 	{
 		// TODO: Upon changin the Mesh, call DeleteMesh() then RegisterMesh()
 		// Remake the whole Components system:
@@ -23,29 +23,30 @@ public:
 		if (ImGui::Begin("Batches"))
 		{
 			auto bm = Renderer::GetBatchManager().lock();
-			const auto& batches = bm->getBatchContainers();
+			const auto& batches = bm->GetBatchContainers();
 			std::vector<const char*> batchNames;
 
-			for (size_t i = 0; i < bm->getCount(); i++)
+			for (size_t i = 0; i < bm->GetCount(); i++)
 			{
-				batchNames.push_back(MaterialManager::Get(i).lock()->getTag().c_str());
+				batchNames.push_back(MaterialManager::Get(i).lock()->GetTag().c_str());
 			}
 
 			ImGuiTabBarFlags tabFlags = ImGuiTabBarFlags_None;
+
 			if (ImGui::BeginTabBar("Batches tab", tabFlags))
 			{
-				for (size_t i = 0; i < bm->getCount(); i++)
+				for (size_t i = 0; i < bm->GetCount(); i++)
 				{
 					int j = 0;
-					std::string materialName = MaterialManager::Get(i).lock()->getTag();
+					std::string materialName = MaterialManager::Get(i).lock()->GetTag();
 					for (auto& batchEntry : *bm->getBatch(i))
 					{
 						if (ImGui::BeginTabItem((materialName + "_" + std::to_string(j)).c_str()))
 						{
-							const auto& vertices = batchEntry->getVertices();
-							const auto& freeVertices = batchEntry->getFreeVerticesList();
+							const auto& vertices = batchEntry->GetVertices();
+							const auto& freeVertices = batchEntry->GetFreeVerticesList();
 
-							for (size_t i = 0; i < vertices.getCount(); i++)
+							for (size_t i = 0; i < vertices.GetCount(); i++)
 							{
 								std::string text = std::to_string(i);
 								if (!freeVertices[i])

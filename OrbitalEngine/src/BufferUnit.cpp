@@ -7,50 +7,50 @@
 namespace Orbital
 {
 	BufferUnit::BufferUnit(WeakRef<Mesh> mesh, WeakRef<Material> material)
-		: m_mesh(mesh)
-		, m_material(material)
+		: mMesh(mesh)
+		, mMaterial(material)
 	{
-		m_vao = Ref<VertexArray>(VertexArray::Create());
-		m_vbo = Ref<VertexBuffer>(VertexBuffer::Create(OE_STATIC_DRAW));
-		m_ibo = Ref<IndexBuffer>(IndexBuffer::Create(OE_STATIC_DRAW));
+		mVao = Ref<VertexArray>(VertexArray::Create());
+		mVbo = Ref<VertexBuffer>(VertexBuffer::Create(OE_STATIC_DRAW));
+		mIbo = Ref<IndexBuffer>(IndexBuffer::Create(OE_STATIC_DRAW));
 
 		auto m = mesh.lock();
-		m_id = m->getId();
-		auto& vertices = m->getVertices();
+		mId = m->GetId();
+		auto& vertices = m->GetVertices();
 		auto& indices = m->getIndices();
 
-		m_vao->bind();
-		m_vbo->bind();
-		m_vbo->allocateMemory(nullptr, vertices.getSize());
-		m_vbo->submitData(vertices.getData(), vertices.getSize());
+		mVao->Bind();
+		mVbo->Bind();
+		mVbo->AllocateMemory(nullptr, vertices.GetSize());
+		mVbo->SubmitData(vertices.GetData(), vertices.GetSize());
 
-		m_ibo->bind();
-		m_ibo->allocateMemory(nullptr, indices.getSize());
-		m_ibo->submitData(indices.getData(), indices.getSize());
+		mIbo->Bind();
+		mIbo->AllocateMemory(nullptr, indices.GetSize());
+		mIbo->SubmitData(indices.GetData(), indices.GetSize());
 
-		m->getVertices().setLayout(*m_vbo);
+		m->GetVertices().SetLayout(*mVbo);
 	}
 
-	void BufferUnit::setModelMatrixUniform(WeakRef<Shader> shader, const Transform& t)
+	void BufferUnit::SetModelMatrixUniform(WeakRef<Shader> shader, const Transform& t)
 	{
 		Mat4 model(1.0f);
-		model = glm::translate(model, t.Position());
-		model = glm::rotate(model, glm::radians(t.Rotation()[0]), { 1.0f, 0.0f, 0.0f });
-		model = glm::rotate(model, glm::radians(t.Rotation()[1]), { 0.0f, 1.0f, 0.0f });
-		model = glm::rotate(model, glm::radians(t.Rotation()[2]), { 0.0f, 0.0f, 1.0f });
-		model = glm::scale(model, t.Scale());
+		model = glm::translate(model, t.GetPosition());
+		model = glm::rotate(model, glm::radians(t.GetRotation()[0]), { 1.0f, 0.0f, 0.0f });
+		model = glm::rotate(model, glm::radians(t.GetRotation()[1]), { 0.0f, 1.0f, 0.0f });
+		model = glm::rotate(model, glm::radians(t.GetRotation()[2]), { 0.0f, 0.0f, 1.0f });
+		model = glm::scale(model, t.GetScale());
 
-		shader.lock()->setUniformMat4f("u_MMatrix", model);
+		shader.lock()->SetUniformMat4f("u_MMatrix", model);
 	}
 
 	bool BufferUnit::operator==(const BufferUnit& otherUnit)
 	{
-		return otherUnit.getId() == getId();
+		return otherUnit.GetId() == GetId();
 	}
 
-	void BufferUnit::bind() const
+	void BufferUnit::Bind() const
 	{
-		m_vao->bind();
-		m_ibo->bind();
+		mVao->Bind();
+		mIbo->Bind();
 	}
 }

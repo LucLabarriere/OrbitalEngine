@@ -9,7 +9,7 @@ namespace Orbital
 {
 	void MeshManager::Initialize()
 	{
-		s_instance = new MeshManager();
+		sInstance = new MeshManager();
 		//LoadMesh(Settings::GetAssetPath("models/backpack/backpack.obj"), "Backpack");
 	}
 
@@ -78,7 +78,7 @@ namespace Orbital
 		}
 		IndexContainer indexContainer(rawIndices);
 
-		((MeshManager*)s_instance)->push(Ref<Mesh>(
+		((MeshManager*)sInstance)->Push(Ref<Mesh>(
 			new Mesh(GetUniqueTag(meshName), vertexContainer, indexContainer)));
 
 		return true;
@@ -87,14 +87,14 @@ namespace Orbital
 	MeshManager::MeshManager()
 		: AssetManager<Mesh>("MeshManager")
 	{
-		push(Mesh::Quad());
-		push(Mesh::Cube());
-		push(Mesh::Triangle());
+		Push(Mesh::Quad());
+		Push(Mesh::Cube());
+		Push(Mesh::Triangle());
 	}
 
-	void MeshManager::push(Ref<Mesh>&& mesh)
+	void MeshManager::Push(Ref<Mesh>&& mesh)
 	{
-		m_assets.push_back(mesh);
+		mAssets.push_back(mesh);
 		Renderer::PushBufferUnit(mesh);
 	}
 }

@@ -12,6 +12,6 @@ namespace Orbital
 	private:
 		MaterialManager();
 
-		void push(Ref<Material>&& material);
+		void Push(Ref<Material>&& material);
 	};
 }

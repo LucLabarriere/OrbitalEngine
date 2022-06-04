@@ -11,12 +11,12 @@ class Tools
 public:
 	static void Initialize()
 	{
-		s_instance = new Tools;
+		sInstance = new Tools;
 	}
 
 	static void Terminate()
 	{
-		delete s_instance;
+		delete sInstance;
 	}
 
 	static void RenderIcon(TextureIconIndex iconIndex);
@@ -26,7 +26,7 @@ private:
 	Tools();
 
 private:
-	static inline Tools* s_instance = nullptr;
-	WeakRef<Texture> m_texture;
-	float m_ratio;
+	static inline Tools* sInstance = nullptr;
+	WeakRef<Texture> mTexture;
+	float mRatio;
 };

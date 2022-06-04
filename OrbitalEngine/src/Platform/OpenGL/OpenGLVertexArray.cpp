@@ -9,21 +9,21 @@ namespace Orbital
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
-		glad_glDeleteVertexArrays(1, &m_rendererId);
+		glad_glDeleteVertexArrays(1, &mRendererId);
 	}
 
-	void OpenGLVertexArray::bind() const
+	void OpenGLVertexArray::Bind() const
 	{
-		glad_glBindVertexArray(m_rendererId);
+		glad_glBindVertexArray(mRendererId);
 	}
 
-	void OpenGLVertexArray::unbind() const
+	void OpenGLVertexArray::Unbind() const
 	{
 		glad_glBindVertexArray(0);
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		glad_glGenVertexArrays(1, &m_rendererId);
+		glad_glGenVertexArrays(1, &mRendererId);
 	}
 }

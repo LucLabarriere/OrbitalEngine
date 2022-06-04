@@ -4,43 +4,43 @@
 
 
 Inspector::Inspector()
-	: m_object()
+	: mObject()
 {
 
 }
 
-void Inspector::render()
+void Inspector::RenderImpl()
 {
 	ImGui::Begin("Inspector");
-	switch (m_object.Tag)
+	switch (mObject.Tag)
 	{
 		case InspectedObjectTag::Entity:
 		{
-			renderEntity();
+			RenderEntity();
 			break;
 		}
 		case InspectedObjectTag::Texture:
 		{
-			renderTexture();
+			RenderTexture();
 			break;
 		}
 		case InspectedObjectTag::Text:
 		{
-			renderText();
+			RenderText();
 			break;
 		}
 		case InspectedObjectTag::Material:
 		{
-			renderMaterial();
+			RenderMaterial();
 			break;
 		}
 	}
 	ImGui::End();
 }
 
-void Inspector::renderEntity()
+void Inspector::RenderEntity()
 {
-	auto& entity = std::get<Entity>(m_object.Value);
+	auto& entity = std::get<Entity>(mObject.Value);
 
 	if (entity.IsValid())
 	{
@@ -66,7 +66,7 @@ void Inspector::renderEntity()
 
 			//LayerID
 			int bufferLayerId = (int)layerId;
-			ImGui::Combo("LayerID", &bufferLayerId, m_layerRange, OE_LAST_LAYER + 1);
+			ImGui::Combo("LayerID", &bufferLayerId, mLayerRange, OE_LAST_LAYER + 1);
 
 			if ((LayerID)bufferLayerId != layerId)
 			{
@@ -78,9 +78,9 @@ void Inspector::renderEntity()
 		{
 			if (ImGui::CollapsingHeader("Transform"))
 			{
-				ImGui::DragFloat3("Position", &transform->Position()[0], 0.001f);
-				ImGui::DragFloat3("Rotation", &transform->Rotation()[0], 1.0f);
-				ImGui::DragFloat3("Scale", &transform->Scale()[0], 0.01f);
+				ImGui::DragFloat3("Position", &transform->GetPosition()[0], 0.001f);
+				ImGui::DragFloat3("Rotation", &transform->GetRotation()[0], 1.0f);
+				ImGui::DragFloat3("Scale", &transform->GetScale()[0], 0.01f);
 
 				if (ImGui::Button("X"))
 				{
@@ -93,20 +93,20 @@ void Inspector::renderEntity()
 		{
 			if (ImGui::CollapsingHeader("MeshRenderer"))
 			{
-				MeshRenderer::DrawData drawData = meshRenderer->getDrawData();
+				MeshRenderer::DrawData drawData = meshRenderer->GetDrawData();
 
 				ImGui::Checkbox("Static", &drawData.staticDraw);
 				ImGui::Checkbox("Batched", &drawData.batchDraw);
 				ImGui::Checkbox("Hidden", &drawData.hidden);
 
-				if (drawData != meshRenderer->getDrawData())
+				if (drawData != meshRenderer->GetDrawData())
 				{
-					meshRenderer->setDrawData(drawData);
+					meshRenderer->SetDrawData(drawData);
 
 					// TODO correct here, set hidden should be done for the children of the children
 					for (auto child : hiearchy)
 					{
-						child.GetComponent<MeshRenderer>().setHidden(drawData.hidden);
+						child.GetComponent<MeshRenderer>().SetHidden(drawData.hidden);
 					}
 				}
 
@@ -116,15 +116,15 @@ void Inspector::renderEntity()
 
 				for (size_t i = 0; i < meshTags.size(); i++)
 				{
-					if (meshTags[i] == meshRenderer->getMesh().lock()->getTag().c_str())
+					if (meshTags[i] == meshRenderer->GetMesh().lock()->GetTag().c_str())
 						currentItem = i;
 				}
 
 				ImGui::Combo("Mesh", &currentItem, meshTags.data(), meshTags.size());
 
-				if (meshTags[currentItem] != meshRenderer->getMesh().lock()->getTag())
+				if (meshTags[currentItem] != meshRenderer->GetMesh().lock()->GetTag())
 				{
-					meshRenderer->setMesh(meshTags[currentItem]);
+					meshRenderer->SetMesh(meshTags[currentItem]);
 				}
 
 				// Material
@@ -133,24 +133,24 @@ void Inspector::renderEntity()
 
 				for (size_t i = 0; i < materialTags.size(); i++)
 				{
-					if (materialTags[i] == meshRenderer->getMaterial().lock()->getTag().c_str())
+					if (materialTags[i] == meshRenderer->GetMaterial().lock()->GetTag().c_str())
 						currentItem = i;
 				}
 
 				ImGui::Combo("Material", &currentItem, materialTags.data(), materialTags.size());
 
-				if (materialTags[currentItem] != meshRenderer->getMaterial().lock()->getTag())
+				if (materialTags[currentItem] != meshRenderer->GetMaterial().lock()->GetTag())
 				{
-					meshRenderer->setMaterial(materialTags[currentItem]);
+					meshRenderer->SetMaterial(materialTags[currentItem]);
 				}
 
-				ImGui::DragFloat2("TexCoords multiplicator", &meshRenderer->getTexCoordsMultiplicator()[0], 0.1f, 0.0f, 10.0f);
+				ImGui::DragFloat2("TexCoords multiplicator", &meshRenderer->GetTexCoordsMultiplicator()[0], 0.1f, 0.0f, 10.0f);
 
 				// Delete
 				if (ImGui::Button("X"))
 				{
 					entity.RemoveComponent<MeshRenderer>();
-					meshRenderer->destroy();
+					meshRenderer->Destroy();
 				}
 			}
 		}
@@ -255,7 +255,7 @@ void Inspector::renderEntity()
 						entity.AddComponent<Transform>();
 						transform = entity.TryGetComponent<Transform>();
 					}
-					entity.AddComponent<PointLight>(&transform->Position());
+					entity.AddComponent<PointLight>(&transform->GetPosition());
 				}
 			}
 			if (!spotLight)
@@ -267,7 +267,7 @@ void Inspector::renderEntity()
 						entity.AddComponent<Transform>();
 						transform = entity.TryGetComponent<Transform>();
 					}
-					entity.AddComponent<SpotLight>(&transform->Position());
+					entity.AddComponent<SpotLight>(&transform->GetPosition());
 				}
 			}
 			ImGui::EndPopup();
@@ -282,13 +282,13 @@ void Inspector::renderEntity()
 	}
 }
 
-void Inspector::renderTexture()
+void Inspector::RenderTexture()
 {
-	auto texture = std::get<WeakRef<Texture>>(m_object.Value).lock();
+	auto texture = std::get<WeakRef<Texture>>(mObject.Value).lock();
 
 	float maxSize = 256.0f;
-	float width = (float)texture->getWidth();
-	float height = (float)texture->getHeight();
+	float width = (float)texture->GetWidth();
+	float height = (float)texture->GetHeight();
 
 
 	if (width > height)
@@ -305,11 +305,11 @@ void Inspector::renderTexture()
 	}
 
 	ImGui::Text("Texture");
-	ImGui::Text("Name: %s", texture->getTag().c_str());
-	ImGui::Text("Width: %u", texture->getWidth());
-	ImGui::Text("Height: %u", texture->getHeight());
+	ImGui::Text("Name: %s", texture->GetTag().c_str());
+	ImGui::Text("Width: %u", texture->GetWidth());
+	ImGui::Text("Height: %u", texture->GetHeight());
 	ImGui::Image(
-		(void*)(intptr_t)texture->getRendererId(),
+		(void*)(intptr_t)texture->GetRendererId(),
 		ImVec2(width, height),
 		ImVec2(0, 0),
 		ImVec2(1, 1)
@@ -327,15 +327,15 @@ void Inspector::renderTexture()
 
 	for (size_t i = 0; i < wrapValues.size(); i++)
 	{
-		if (wrapValues[i] == texture->getWrapS())
+		if (wrapValues[i] == texture->GetWrapS())
 			currentItem = i;
 	}
 
 	ImGui::Combo("Wrap S", &currentItem, wrapNames.data(), wrapNames.size());
 
-	if (wrapValues[currentItem] != texture->getWrapS())
+	if (wrapValues[currentItem] != texture->GetWrapS())
 	{
-		texture->setWrapS(wrapValues[currentItem]);
+		texture->SetWrapS(wrapValues[currentItem]);
 	}
 
 	// WrapT
@@ -343,15 +343,15 @@ void Inspector::renderTexture()
 
 	for (size_t i = 0; i < wrapValues.size(); i++)
 	{
-		if (wrapValues[i] == texture->getWrapT())
+		if (wrapValues[i] == texture->GetWrapT())
 			currentItem = i;
 	}
 
 	ImGui::Combo("Wrap T", &currentItem, wrapNames.data(), wrapNames.size());
 
-	if (wrapValues[currentItem] != texture->getWrapT())
+	if (wrapValues[currentItem] != texture->GetWrapT())
 	{
-		texture->setWrapT(wrapValues[currentItem]);
+		texture->SetWrapT(wrapValues[currentItem]);
 	}
 
 	// MinFilter
@@ -362,15 +362,15 @@ void Inspector::renderTexture()
 
 	for (size_t i = 0; i < filterValues.size(); i++)
 	{
-		if (filterValues[i] == texture->getMinFilter())
+		if (filterValues[i] == texture->GetMinFilter())
 			currentItem = i;
 	}
 
 	ImGui::Combo("Minify filter", &currentItem, filterNames.data(), filterNames.size());
 
-	if (filterValues[currentItem] != texture->getMinFilter())
+	if (filterValues[currentItem] != texture->GetMinFilter())
 	{
-		texture->setMinFilter(filterValues[currentItem]);
+		texture->SetMinFilter(filterValues[currentItem]);
 	}
 
 	// MagFilter
@@ -378,31 +378,31 @@ void Inspector::renderTexture()
 
 	for (size_t i = 0; i < filterValues.size(); i++)
 	{
-		if (filterValues[i] == texture->getMagFilter())
+		if (filterValues[i] == texture->GetMagFilter())
 			currentItem = i;
 	}
 
 	ImGui::Combo("Magnify filter", &currentItem, filterNames.data(), filterNames.size());
 
-	if (filterValues[currentItem] != texture->getMagFilter())
+	if (filterValues[currentItem] != texture->GetMagFilter())
 	{
-		texture->setMagFilter(filterValues[currentItem]);
+		texture->SetMagFilter(filterValues[currentItem]);
 	}
 }
 
-void Inspector::renderText()
+void Inspector::RenderText()
 {
-	auto& text = std::get<std::string>(m_object.Value);
+	auto& text = std::get<std::string>(mObject.Value);
 	ImGui::Text(text.c_str());
 }
 
-void Inspector::renderMaterial()
+void Inspector::RenderMaterial()
 {
-	auto material = std::get<WeakRef<Material>>(m_object.Value).lock();
+	auto material = std::get<WeakRef<Material>>(mObject.Value).lock();
 	ImGui::Text("Material");
-	ImGui::Text("Name: %s", material->getTag().c_str());
-	ImGui::DragFloat("Ambient", &material->getAmbient(), 0.02f, 0.0, 1.0f);
-	ImGui::ColorEdit3("Diffuse", &material->getDiffuseTint()[0]);
-	ImGui::ColorEdit3("Specular", &material->getSpecularTint()[0]);
-	ImGui::DragFloat("shininess", &material->getShininess());
+	ImGui::Text("Name: %s", material->GetTag().c_str());
+	ImGui::DragFloat("Ambient", &material->GetAmbient(), 0.02f, 0.0, 1.0f);
+	ImGui::ColorEdit3("Diffuse", &material->GetDiffuseTint()[0]);
+	ImGui::ColorEdit3("Specular", &material->GetSpecularTint()[0]);
+	ImGui::DragFloat("shininess", &material->GetShininess());
 }

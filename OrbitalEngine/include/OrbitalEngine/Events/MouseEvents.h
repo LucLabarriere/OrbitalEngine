@@ -8,14 +8,14 @@ namespace Orbital
 	{
 	public:
 		MouseEvent(float x, float y)
-			: Event(), m_xPos(x), m_yPos(y) { }
+			: Event(), mXPos(x), mYPos(y) { }
 
-		float getX() const { return m_xPos; }
-		float getY() const { return m_yPos; }
+		float GetX() const { return mXPos; }
+		float GetY() const { return mYPos; }
 
 	protected:
-		float m_xPos;
-		float m_yPos;
+		float mXPos;
+		float mYPos;
 	};
 
 	class MouseMovedEvent : public MouseEvent
@@ -27,7 +27,7 @@ namespace Orbital
 		OE_EVENT_DEFINITION(
 			MouseMoved,
 			InputEventCategory | MouseEventCategory,
-			fmt::format("{}, {}", m_xPos, m_yPos)
+			fmt::format("{}, {}", mXPos, mYPos)
 		)
 	};
 
@@ -35,12 +35,12 @@ namespace Orbital
 	{
 	public:
 		MouseButtonEvent(float x, float y, unsigned int button)
-			: MouseEvent(x, y), m_button(button) { }
+			: MouseEvent(x, y), mButton(button) { }
 
-		unsigned int getButton() const { return m_button; }
+		unsigned int GetButton() const { return mButton; }
 
 	protected:
-		unsigned int m_button;
+		unsigned int mButton;
 	};
 
 	class MouseButtonPressedEvent : public MouseButtonEvent
@@ -52,7 +52,7 @@ namespace Orbital
 		OE_EVENT_DEFINITION(
 			MouseButtonPressed,
 			InputEventCategory | MouseEventCategory,
-			fmt::format("{}, {}, {}", m_xPos, m_yPos, m_button)
+			fmt::format("{}, {}, {}", mXPos, mYPos, mButton)
 		)
 	};
 
@@ -65,7 +65,7 @@ namespace Orbital
 		OE_EVENT_DEFINITION(
 			MouseButtonReleased,
 			InputEventCategory | MouseEventCategory,
-			fmt::format("{}, {}, {}", m_xPos, m_yPos, m_button)
+			fmt::format("{}, {}, {}", mXPos, mYPos, mButton)
 		)
 	};
 
@@ -73,19 +73,19 @@ namespace Orbital
 	{
 	public:
 		MouseScrolledEvent(float x, float y, float xOffset, float yOffset)
-			: MouseEvent(x, y), m_xOffset(xOffset), m_yOffset(yOffset) { }
+			: MouseEvent(x, y), mXOffset(xOffset), mYOffset(yOffset) { }
 
-		float getXOffset() const { return m_xOffset; }
-		float getYOffset() const { return m_yOffset; }
+		float GetXOffset() const { return mXOffset; }
+		float GetYOffset() const { return mYOffset; }
 
 		OE_EVENT_DEFINITION(
 			MouseScrolled,
 			InputEventCategory | MouseEventCategory,
-			fmt::format("{}, {}, {}, {}", m_xPos, m_yPos, m_xOffset, m_yOffset)
+			fmt::format("{}, {}, {}, {}", mXPos, mYPos, mXOffset, mYOffset)
 		)
 
 	private:
-		float m_xOffset;
-		float m_yOffset;
+		float mXOffset;
+		float mYOffset;
 	};
 }

@@ -17,7 +17,7 @@ namespace Orbital
 	TextureData Texture::Load(const std::string& filename)
 	{
 		TextureData data;
-		OE_ASSERT(fileExists(filename), "Texture: '{}' does not exist.", filename);
+		OE_ASSERT(FileExists(filename), "Texture: '{}' does not exist.", filename);
 		data.data = stbi_load(
 			filename.c_str(), &data.width, &data.height, &data.nChannels, 0);
 
@@ -30,70 +30,70 @@ namespace Orbital
 		: Texture(tag, width, height)
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glad_glGenTextures(1, &m_rendererId);
+		glad_glGenTextures(1, &mRendererId);
 		glad_glGenSamplers(1, &m_samplerId);
-		bind();
+		Bind();
 
-		setWrapS(GL_REPEAT);
-		setWrapT(GL_REPEAT);
-		setMinFilter(GL_LINEAR);
-		setMagFilter(GL_LINEAR);
+		SetWrapS(GL_REPEAT);
+		SetWrapT(GL_REPEAT);
+		SetMinFilter(GL_LINEAR);
+		SetMagFilter(GL_LINEAR);
 
-		glad_glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
+		glad_glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, mWidth, mHeight, 0, format, GL_UNSIGNED_BYTE, data);
 		glad_glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
 	OpenGLTexture::~OpenGLTexture()
 	{
-		glad_glDeleteTextures(1, &m_rendererId);
+		glad_glDeleteTextures(1, &mRendererId);
 		glad_glDeleteSamplers(1, &m_samplerId);
 	}
 
-	void OpenGLTexture::bind() const
+	void OpenGLTexture::Bind() const
 	{
 		glad_glActiveTexture(GL_TEXTURE0);
-		glad_glBindTexture(GL_TEXTURE_2D, m_rendererId);
+		glad_glBindTexture(GL_TEXTURE_2D, mRendererId);
 		glad_glBindSampler(0, m_samplerId);
 	}
 
-	void OpenGLTexture::bind(unsigned int slot) const
+	void OpenGLTexture::Bind(unsigned int slot) const
 	{
 		glad_glActiveTexture(GL_TEXTURE0 + slot);
-		glad_glBindTexture(GL_TEXTURE_2D, m_rendererId);
+		glad_glBindTexture(GL_TEXTURE_2D, mRendererId);
 		glad_glBindSampler(slot, m_samplerId);
 	}
 
-	void OpenGLTexture::unbind() const
+	void OpenGLTexture::Unbind() const
 	{
 		glad_glBindTexture(GL_TEXTURE_2D, 0);
 		glad_glBindSampler(0, 0);
 	}
 
-	void OpenGLTexture::setWrapS(unsigned int value)
+	void OpenGLTexture::SetWrapS(unsigned int value)
 	{
-		bind();
-		m_wrapS = value;
+		Bind();
+		mWrapS = value;
 		glad_glSamplerParameteri(m_samplerId, GL_TEXTURE_WRAP_S, value);
 	}
 
-	void OpenGLTexture::setWrapT(unsigned int value)
+	void OpenGLTexture::SetWrapT(unsigned int value)
 	{
-		bind();
-		m_wrapT = value;
+		Bind();
+		mWrapT = value;
 		glad_glSamplerParameteri(m_samplerId, GL_TEXTURE_WRAP_T, value);
 	}
 
-	void OpenGLTexture::setMinFilter(unsigned int value)
+	void OpenGLTexture::SetMinFilter(unsigned int value)
 	{
-		bind();
-		m_minFilter = value;
+		Bind();
+		mMinFilter = value;
 		glad_glSamplerParameteri(m_samplerId, GL_TEXTURE_MIN_FILTER, value);
 	}
 
-	void OpenGLTexture::setMagFilter(unsigned int value)
+	void OpenGLTexture::SetMagFilter(unsigned int value)
 	{
-		bind();
-		m_magFilter = value;
+		Bind();
+		mMagFilter = value;
 		glad_glSamplerParameteri(m_samplerId, GL_TEXTURE_MAG_FILTER, value);
 	}
 }

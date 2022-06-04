@@ -7,34 +7,34 @@ namespace Orbital
 	class KeyPressedEvent : public Event
 	{
 	public:
-		KeyPressedEvent(int keyCode) : Event(), m_keyCode(keyCode) { }
+		KeyPressedEvent(int keyCode) : Event(), mKeyCode(keyCode) { }
 
-		unsigned int getKeyCode() const { return m_keyCode; }
+		unsigned int GetKeyCode() const { return mKeyCode; }
 
 		OE_EVENT_DEFINITION(
 			KeyPressed,
 			InputEventCategory | KeyEventCategory,
-			fmt::format("{}", m_keyCode)
+			fmt::format("{}", mKeyCode)
 		)
 
 	private:
-		int m_keyCode;
+		int mKeyCode;
 	};
 
 	class KeyReleasedEvent : public Event
 	{
 	public:
-		KeyReleasedEvent(int keyCode) : Event(), m_keyCode(keyCode) {}
+		KeyReleasedEvent(int keyCode) : Event(), mKeyCode(keyCode) {}
 
-		unsigned int getKeyCode() const { return m_keyCode; }
+		unsigned int GetKeyCode() const { return mKeyCode; }
 
 		OE_EVENT_DEFINITION(
 			KeyReleased,
 			InputEventCategory | KeyEventCategory,
-			fmt::format("{}", m_keyCode)
+			fmt::format("{}", mKeyCode)
 		)
 
 	private:
-		int m_keyCode;
+		int mKeyCode;
 	};
 }

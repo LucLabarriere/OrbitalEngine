@@ -12,6 +12,6 @@ namespace Orbital
 	private:
 		MeshManager();
 
-		void push(Ref<Mesh>&& mesh);
+		void Push(Ref<Mesh>&& mesh);
 	};
 }

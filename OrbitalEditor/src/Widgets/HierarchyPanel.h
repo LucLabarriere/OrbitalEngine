@@ -4,6 +4,7 @@
 #include "OrbitalEngine/Logic/Scene.h"
 #include "TreeNode.h"
 #include "Widget.h"
+#include <imgui.h>
 
 using namespace Orbital;
 
@@ -12,17 +13,17 @@ class HierarchyPanel : public std::enable_shared_from_this<HierarchyPanel>, Widg
 public:
 	HierarchyPanel();
 	
-	void initialize();
-	void update();
-	void render();
+	void Initialize();
+	void Update();
+	void Render();
 
-	Entity& getSelectedEntity() { return m_selectedEntity; };
-	entt::entity getSelectedEntityHandle() { return m_selectedEntity.GetHandle(); };
-	void setSelectedEntity(const Entity& entity) { m_selectedEntity = entity; }
+	Entity& GetSelectedEntity() { return mSelectedEntity; };
+	entt::entity GetSelectedEntityHandle() { return mSelectedEntity.GetHandle(); };
+	void SetSelectedEntity(const Entity& entity) { mSelectedEntity = entity; }
 
 private:
-	std::vector<TreeNode> m_treeNodes;
-	Entity m_selectedEntity;
+	std::vector<TreeNode> mTreeNodes;
+	Entity mSelectedEntity;
 
-	const std::vector<Entity>* m_sceneChildren;
+	const std::vector<Entity>* mSceneChildren;
 };

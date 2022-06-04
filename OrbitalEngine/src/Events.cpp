@@ -2,6 +2,6 @@
 
 std::ostream& operator<<(std::ostream& os, const Orbital::Event& e)
 {
-	os << e.toString();
+	os << e.ToString();
 	return os;
 }

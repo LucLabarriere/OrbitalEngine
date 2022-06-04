@@ -6,10 +6,10 @@ namespace Orbital
 	class NativeScript
 	{
 	public:
-		NativeScript<T>(Ref<T>& scriptableEntity) : m_instance(scriptableEntity) { }
-		Ref<T> getInstance() { return m_instance; }
+		NativeScript<T>(Ref<T>& scriptableEntity) : mInstance(scriptableEntity) { }
+		Ref<T> GetInstance() { return mInstance; }
 
 	private:
-		Ref<T> m_instance;
+		Ref<T> mInstance;
 	};
 }

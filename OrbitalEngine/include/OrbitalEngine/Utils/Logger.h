@@ -23,13 +23,13 @@ namespace Orbital
 	public:
 		static void SetLevel(Level level)
 		{
-			s_level = level;
+			sLevel = level;
 		}
 
 		template <typename ...Args>
 		static void Trace(std::string msg, Args&&... args)
 		{
-			if (s_level <= Level::Trace)
+			if (sLevel <= Level::Trace)
 			{
 				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Purple() + "Trace  " + Reset() + "] "
 					+ msg + EOL(), args...);
@@ -39,7 +39,7 @@ namespace Orbital
 		template <typename ...Args>
 		static void Debug(std::string msg, Args&&... args)
 		{
-			if (s_level <= Level::Debug)
+			if (sLevel <= Level::Debug)
 			{
 				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Green() + "Debug  " + Reset() + "] "
 					+ msg + EOL(), args...);
@@ -49,7 +49,7 @@ namespace Orbital
 		template <typename ...Args>
 		static void Info(std::string msg, Args&&... args)
 		{
-			if (s_level <= Level::Info)
+			if (sLevel <= Level::Info)
 			{
 				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Cyan() + "Info   " + Reset() + "] "
 					+ msg + EOL(), args...);
@@ -59,7 +59,7 @@ namespace Orbital
 		template <typename ...Args>
 		static void Warn(std::string msg, Args&&... args)
 		{
-			if (s_level <= Level::Warn)
+			if (sLevel <= Level::Warn)
 			{
 				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Yellow() + "Warning" + Reset() + "] "
 					+ msg + EOL(), args...);
@@ -69,7 +69,7 @@ namespace Orbital
 		template <typename ...Args>
 		static void Error(std::string msg, Args&&... args)
 		{
-			if (s_level <= Level::Error)
+			if (sLevel <= Level::Error)
 			{
 				Echo(Now() + " " + Bright() + "Orbital" + Reset() + " [" + Red() + "Error  " + Reset() + "] "
 					+ msg + EOL(), args...);
@@ -111,6 +111,6 @@ namespace Orbital
 				fmt::make_format_args(std::forward<Args>(args)...));
 		}
 
-		static inline Level s_level = Level::Info;
+		static inline Level sLevel = Level::Info;
 	};
 }

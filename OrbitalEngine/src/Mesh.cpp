@@ -5,9 +5,9 @@ namespace Orbital
 	inline static const float offset = 0.0005f;
 
 	Mesh::Mesh(const std::string& tag, const BasicVertexContainer& vertices, const IndexContainer& indices)
-		: Asset(s_id, tag), m_vertices(vertices), m_indices(indices)
+		: Asset(sId, tag), mVertices(vertices), mIndices(indices)
 	{
-		s_id += 1;
+		sId += 1;
 	}
 
 	Ref<Mesh> Mesh::Quad(const std::string& tag)

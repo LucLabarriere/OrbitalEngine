@@ -3,63 +3,63 @@
 
 namespace Orbital
 {
-	Camera::Camera() : m_position(0.0f, 0.0f, -0.5f), m_up(0.0f, 1.0f, 0.0f), m_front(0.0f, 0.0f, 1.0f)
-		, m_right(1.0f, 0.0f, 0.0f), m_rotation(0.0f, 90.0f, 0.0f), m_fov(60.0f)
-		, m_aspectRatio((float)Settings::Get(Settings::UIntSetting::WindowWidth) / (float)Settings::Get(Settings::UIntSetting::WindowHeight))
-		, m_viewMatrix(1.0f), m_projectionMatrix(1.0f), m_VPMatrix(1.0f)
+	Camera::Camera() : mPosition(0.0f, 0.0f, -0.5f), mUp(0.0f, 1.0f, 0.0f), mFront(0.0f, 0.0f, 1.0f)
+		, mRight(1.0f, 0.0f, 0.0f), mRotation(0.0f, 90.0f, 0.0f), mFov(60.0f)
+		, mAspectRatio((float)Settings::Get(Settings::UIntSetting::WindowWidth) / (float)Settings::Get(Settings::UIntSetting::WindowHeight))
+		, mViewMatrix(1.0f), mProjectionMatrix(1.0f), mVPMatrix(1.0f)
 	{
-		updateMatrices();
+		UpdateMatrices();
 	}
 
-	void Camera::updateMatrices()
+	void Camera::UpdateMatrices()
 	{
-		m_front.x = cos(glm::radians(m_rotation.y)) * cos(glm::radians(m_rotation.x));
-		m_front.y = sin(glm::radians(m_rotation.x));
-		m_front.z = sin(glm::radians(m_rotation.y)) * cos(glm::radians(m_rotation.x));
-		m_front = glm::normalize(m_front);
-		m_right = glm::normalize(glm::cross(m_front, m_up));
+		mFront.x = cos(glm::radians(mRotation.y)) * cos(glm::radians(mRotation.x));
+		mFront.y = sin(glm::radians(mRotation.x));
+		mFront.z = sin(glm::radians(mRotation.y)) * cos(glm::radians(mRotation.x));
+		mFront = glm::normalize(mFront);
+		mRight = glm::normalize(glm::cross(mFront, mUp));
 
-		if (m_orthographic)
+		if (mOrthographic)
 		{
-			m_projectionMatrix = glm::ortho(
-				-m_zoomLevel * m_aspectRatio, m_zoomLevel * m_aspectRatio,
-				-m_zoomLevel, m_zoomLevel,
+			mProjectionMatrix = glm::ortho(
+				-mZoomLevel * mAspectRatio, mZoomLevel * mAspectRatio,
+				-mZoomLevel, mZoomLevel,
 				0.1f, 100.0f);
 		}
 		else
-			m_projectionMatrix = glm::perspective(glm::radians(m_fov), m_aspectRatio, 0.1f, 100.0f);
+			mProjectionMatrix = glm::perspective(glm::radians(mFov), mAspectRatio, 0.1f, 100.0f);
 
-		m_viewMatrix = glm::lookAt(m_position, m_position + m_front, m_up);
-		m_VPMatrix = m_projectionMatrix * m_viewMatrix;
+		mViewMatrix = glm::lookAt(mPosition, mPosition + mFront, mUp);
+		mVPMatrix = mProjectionMatrix * mViewMatrix;
 	}
 
-	void Camera::move(const glm::vec3& translation)
+	void Camera::Move(const glm::vec3& translation)
 	{
-		m_position += translation.x * m_right;
-		m_position += translation.y * m_up;
-		m_position += translation.z * m_front;
-		updateMatrices();
+		mPosition += translation.x * mRight;
+		mPosition += translation.y * mUp;
+		mPosition += translation.z * mFront;
+		UpdateMatrices();
 	}
 
-	void Camera::rotate(const glm::vec2& rotation)
+	void Camera::Rotate(const glm::vec2& rotation)
 	{
-		m_rotation += glm::vec3(rotation, 0.0f);
+		mRotation += glm::vec3(rotation, 0.0f);
 
-		if (m_rotation.x > 89.0f)
-			m_rotation.x = 89.0f;
-		else if (m_rotation.x < -89.0f)
-			m_rotation.x = -89.0f;
+		if (mRotation.x > 89.0f)
+			mRotation.x = 89.0f;
+		else if (mRotation.x < -89.0f)
+			mRotation.x = -89.0f;
 
-		updateMatrices();
+		UpdateMatrices();
 	}
 
-	void Camera::zoom(float zoomModification)
+	void Camera::Zoom(float zoomModification)
 	{
-		if (m_orthographic)
-			m_zoomLevel -= zoomModification;
+		if (mOrthographic)
+			mZoomLevel -= zoomModification;
 		else
-			move(glm::vec3(0.0f, 0.0f, zoomModification));
+			Move(glm::vec3(0.0f, 0.0f, zoomModification));
 
-		updateMatrices();
+		UpdateMatrices();
 	}
 }

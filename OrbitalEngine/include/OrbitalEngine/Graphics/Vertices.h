@@ -102,27 +102,27 @@ namespace Orbital
 	{
 	public:
 		template <class... T>
-		VertexContainer(T&&... args) : m_vertices({ args... }) { }
-		VertexContainer(size_t count) : m_vertices(count) { }
+		VertexContainer(T&&... args) : mVertices({ args... }) { }
+		VertexContainer(size_t count) : mVertices(count) { }
 
-		void allocateMemory(const VertexBuffer& buffer) const;
-		void submitData(const VertexBuffer& buffer) const;
+		void AllocateMemory(const VertexBuffer& buffer) const;
+		void SubmitData(const VertexBuffer& buffer) const;
 
-		void setLayout(const VertexBuffer& buffer) const;
-		void setVertex(size_t i, Vertex<Vertices...>&& vertex) { m_vertices[i] = vertex; }
+		void SetLayout(const VertexBuffer& buffer) const;
+		void SetVertex(size_t i, Vertex<Vertices...>&& vertex) { mVertices[i] = vertex; }
 
-		size_t getCount() const { return m_vertices.size(); }
-		size_t getSize() const { return m_vertices.size() * Vertex<Vertices...>::GetSize(); }
-		const void* getData() const { return m_vertices.data(); }
-		const Vertex<Vertices...>* getFirstVertex() const { return &m_vertices[0]; }
-		const Vertex<Vertices...>& operator[](size_t i) const { return m_vertices[i]; }
-		Vertex<Vertices...>& operator[](size_t i) { return m_vertices[i]; }
+		size_t GetCount() const { return mVertices.size(); }
+		size_t GetSize() const { return mVertices.size() * Vertex<Vertices...>::GetSize(); }
+		const void* GetData() const { return mVertices.data(); }
+		const Vertex<Vertices...>* GetFirstVertex() const { return &mVertices[0]; }
+		const Vertex<Vertices...>& operator[](size_t i) const { return mVertices[i]; }
+		Vertex<Vertices...>& operator[](size_t i) { return mVertices[i]; }
 
-		std::vector<Vertex<Vertices...>>::iterator begin() { return m_vertices.begin(); }
-		std::vector<Vertex<Vertices...>>::iterator end() { return m_vertices.end(); }
+		std::vector<Vertex<Vertices...>>::iterator begin() { return mVertices.begin(); }
+		std::vector<Vertex<Vertices...>>::iterator end() { return mVertices.end(); }
 
 	private:
-		std::vector <Vertex<Vertices...>> m_vertices;
+		std::vector <Vertex<Vertices...>> mVertices;
 	};
 
 	// Vertices

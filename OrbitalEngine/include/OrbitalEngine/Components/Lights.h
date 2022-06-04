@@ -15,7 +15,7 @@ namespace Orbital
 		Vec3 Diffuse = { 1.0f, 1.0f, 0.90f };
 		Vec3 Specular = { 1.0f, 1.0f, 0.90f };
 
-		void bind(const Ref<Shader>& shader, unsigned int lightId);
+		void Bind(const Ref<Shader>& shader, unsigned int lightId);
 	};
 
 	struct PointLight
@@ -28,7 +28,7 @@ namespace Orbital
 		float LinearAttenuation = 0.1f;
 		float QuadraticAttenuation = 2.0f;
 
-		void bind(const Ref<Shader>& shader, unsigned int lightId);
+		void Bind(const Ref<Shader>& shader, unsigned int lightId);
 	};
 
 	struct SpotLight
@@ -44,6 +44,6 @@ namespace Orbital
 		float Cutoff = 0.3f;
 		float Edge = 1.0f;
 
-		void bind(const Ref<Shader>& shader, unsigned int lightId);
+		void Bind(const Ref<Shader>& shader, unsigned int lightId);
 	};
 }

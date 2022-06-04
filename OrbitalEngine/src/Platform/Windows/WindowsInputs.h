@@ -8,18 +8,18 @@ namespace Orbital
 	{
 	private:
 		WindowsInputs(GLFWwindow* glfwWindow);
-		virtual bool isKeyDown(int keyCode) const override;
-		virtual bool isMouseButtonDown(int buttonCode) const override;
-		virtual void lockCursor(bool value) override;
-		virtual const glm::vec2 getMousePosition() const override;
-		virtual bool isMouseEnabled() const override
+		virtual bool IsKeyDownImpl(int keyCode) const override;
+		virtual bool IsMouseButtonDownImpl(int buttonCode) const override;
+		virtual void LockCursorImpl(bool value) override;
+		virtual const glm::vec2 GetMousePositionImpl() const override;
+		virtual bool IsMouseEnabledImpl() const override
 		{
-			return glfwGetInputMode(m_glfwWindow, GLFW_CURSOR)
+			return glfwGetInputMode(mGlfwWindow, GLFW_CURSOR)
 				== GLFW_CURSOR_DISABLED ? false : true;
 		}
 	
 	private:
 		friend Inputs;
-		GLFWwindow* m_glfwWindow = nullptr;
+		GLFWwindow* mGlfwWindow = nullptr;
 	};
 }

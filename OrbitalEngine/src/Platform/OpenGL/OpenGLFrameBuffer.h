@@ -14,11 +14,11 @@ namespace Orbital
 	public:
 		virtual ~OpenGLFrameBuffer() override;
 
-		virtual void bind() const override;
-		virtual void bindDraw() const override;
-		virtual void unbind() const override;
+		virtual void Bind() const override;
+		virtual void BindDraw() const override;
+		virtual void Unbind() const override;
 
-		virtual void renderFrame() override;
+		virtual void RenderFrame() override;
 
 	private:
 		OpenGLFrameBuffer();
@@ -27,9 +27,9 @@ namespace Orbital
 		friend FrameBuffer;
 
 		unsigned int m_renderBufferId;
-		Scope<VertexArray> m_vao;
-		Scope<VertexBuffer> m_vbo;
-		Scope<IndexBuffer> m_ibo;
+		Scope<VertexArray> mVao;
+		Scope<VertexBuffer> mVbo;
+		Scope<IndexBuffer> mIbo;
 		const Transform m_screenTransform = {
 			{ 0.0f, 0.0f, 0.0f },
 			{ 0.0f, 0.0f, 0.0f },

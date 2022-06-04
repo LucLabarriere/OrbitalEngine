@@ -8,19 +8,19 @@ namespace Orbital
 	{
 	public:
 		WindowResizedEvent(unsigned int width, unsigned int height)
-			: Event(), m_width(width), m_height(height) { }
+			: Event(), mWidth(width), mHeight(height) { }
 
-		unsigned int getWidth() const { return m_width; }
-		unsigned int getHeight() const { return m_height; }
+		unsigned int GetWidth() const { return mWidth; }
+		unsigned int GetHeight() const { return mHeight; }
 
 		OE_EVENT_DEFINITION(
 			WindowResized,
 			WindowEventCategory,
-			fmt::format("{}, {}", m_width, m_height)
+			fmt::format("{}, {}", mWidth, mHeight)
 		)
 
 	private:
-		unsigned int m_width;
-		unsigned int m_height;
+		unsigned int mWidth;
+		unsigned int mHeight;
 	};
 }

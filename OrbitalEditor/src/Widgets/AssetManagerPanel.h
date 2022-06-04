@@ -9,8 +9,8 @@ class AssetManagerPanel: public Widget
 public:
 	AssetManagerPanel();
 
-	void render();
+	void Render();
 
 private:
-	int m_selected = -1;
+	int mSelected = -1;
 };

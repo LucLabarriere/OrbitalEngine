@@ -9,8 +9,8 @@ namespace Orbital
 	public:
 		virtual ~OpenGLVertexArray();
 
-		virtual void bind() const override;
-		virtual void unbind() const override;
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
 
 	protected:
 		friend VertexArray;

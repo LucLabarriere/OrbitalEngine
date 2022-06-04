@@ -10,17 +10,17 @@ namespace Orbital
 		OpenGLWindow(unsigned int width, unsigned int height, const std::string& title);
 		virtual ~OpenGLWindow() override;
 		
-		virtual bool shouldClose() override;
-		virtual void onUpdate() override;
-		virtual void shutdown() override;
-		virtual void enableCursor() override;
-		virtual void disableCursor() override;
+		virtual bool ShouldClose() override;
+		virtual void OnUpdate() override;
+		virtual void Shutdown() override;
+		virtual void EnableCursor() override;
+		virtual void DisableCursor() override;
 
-		virtual void* getNativeWindow() const override;
+		virtual void* GetNativeWindow() const override;
 		
-		virtual void setVSyncEnabled(bool value)
+		virtual void SetVSyncEnabled(bool value)
 		{
-			m_vsyncEnabled = value;
+			mVsyncEnabled = value;
 			glfwSwapInterval((int)value);
 		}
 

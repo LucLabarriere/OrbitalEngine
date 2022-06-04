@@ -1,50 +1,51 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Components/Component.h"
 
 namespace Orbital
 {
-	class Camera
+	class Camera: public Component
 	{
 	public:
 		Camera();
 
-		void updateMatrices();
+		void UpdateMatrices();
 
-		void move(const glm::vec3& translation);
-		void rotate(const glm::vec2& rotation);
-		void zoom(float zoomModification);
+		void Move(const glm::vec3& translation);
+		void Rotate(const glm::vec2& rotation);
+		void Zoom(float zoomModification);
 
-		const Mat4& getViewMatrix() const { return m_viewMatrix; }
-		const Mat4& getProjectionMatrix() const { return m_projectionMatrix; }
-		const Mat4& getVPMatrix() const { return m_VPMatrix; }
-		const Vec3& getPosition() const { return m_position; }
-		const Vec3& getRight() const { return m_right; }
-		const Vec3& getUp() const { return m_up; }
-		const Vec3& getFront() const { return m_front; }
-		bool isOrthographic() const { return m_orthographic; }
-		bool isMainCamera() const { return m_mainCamera; }
+		const Mat4& GetViewMatrix() const { return mViewMatrix; }
+		const Mat4& GetProjectionMatrix() const { return mProjectionMatrix; }
+		const Mat4& GetVPMatrix() const { return mVPMatrix; }
+		const Vec3& GetPosition() const { return mPosition; }
+		const Vec3& GetRight() const { return mRight; }
+		const Vec3& GetUp() const { return mUp; }
+		const Vec3& GetFront() const { return mFront; }
+		bool IsOrthographic() const { return mOrthographic; }
+		bool IsMainCamera() const { return mMainCamera; }
 
-		void setOrthographic() { m_orthographic = true; updateMatrices(); }
-		void setPerspective() { m_orthographic = false; updateMatrices(); }
-		void setAspectRatio(float value) { m_aspectRatio = value; updateMatrices(); }
-		void setPosition(const Vec3& position) { m_position = position; updateMatrices(); };
-		void setMainCamera(bool value) { m_mainCamera = value; }
+		void SetOrthographic() { mOrthographic = true; UpdateMatrices(); }
+		void SetPerspective() { mOrthographic = false; UpdateMatrices(); }
+		void SetAspectRatio(float value) { mAspectRatio = value; UpdateMatrices(); }
+		void SetPosition(const Vec3& position) { mPosition = position; UpdateMatrices(); };
+		void SetMainCamera(bool value) { mMainCamera = value; }
 		
 	private:
-		bool m_orthographic = false;
-		bool m_mainCamera = true;
-		Vec3 m_position;
-		Vec3 m_up;
-		Vec3 m_front;
-		Vec3 m_right;
-		Vec3 m_rotation;
-		float m_aspectRatio;
-		float m_fov;
-		float m_zoomLevel = 1.0f;
+		bool mOrthographic = false;
+		bool mMainCamera = true;
+		Vec3 mPosition;
+		Vec3 mUp;
+		Vec3 mFront;
+		Vec3 mRight;
+		Vec3 mRotation;
+		float mAspectRatio;
+		float mFov;
+		float mZoomLevel = 1.0f;
 
-		Mat4 m_projectionMatrix;
-		Mat4 m_viewMatrix;
-		Mat4 m_VPMatrix;
+		Mat4 mProjectionMatrix;
+		Mat4 mViewMatrix;
+		Mat4 mVPMatrix;
 	};
 }

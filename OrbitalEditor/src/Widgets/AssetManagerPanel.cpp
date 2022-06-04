@@ -8,7 +8,7 @@ AssetManagerPanel::AssetManagerPanel()
 
 }
 
-void AssetManagerPanel::render()
+void AssetManagerPanel::Render()
 {
 	if (ImGui::Begin("Assets"))
 	{
@@ -23,11 +23,11 @@ void AssetManagerPanel::render()
 		ImGuiSelectableFlags selectableFlags = ImGuiSelectableFlags_SpanAllColumns;
 		for (auto& texture : *TextureManager::GetInstance())
 		{
-			std::string text = std::format("Texture: {}", texture->getTag());
+			std::string text = std::format("Texture: {}", texture->GetTag());
 
-			if (ImGui::Selectable(text.c_str(), m_selected == i, selectableFlags))
+			if (ImGui::Selectable(text.c_str(), mSelected == i, selectableFlags))
 			{
-				m_selected = i;
+				mSelected = i;
 				Inspector::SetTexture(texture);
 			}
 			i += 1;
@@ -35,23 +35,23 @@ void AssetManagerPanel::render()
 
 		for (auto& shader : *ShaderManager::GetInstance())
 		{
-			std::string text = std::format("Shader: {}", shader->getTag());
+			std::string text = std::format("Shader: {}", shader->GetTag());
 
-			if (ImGui::Selectable(text.c_str(), m_selected == i, selectableFlags))
+			if (ImGui::Selectable(text.c_str(), mSelected == i, selectableFlags))
 			{
-				m_selected = i;
-				Inspector::SetText(shader->getContent());
+				mSelected = i;
+				Inspector::SetText(shader->GetContent());
 			}
 			i += 1;
 		}
 
 		for (auto& material : *MaterialManager::GetInstance())
 		{
-			std::string text = std::format("Material: {}", material->getTag());
+			std::string text = std::format("Material: {}", material->GetTag());
 
-			if (ImGui::Selectable(text.c_str(), m_selected == i, selectableFlags))
+			if (ImGui::Selectable(text.c_str(), mSelected == i, selectableFlags))
 			{
-				m_selected = i;
+				mSelected = i;
 				Inspector::SetMaterial(material);
 			}
 			i += 1;

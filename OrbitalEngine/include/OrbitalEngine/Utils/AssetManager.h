@@ -10,67 +10,67 @@ namespace Orbital
 	class AssetManager
 	{
 	public:
-		static void Terminate() { delete s_instance; }
-		static AssetManager<T>* GetInstance() { return s_instance; }
+		static void Terminate() { delete sInstance; }
+		static AssetManager<T>* GetInstance() { return sInstance; }
 
 		static std::vector<const char*> GetAvailable()
 		{
-			return s_instance->getAvailable();
+			return sInstance->GetAvailableImpl();
 		}
 
 		static WeakRef<T> Get(const std::string& assetName)
 		{
-			for (auto& asset : s_instance->m_assets)
+			for (auto& asset : sInstance->mAssets)
 			{
-				if (asset->getTag() == assetName)
+				if (asset->GetTag() == assetName)
 				{
 					return asset;
 				}
 			}
 
-			OE_RAISE_SIGSEGV("{}: {} does not exist", s_managerName, assetName);
+			OE_RAISE_SIGSEGV("{}: {} does not exist", sManagerName, assetName);
 		}
 
 		static WeakRef<T> Get(size_t assetId)
 		{
-			for (Ref<T>& asset : s_instance->m_assets)
+			for (Ref<T>& asset : sInstance->mAssets)
 			{
-				if (asset->getId() == assetId)
+				if (asset->GetId() == assetId)
 				{
 					return asset;
 				}
 			}
 
-			OE_RAISE_SIGSEGV("{}: {} does not exist", s_managerName, assetId);
+			OE_RAISE_SIGSEGV("{}: {} does not exist", sManagerName, assetId);
 		}
 		
-		static size_t GetCount() { return s_instance->m_assets.size(); }
+		static size_t GetCount() { return sInstance->mAssets.size(); }
 
-		std::vector<Ref<T>>::iterator begin() { return m_assets.begin(); }
-		std::vector<Ref<T>>::iterator end() { return m_assets.end(); }
+		std::vector<Ref<T>>::iterator begin() { return mAssets.begin(); }
+		std::vector<Ref<T>>::iterator end() { return mAssets.end(); }
 
 		static std::string GetUniqueTag(const std::string& tag)
 		{
-			return s_instance->getUniqueTag(tag);
+			return sInstance->GetUniqueTagImpl(tag);
 		}
 
 	protected:
-		AssetManager<T>(const std::string managerName) { s_managerName = managerName; }
+		AssetManager<T>(const std::string managerName) { sManagerName = managerName; }
 
-		std::vector<const char*> getAvailable()
+		std::vector<const char*> GetAvailableImpl()
 		{
 			std::vector<const char*> assetNames;
-			assetNames.reserve(m_assets.size());
+			assetNames.reserve(mAssets.size());
 
-			for (size_t i = 0; i < m_assets.size(); i++)
+			for (size_t i = 0; i < mAssets.size(); i++)
 			{
-				assetNames.push_back(m_assets[i]->getTag().c_str());
+				assetNames.push_back(mAssets[i]->GetTag().c_str());
 			}
 
 			return assetNames;
 		}
 
-		std::string getUniqueTag(const std::string& tag)
+		std::string GetUniqueTagImpl(const std::string& tag)
 		{
 			size_t count = 0;
 
@@ -81,9 +81,9 @@ namespace Orbital
 			{
 				changedName = false;
 
-				for (Ref<T>& asset : m_assets)
+				for (Ref<T>& asset : mAssets)
 				{
-					if (newTag == asset->getTag())
+					if (newTag == asset->GetTag())
 					{
 						count += 1;
 						newTag = tag + "_" + std::to_string(count);
@@ -96,8 +96,8 @@ namespace Orbital
 		}
 
 	protected:
-		inline static std::string s_managerName = "AssetManager";
-		inline static AssetManager<T>* s_instance = nullptr;
-		std::vector<Ref<T>> m_assets;
+		inline static std::string sManagerName = "AssetManager";
+		inline static AssetManager<T>* sInstance = nullptr;
+		std::vector<Ref<T>> mAssets;
 	};
 }

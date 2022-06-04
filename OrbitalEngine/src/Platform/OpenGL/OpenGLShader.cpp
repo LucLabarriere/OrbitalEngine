@@ -10,69 +10,69 @@ namespace Orbital
 
 	OpenGLShader::~OpenGLShader()
 	{
-		unbind();
-		glad_glDeleteProgram(m_rendererId);
+		Unbind();
+		glad_glDeleteProgram(mRendererId);
 	}
 
-	void OpenGLShader::bind() const
+	void OpenGLShader::Bind() const
 	{
-		glad_glUseProgram(m_rendererId);
+		glad_glUseProgram(mRendererId);
 	}
 
-	void OpenGLShader::unbind() const
+	void OpenGLShader::Unbind() const
 	{
 		glad_glUseProgram(0);
 	}
 
-	void OpenGLShader::setUniform1i(const std::string& name, int value) const
+	void OpenGLShader::SetUniform1i(const std::string& name, int value) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniform1i(location, value);
 	}
 
-	void OpenGLShader::setUniform1f(const std::string& name, float value) const
+	void OpenGLShader::SetUniform1f(const std::string& name, float value) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniform1f(location, value);
 	}
 
-	void OpenGLShader::setUniform2f(const std::string& name, const glm::vec2& v) const
+	void OpenGLShader::SetUniform2f(const std::string& name, const glm::vec2& v) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniform2f(location, v[0], v[1]);
 	}
 
-	void OpenGLShader::setUniform2f(const std::string& name, float v1, float v2) const
+	void OpenGLShader::SetUniform2f(const std::string& name, float v1, float v2) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniform2f(location, v1, v2);
 	}
 
-	void OpenGLShader::setUniform3f(const std::string& name, const glm::vec3& v) const
+	void OpenGLShader::SetUniform3f(const std::string& name, const glm::vec3& v) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniform3f(location, v[0], v[1], v[2]);
 	}
 
-	void OpenGLShader::setUniform3f(const std::string& name, float v1, float v2, float v3) const
+	void OpenGLShader::SetUniform3f(const std::string& name, float v1, float v2, float v3) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniform3f(location, v1, v2, v3);
 	}
 
-	void OpenGLShader::setUniform4f(const std::string& name, const glm::vec4& v) const
+	void OpenGLShader::SetUniform4f(const std::string& name, const glm::vec4& v) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniform4f(location, v[0], v[1], v[2], v[3]);
 	}
 
-	void OpenGLShader::setUniform4f(const std::string& name, float v1, float v2, float v3, float v4) const
+	void OpenGLShader::SetUniform4f(const std::string& name, float v1, float v2, float v3, float v4) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniform4f(location, v1, v2, v3, v4);
 	}
 
-	void OpenGLShader::setUniformMat4f(const std::string& name, const glm::mat4& value) const
+	void OpenGLShader::SetUniformMat4f(const std::string& name, const glm::mat4& value) const
 	{
 		unsigned int location = getUniformLocation(name);
 		glad_glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
@@ -81,18 +81,18 @@ namespace Orbital
 	OpenGLShader::OpenGLShader(const std::string& tag, const std::string& filepath)
 		: Shader(tag, filepath)
 	{
-		Sources sources = parseSourceCode(m_filepath);
-		m_content = "#Vertex Shader\n" + sources.vs + "\n#Fragment Shader\n" + sources.fs;
+		Sources sources = parseSourceCode(mFilepath);
+		mContent = "#Vertex Shader\n" + sources.vs + "\n#Fragment Shader\n" + sources.fs;
 
 		createShader(sources.vs, sources.fs);
 	}
 
 	unsigned int OpenGLShader::getUniformLocation(const std::string& name) const
 	{
-		int location = glad_glGetUniformLocation(m_rendererId, name.c_str());
+		int location = glad_glGetUniformLocation(mRendererId, name.c_str());
 
 		if (location == -1)
-			Logger::Error("OpenGLShader: In shader '{}' Uniform '{}' doesn't exist", m_tag, name);
+			Logger::Error("OpenGLShader: In shader '{}' Uniform '{}' doesn't exist", mTag, name);
 
 		return location;
 	}
@@ -102,12 +102,12 @@ namespace Orbital
 		unsigned int vs = this->compileShader(GL_VERTEX_SHADER, vertexShader);
 		unsigned int fs = this->compileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
-		m_rendererId = glad_glCreateProgram();
-		glad_glAttachShader(m_rendererId, vs);
-		glad_glAttachShader(m_rendererId, fs);
+		mRendererId = glad_glCreateProgram();
+		glad_glAttachShader(mRendererId, vs);
+		glad_glAttachShader(mRendererId, fs);
 
-		glad_glLinkProgram(m_rendererId);
-		glad_glValidateProgram(m_rendererId);
+		glad_glLinkProgram(mRendererId);
+		glad_glValidateProgram(mRendererId);
 
 		glad_glDeleteShader(vs);
 		glad_glDeleteShader(fs);
@@ -133,7 +133,7 @@ namespace Orbital
 			glad_glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
 			glad_glDeleteShader(shader);
 
-			Logger::Error("OpenGLShader: Error in shader '{}' ({}) : {}", m_tag, typeName, errorLog);
+			Logger::Error("OpenGLShader: Error in shader '{}' ({}) : {}", mTag, typeName, errorLog);
 			return 0;
 		}
 		
@@ -144,7 +144,7 @@ namespace Orbital
 	{
 		std::ifstream sourceFile;
 		Logger::Debug("Loading shader: '{}'", filepath);
-		OE_ASSERT(fileExists(filepath), "OpenGLShader: '{}': no such file", filepath);
+		OE_ASSERT(FileExists(filepath), "OpenGLShader: '{}': no such file", filepath);
 
 		sourceFile.open(filepath, std::ios::out);
 
@@ -169,13 +169,13 @@ namespace Orbital
 		return { vs, fs };
 	}
 
-	void OpenGLShader::reload()
+	void OpenGLShader::Reload()
 	{
-		unbind();
-		glad_glDeleteProgram(m_rendererId);
+		Unbind();
+		glad_glDeleteProgram(mRendererId);
 
-		Sources sources = parseSourceCode(m_filepath);
-		m_content = "#Vertex Shader\n" + sources.vs + "\n#Fragment Shader\n" + sources.fs;
+		Sources sources = parseSourceCode(mFilepath);
+		mContent = "#Vertex Shader\n" + sources.vs + "\n#Fragment Shader\n" + sources.fs;
 
 		createShader(sources.vs, sources.fs);
 	}

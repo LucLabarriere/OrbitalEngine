@@ -8,19 +8,19 @@ namespace Orbital
 		static FrameBuffer* Create();
 		virtual ~FrameBuffer() {};
 
-		virtual void bind() const = 0;
-		virtual void bindDraw() const = 0;
-		virtual void unbind() const = 0;
+		virtual void Bind() const = 0;
+		virtual void BindDraw() const = 0;
+		virtual void Unbind() const = 0;
 
-		virtual void renderFrame() = 0;
-		unsigned int getTextureId() const { return m_textureId; }
+		virtual void RenderFrame() = 0;
+		unsigned int GetTextureId() const { return mTextureId; }
 
 
 	protected:
 		FrameBuffer() { }
 
 	protected:
-		unsigned int m_rendererId = 0;
-		unsigned int m_textureId = 0;
+		unsigned int mRendererId = 0;
+		unsigned int mTextureId = 0;
 	};
 }

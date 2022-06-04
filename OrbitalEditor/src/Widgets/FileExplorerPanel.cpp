@@ -4,42 +4,42 @@
 
 FileExplorerPanel::FileExplorerPanel()
 {
-	updateFiles();
+	UpdateFiles();
 }
 
-void FileExplorerPanel::updateFiles()
+void FileExplorerPanel::UpdateFiles()
 {
-	m_fileCount = std::distance(std::filesystem::directory_iterator(m_currentDirectory), std::filesystem::directory_iterator());
-	m_fileNames.resize(m_fileCount);
+	mFileCount = std::distance(std::filesystem::directory_iterator(mCurrentDirectory), std::filesystem::directory_iterator());
+	mFileNames.resize(mFileCount);
 
 	size_t i = 0;
-	const auto& entries = std::filesystem::directory_iterator(m_currentDirectory);
+	const auto& entries = std::filesystem::directory_iterator(mCurrentDirectory);
 	for (const auto& entry : entries)
 	{
-		m_fileNames[i] = entry.path().filename().string();
+		mFileNames[i] = entry.path().filename().string();
 		i += 1;
 	}
 
-	m_selected = -1;
+	mSelected = -1;
 }
 
-void FileExplorerPanel::changeFolder()
+void FileExplorerPanel::ChangeFolder()
 {
-	std::filesystem::path newPath = m_currentDirectory / m_fileNames[m_selected];
+	std::filesystem::path newPath = mCurrentDirectory / mFileNames[mSelected];
 	Logger::Trace("Path: {}", newPath.string());
 	bool isDirectory = std::filesystem::is_directory(newPath);
 
 	if (isDirectory)
 	{
-		m_currentDirectory = newPath;
+		mCurrentDirectory = newPath;
 	}
 
-	updateFiles();
+	UpdateFiles();
 }
 
-TextureIconIndex FileExplorerPanel::getIconIndex(const std::string& fileName)
+TextureIconIndex FileExplorerPanel::GetIconIndex(const std::string& fileName)
 {
-	std::filesystem::path filePath(std::filesystem::path(m_currentDirectory / fileName));
+	std::filesystem::path filePath(std::filesystem::path(mCurrentDirectory / fileName));
 	std::string extension = filePath.extension().string();
 	/*if (std::filesystem::is_directory(filePath))
 		extension = "folder";*/
@@ -54,16 +54,16 @@ TextureIconIndex FileExplorerPanel::getIconIndex(const std::string& fileName)
 	return TextureIconIndex::File;
 }
 
-void FileExplorerPanel::render()
+void FileExplorerPanel::Render()
 {
 	if (ImGui::Begin("Files"))
 	{
 		if (ImGui::Button("<"))
 		{
-			m_currentDirectory = m_currentDirectory.parent_path();
-			updateFiles();
+			mCurrentDirectory = mCurrentDirectory.parent_path();
+			UpdateFiles();
 		}
-		ImGui::Text(m_currentDirectory.parent_path().string().c_str());
+		ImGui::Text(mCurrentDirectory.parent_path().string().c_str());
 
 		ImGuiTableFlags tableFlags = ImGuiTableFlags_SizingFixedFit | 
 			ImGuiTableFlags_ContextMenuInBody | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_RowBg;
@@ -75,16 +75,16 @@ void FileExplorerPanel::render()
 			ImGui::TableSetupColumn("AAA", ImGuiTableColumnFlags_WidthFixed);
 			ImGui::TableSetupColumn("BBB", ImGuiTableColumnFlags_WidthStretch);
 
-			for (size_t i = 0; i < m_fileNames.size(); i++)
+			for (size_t i = 0; i < mFileNames.size(); i++)
 			{
-				auto iconIndex = getIconIndex(m_fileNames[i]);
+				auto iconIndex = GetIconIndex(mFileNames[i]);
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 
 				Tools::RenderIcon(iconIndex);
 				ImGui::TableNextColumn();
 
-				bool selected = ImGui::Selectable(m_fileNames[i].c_str(), m_selected == i, selectableFlags);
+				bool selected = ImGui::Selectable(mFileNames[i].c_str(), mSelected == i, selectableFlags);
 
 				if (iconIndex == TextureIconIndex::Image && ImGui::BeginPopupContextItem(fmt::format("Load Texture {}", i).c_str()))
 				{
@@ -101,11 +101,11 @@ void FileExplorerPanel::render()
 
 				if (selected)
 				{
-					m_selected = i;
+					mSelected = i;
 
 					if (ImGui::IsMouseDoubleClicked(0))
 					{
-						changeFolder();
+						ChangeFolder();
 					}
 				}
 			}

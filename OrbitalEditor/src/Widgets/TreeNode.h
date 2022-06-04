@@ -13,15 +13,15 @@ class TreeNode
 public:
 	TreeNode();
 	TreeNode(const Entity& entity, Ref<HierarchyPanel> panel);
-	void initialize(const Entity& entity, Ref<HierarchyPanel> panel);
-	void update();
-	const Entity& getEntity() const { return m_entity; }
+	void Initialize(const Entity& entity, Ref<HierarchyPanel> panel);
+	void Update();
+	const Entity& GetEntity() const { return mEntity; }
 
-	void render();
+	void Render();
 
 private:
-	Entity m_entity;
-	std::vector<TreeNode> m_children;
-	std::string m_title;
-	Ref<HierarchyPanel> m_panel;
+	Entity mEntity;
+	std::vector<TreeNode> mChildren;
+	std::string mTitle;
+	Ref<HierarchyPanel> mPanel;
 };

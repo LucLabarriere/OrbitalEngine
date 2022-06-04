@@ -9,110 +9,110 @@
 namespace Orbital
 {
 	Batch::Batch(WeakRef<Material>& material, size_t vertexCount, size_t indexCount)
-		: m_material(material)
-		, m_vertices(vertexCount)
-		, m_indices(indexCount == 0 ? int(vertexCount - 2) * 3 : indexCount)
-		, m_freeVertices(m_vertices.getCount(), true)
-		, m_renderMode(OE_DYNAMIC_DRAW)
+		: mMaterial(material)
+		, mVertices(vertexCount)
+		, mIndices(indexCount == 0 ? int(vertexCount - 2) * 3 : indexCount)
+		, mFreeVertices(mVertices.GetCount(), true)
+		, mRenderMode(OE_DYNAMIC_DRAW)
 	{
-		m_vao = Ref<VertexArray>(VertexArray::Create());
-		m_vbo = Ref<VertexBuffer>(VertexBuffer::Create(m_renderMode));
-		m_ibo = Ref<IndexBuffer>(IndexBuffer::Create(m_renderMode));
+		mVao = Ref<VertexArray>(VertexArray::Create());
+		mVbo = Ref<VertexBuffer>(VertexBuffer::Create(mRenderMode));
+		mIbo = Ref<IndexBuffer>(IndexBuffer::Create(mRenderMode));
 		
-		m_subDataFreeVertices.push_back(BufferSubData(0, m_vertices.getCount() - 1));
-		m_subDataFreeIndices.push_back(BufferSubData(0, m_indices.getCount() - 1));
+		mSubDataFreeVertices.push_back(BufferSubData(0, mVertices.GetCount() - 1));
+		mSubDataFreeIndices.push_back(BufferSubData(0, mIndices.GetCount() - 1));
 	}
 
-	void Batch::bind() const
+	void Batch::Bind() const
 	{
-		m_vao->bind();
-		m_ibo->bind();
+		mVao->Bind();
+		mIbo->Bind();
 	}
 
-	void Batch::bindMaterial() const
+	void Batch::BindMaterial() const
 	{
-		m_material.lock()->bind();
+		mMaterial.lock()->Bind();
 	}
 
-	void Batch::allocateMemory() const
+	void Batch::AllocateMemory() const
 	{
-		m_vao->bind();
-		m_vbo->bind();
-		m_vbo->allocateMemory(nullptr, m_vertices.getSize());
+		mVao->Bind();
+		mVbo->Bind();
+		mVbo->AllocateMemory(nullptr, mVertices.GetSize());
 
-		m_ibo->bind();
-		m_ibo->allocateMemory(nullptr, m_indices.getSize());
+		mIbo->Bind();
+		mIbo->AllocateMemory(nullptr, mIndices.GetSize());
 
-		m_vertices.setLayout(*m_vbo);
+		mVertices.SetLayout(*mVbo);
 	}
 
-	void Batch::submitData() const
+	void Batch::SubmitData() const
 	{
-		m_vao->bind();
-		m_vbo->bind();
+		mVao->Bind();
+		mVbo->Bind();
 		// Do submitSubData Here
-		m_vbo->submitData(m_vertices.getData(), m_vertices.getSize());
+		mVbo->SubmitData(mVertices.GetData(), mVertices.GetSize());
 
-		m_ibo->bind();
-		m_ibo->submitData(m_indices.getData(), m_indices.getSize());
+		mIbo->Bind();
+		mIbo->SubmitData(mIndices.GetData(), mIndices.GetSize());
 	}
 
-	void Batch::render()
+	void Batch::Render()
 	{
-		m_vao->bind();
-		m_vbo->bind();
+		mVao->Bind();
+		mVbo->Bind();
 
-		for (auto& subData : m_subDataVertices)
+		for (auto& subData : mSubDataVertices)
 		{
 			size_t stride = (subData.lastIndex - subData.firstIndex + 1);
-			m_vbo->submitSubData(
-				m_vertices.getFirstVertex() + subData.firstIndex,
+			mVbo->submitSubData(
+				mVertices.GetFirstVertex() + subData.firstIndex,
 				subData.firstIndex * sizeof(BasicVertex),
 				stride * sizeof(BasicVertex)
 			);
 		}
 
-		m_currentSubDataVertices = nullptr;
-		m_subDataVertices.resize(0);
+		mCurrentSubDataVertices = nullptr;
+		mSubDataVertices.resize(0);
 
-		m_ibo->bind();
+		mIbo->Bind();
 		
-		for (auto& subData : m_subDataIndices)
+		for (auto& subData : mSubDataIndices)
 		{
 			size_t stride = (subData.lastIndex - subData.firstIndex + 1);
-			m_ibo->submitSubData(
-				m_indices.getFirstIndex() + subData.firstIndex,
+			mIbo->submitSubData(
+				mIndices.GetFirstIndex() + subData.firstIndex,
 				subData.firstIndex * sizeof(unsigned int),
 				stride * sizeof(unsigned int));
 		}
-		m_currentSubDataIndices = nullptr;
+		mCurrentSubDataIndices = nullptr;
 
-		RenderCommands::DrawIndexed(OE_TRIANGLES, m_indices.getSize());
+		RenderCommands::DrawIndexed(OE_TRIANGLES, mIndices.GetSize());
 		Metrics::IncrementBatchCount();
 
-		m_subDataIndices.resize(0);
+		mSubDataIndices.resize(0);
 	}
 
-	void Batch::registerMesh(MeshRenderer& mr, Transform& t)
+	void Batch::RegisterMesh(MeshRenderer& mr, Transform& t)
 	{
-		auto mesh = mr.getMesh().lock();
-		auto& vertices = mesh->getVertices();
+		auto mesh = mr.GetMesh().lock();
+		auto& vertices = mesh->GetVertices();
 		auto& indices = mesh->getIndices();
-		auto drawData = mr.getDrawData();
-		auto batchData = mr.getBatchData();
+		auto drawData = mr.GetDrawData();
+		auto batchData = mr.GetBatchData();
 
 		int vertexPointer = batchData.vertexPointer;
 		int indexPointer = batchData.indexPointer;
 
 		if (vertexPointer == -1 || indexPointer == -1)
 		{
-			std::tie(vertexPointer, indexPointer) = getAvailableSlot(vertices.getCount(), indices.getCount());
+			std::tie(vertexPointer, indexPointer) = GetAvailableSlot(vertices.GetCount(), indices.GetCount());
 
 			batchData.vertexPointer = vertexPointer;
 			batchData.indexPointer = indexPointer;
 			batchData.batch = shared_from_this();
 
-			mr.setBatchData(batchData);
+			mr.SetBatchData(batchData);
 		}
 
 		if (vertexPointer == -1 || indexPointer == -1)
@@ -122,120 +122,120 @@ namespace Orbital
 		}
 
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, t.Position());
-		model = glm::rotate(model, glm::radians(t.Rotation()[0]), { 1.0f, 0.0f, 0.0f });
-		model = glm::rotate(model, glm::radians(t.Rotation()[1]), { 0.0f, 1.0f, 0.0f });
-		model = glm::rotate(model, glm::radians(t.Rotation()[2]), { 0.0f, 0.0f, 1.0f });
-		model = glm::scale(model, t.Scale());
+		model = glm::translate(model, t.GetPosition());
+		model = glm::rotate(model, glm::radians(t.GetRotation()[0]), { 1.0f, 0.0f, 0.0f });
+		model = glm::rotate(model, glm::radians(t.GetRotation()[1]), { 0.0f, 1.0f, 0.0f });
+		model = glm::rotate(model, glm::radians(t.GetRotation()[2]), { 0.0f, 0.0f, 1.0f });
+		model = glm::scale(model, t.GetScale());
 
 		glm::mat4 rotation(0.0f);
-		rotation = glm::rotate(rotation, glm::radians(t.Rotation()[0]), { 1.0f, 0.0f, 0.0f });
-		rotation = glm::rotate(rotation, glm::radians(t.Rotation()[1]), { 0.0f, 1.0f, 0.0f });
-		rotation = glm::rotate(rotation, glm::radians(t.Rotation()[2]), { 0.0f, 0.0f, 1.0f });
+		rotation = glm::rotate(rotation, glm::radians(t.GetRotation()[0]), { 1.0f, 0.0f, 0.0f });
+		rotation = glm::rotate(rotation, glm::radians(t.GetRotation()[1]), { 0.0f, 1.0f, 0.0f });
+		rotation = glm::rotate(rotation, glm::radians(t.GetRotation()[2]), { 0.0f, 0.0f, 1.0f });
 		
-		if (m_currentSubDataVertices == nullptr || m_currentSubDataVertices->lastIndex + 1 != vertexPointer)
+		if (mCurrentSubDataVertices == nullptr || mCurrentSubDataVertices->lastIndex + 1 != vertexPointer)
 		{
-			m_subDataVertices.push_back(BufferSubData(vertexPointer, vertexPointer + vertices.getCount() - 1));
-			m_currentSubDataVertices = &m_subDataVertices[m_subDataVertices.size() - 1];
+			mSubDataVertices.push_back(BufferSubData(vertexPointer, vertexPointer + vertices.GetCount() - 1));
+			mCurrentSubDataVertices = &mSubDataVertices[mSubDataVertices.size() - 1];
 		}
 		else
 		{
-			m_currentSubDataVertices->lastIndex += vertices.getCount();
+			mCurrentSubDataVertices->lastIndex += vertices.GetCount();
 		}
 
-		for (size_t i = 0; i < vertices.getCount(); i++)
+		for (size_t i = 0; i < vertices.GetCount(); i++)
 		{
-			m_vertices[i + vertexPointer] = vertices[i];
-			m_vertices[i + vertexPointer].position = model * Vec4(m_vertices[i + vertexPointer].position, 1.0f);
-			m_vertices[i + vertexPointer].normal = Mat3(glm::transpose(glm::inverse(model))) * m_vertices[i + vertexPointer].normal;
-			m_vertices[i + vertexPointer].texCoords = mr.getTexCoordsMultiplicator() * vertices[i].texCoords;
-			m_freeVertices[i + vertexPointer] = false;
+			mVertices[i + vertexPointer] = vertices[i];
+			mVertices[i + vertexPointer].position = model * Vec4(mVertices[i + vertexPointer].position, 1.0f);
+			mVertices[i + vertexPointer].normal = Mat3(glm::transpose(glm::inverse(model))) * mVertices[i + vertexPointer].normal;
+			mVertices[i + vertexPointer].texCoords = mr.GetTexCoordsMultiplicator() * vertices[i].texCoords;
+			mFreeVertices[i + vertexPointer] = false;
 		}
 
-		if (m_currentSubDataIndices == nullptr || m_currentSubDataIndices->lastIndex  + 1 != indexPointer)
+		if (mCurrentSubDataIndices == nullptr || mCurrentSubDataIndices->lastIndex  + 1 != indexPointer)
 		{
-			m_subDataIndices.push_back(BufferSubData(indexPointer, indexPointer + indices.getCount() - 1));
-			m_currentSubDataIndices = &m_subDataIndices[m_subDataIndices.size() - 1];
+			mSubDataIndices.push_back(BufferSubData(indexPointer, indexPointer + indices.GetCount() - 1));
+			mCurrentSubDataIndices = &mSubDataIndices[mSubDataIndices.size() - 1];
 		}
 		else
 		{
-			m_currentSubDataIndices->lastIndex += indices.getCount();
+			mCurrentSubDataIndices->lastIndex += indices.GetCount();
 		}
 
-		for (size_t i = 0; i < indices.getCount(); i++)
+		for (size_t i = 0; i < indices.GetCount(); i++)
 		{
-			m_indices[i + indexPointer] = vertexPointer + indices[i];
+			mIndices[i + indexPointer] = vertexPointer + indices[i];
 		}
 
 		updateFullStatus();
 
-		t.cleanUp();
+		t.CleanUp();
 	}
 
 
-	void Batch::deleteMesh(MeshRenderer& mr)
+	void Batch::DeleteMesh(MeshRenderer& mr)
 	{
 		// TODO: make it work
-		auto batchData = mr.getBatchData();
+		auto batchData = mr.GetBatchData();
 		size_t vertexPointer = batchData.vertexPointer;
 		size_t indexPointer = batchData.indexPointer;
-		auto mesh = mr.getMesh().lock();
+		auto mesh = mr.GetMesh().lock();
 
-		auto& vertices = mesh->getVertices();
+		auto& vertices = mesh->GetVertices();
 		auto& indices = mesh->getIndices();
 
 		// Updating free vertices
-		for (auto& subData : m_subDataFreeVertices)
+		for (auto& subData : mSubDataFreeVertices)
 		{
 			if (subData.lastIndex + 1 == vertexPointer)
 			{
-				subData.lastIndex += vertices.getCount();
+				subData.lastIndex += vertices.GetCount();
 			}
-			else if (vertexPointer + vertices.getCount() - 1 == subData.firstIndex)
+			else if (vertexPointer + vertices.GetCount() - 1 == subData.firstIndex)
 			{
-				subData.firstIndex -= vertices.getCount();
+				subData.firstIndex -= vertices.GetCount();
 			}
 		}
 
 		// Updating free indices
-		for (auto& subData : m_subDataFreeIndices)
+		for (auto& subData : mSubDataFreeIndices)
 		{
 			if (subData.lastIndex + 1 == indexPointer)
 			{
-				subData.lastIndex += indices.getCount();
+				subData.lastIndex += indices.GetCount();
 			}
-			else if (vertexPointer + indices.getCount() - 1 == subData.firstIndex)
+			else if (vertexPointer + indices.GetCount() - 1 == subData.firstIndex)
 			{
-				subData.firstIndex -= indices.getCount();
+				subData.firstIndex -= indices.GetCount();
 			}
 		}
 
-		for (size_t i = vertexPointer; i < vertices.getCount() + vertexPointer; i++)
+		for (size_t i = vertexPointer; i < vertices.GetCount() + vertexPointer; i++)
 		{
-			m_vertices[i] = BasicVertex::Empty();
-			m_freeVertices[i] = true;
+			mVertices[i] = BasicVertex::Empty();
+			mFreeVertices[i] = true;
 		}
 
-		for (size_t i = indexPointer; i < indices.getCount() + indexPointer; i++)
+		for (size_t i = indexPointer; i < indices.GetCount() + indexPointer; i++)
 		{
-			m_indices[i] = 0;
+			mIndices[i] = 0;
 		}
 
-		m_subDataVertices.push_back(BufferSubData(vertexPointer, vertexPointer + vertices.getCount() - 1));
-		m_subDataIndices.push_back(BufferSubData(indexPointer, indexPointer + indices.getCount() - 1));
+		mSubDataVertices.push_back(BufferSubData(vertexPointer, vertexPointer + vertices.GetCount() - 1));
+		mSubDataIndices.push_back(BufferSubData(indexPointer, indexPointer + indices.GetCount() - 1));
 
-		mr.setBatchData(MeshRenderer::BatchData());
+		mr.SetBatchData(MeshRenderer::BatchData());
 
 		updateFullStatus();
 	}
 
-	bool Batch::meshFits(MeshRenderer& mr)
+	bool Batch::MeshFits(MeshRenderer& mr)
 	{
-		auto mesh = mr.getMesh();
-		auto& vertices = mesh.lock()->getVertices();
+		auto mesh = mr.GetMesh();
+		auto& vertices = mesh.lock()->GetVertices();
 		auto& indices = mesh.lock()->getIndices();
 
-		auto [vertexPointer, indexPointer] = getAvailableSlot(vertices.getCount(), indices.getCount(), false);
+		auto [vertexPointer, indexPointer] = GetAvailableSlot(vertices.GetCount(), indices.GetCount(), false);
 
 		if (vertexPointer != -1 && indexPointer != -1)
 			return true;
@@ -243,14 +243,14 @@ namespace Orbital
 		return false;
 	}
 
-	std::tuple<int, int> Batch::getAvailableSlot(size_t vertexCount, size_t indexCount, bool record)
+	std::tuple<int, int> Batch::GetAvailableSlot(size_t vertexCount, size_t indexCount, bool record)
 	{
 		int vertexPointer = -1;
 		int indexPointer = -1;
 
-		for (auto& subData : m_subDataFreeVertices)
+		for (auto& subData : mSubDataFreeVertices)
 		{
-			if (vertexCount <= subData.getStride())
+			if (vertexCount <= subData.GetStride())
 			{
 				vertexPointer = subData.firstIndex;
 				if (record) subData.firstIndex += vertexCount;
@@ -258,9 +258,9 @@ namespace Orbital
 			}
 		}
 
-		for (auto& subData : m_subDataFreeIndices)
+		for (auto& subData : mSubDataFreeIndices)
 		{
-			if (indexCount <= subData.getStride())
+			if (indexCount <= subData.GetStride())
 			{
 				indexPointer = subData.firstIndex;
 				if (record) subData.firstIndex += indexCount;
@@ -273,11 +273,11 @@ namespace Orbital
 
 	void Batch::updateFullStatus()
 	{
-		auto [ vertexPointer, indexPointer ] = getAvailableSlot(24, 36, false);
+		auto [ vertexPointer, indexPointer ] = GetAvailableSlot(24, 36, false);
 
 		if (vertexPointer == -1 || indexPointer == -1)
-			m_full = true;
+			mFull = true;
 		else
-			m_full = false;
+			mFull = false;
 	}
 }

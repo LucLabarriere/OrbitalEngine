@@ -10,8 +10,8 @@ namespace Orbital
 	class Mesh : public Asset
 	{
 	public:
-		const BasicVertexContainer& getVertices() const { return m_vertices; }
-		const IndexContainer& getIndices() const { return m_indices; }
+		const BasicVertexContainer& GetVertices() const { return mVertices; }
+		const IndexContainer& getIndices() const { return mIndices; }
 
 	private:
 		Mesh(const std::string& tag, const BasicVertexContainer& vertices, const IndexContainer& indices);
@@ -23,9 +23,9 @@ namespace Orbital
 	private:
 		friend MeshManager;
 
-		BasicVertexContainer m_vertices;
-		IndexContainer m_indices;
+		BasicVertexContainer mVertices;
+		IndexContainer mIndices;
 
-		static inline size_t s_id = 0;
+		static inline size_t sId = 0;
 	};
 }

@@ -8,7 +8,7 @@
 
 EditorApplication::EditorApplication() : Application()
 {
-	//m_cameraController = CreateRef<CameraController>(&m_camera);
+	//mCameraController = CreateRef<CameraController>(&m_camera);
 }
 
 EditorApplication::~EditorApplication()
@@ -19,26 +19,26 @@ EditorApplication::~EditorApplication()
 	Tools::Terminate();
 }
 
-void EditorApplication::onLoad()
+void EditorApplication::OnLoad()
 {
 	// TODO: move most of the things into a start up script tied to the Scene entity.
 	// - Add a freeCamera entity with transform and camera components
 	// - It should be possible to hide it from the editor
 	// - Remove position from camera, add reference to transform instead
 	Tools::Initialize();
-	Widget::SetActiveScene(&m_activeScene);
+	Widget::SetActiveScene(&mActiveScene);
 
-	m_editorCamera = m_activeScene->CreateEntity("FreeCamera", OE_LAST_LAYER);
-	m_editorCamera.AddComponent<Camera>();
-	auto& freeCameraController = m_editorCamera.AddComponent<FreeCameraController>();
-	m_activeScene->SetMainCamera(m_editorCamera);
+	mEditorCamera = mActiveScene->CreateEntity("FreeCamera", OE_LAST_LAYER);
+	mEditorCamera.AddComponent<Camera>();
+	auto& freeCameraController = mEditorCamera.AddComponent<FreeCameraController>();
+	mActiveScene->SetMainCamera(mEditorCamera);
 
-	m_mainCamera = m_activeScene->CreateEntity("Player");
-	m_mainCamera.AddComponent<Camera>();
-	auto& playerController = m_mainCamera.AddComponent<FirstPersonController>();
-	playerController.setPosition({ 0.0f, 0.5f, -1.0f });
+	mMainCamera = mActiveScene->CreateEntity("Player");
+	mMainCamera.AddComponent<Camera>();
+	auto& playerController = mMainCamera.AddComponent<FirstPersonController>();
+	playerController.SetPosition({ 0.0f, 0.5f, -1.0f });
 
-	auto floor = m_activeScene->CreateEntity("Floor");
+	auto floor = mActiveScene->CreateEntity("Floor");
 	auto& tFloor = floor.AddComponent<Transform>(Transform({
 		{ 0.0f,  0.0f, 0.0f },
 		{ 90.0f, 0.0f, 0.0f },
@@ -47,7 +47,7 @@ void EditorApplication::onLoad()
 
 	floor.AddComponent<MeshRenderer>("Quad", &tFloor, true, "Blank");
 
-	auto cube = m_activeScene->CreateEntity("Cube");
+	auto cube = mActiveScene->CreateEntity("Cube");
 	auto& tCube = cube.AddComponent<Transform>(Transform({
 		{ 0.0f, 0.5f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f },
@@ -56,7 +56,7 @@ void EditorApplication::onLoad()
 
 	auto& mr = cube.AddComponent<MeshRenderer>("Cube", &tCube, true, "Damier");
 
-	auto pointLight = m_activeScene->CreateEntity("Point Light");
+	auto pointLight = mActiveScene->CreateEntity("Point Light");
 	auto& tPointLight = pointLight.AddComponent<Transform>(Transform({
 		{ 0.0f, 0.5f, 1.3f },
 		{ 0.0f, 0.0f, 0.0f },
@@ -64,12 +64,12 @@ void EditorApplication::onLoad()
 	}));
 
 	auto& lPointLight = pointLight.AddComponent<PointLight>();
-	lPointLight.Position = &tPointLight.Position();
+	lPointLight.Position = &tPointLight.GetPosition();
 	lPointLight.Diffuse = { 0.0f, 0.0f, 1.0f };
 	lPointLight.Specular = { 0.0f, 0.0f, 1.0f };
 	pointLight.AddComponent<MeshRenderer>("Cube", &tPointLight);
 
-	auto pointLight2 = m_activeScene->CreateEntity("Point Light2");
+	auto pointLight2 = mActiveScene->CreateEntity("Point Light2");
 	auto& tPointLight2 = pointLight2.AddComponent<Transform>(Transform({
 		{ 1.3f, 0.5f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f },
@@ -77,16 +77,16 @@ void EditorApplication::onLoad()
 	}));
 
 	auto& lPointLight2 = pointLight2.AddComponent<PointLight>();
-	lPointLight2.Position = &tPointLight2.Position();
+	lPointLight2.Position = &tPointLight2.GetPosition();
 	lPointLight2.Diffuse = { 1.0f, 0.0f, 0.0f };
 	lPointLight2.Specular = { 1.0f, 0.0f, 0.0f };
 	pointLight2.AddComponent<MeshRenderer>("Cube", &tPointLight2);
 
-	auto sun = m_activeScene->CreateEntity("Sun");
+	auto sun = mActiveScene->CreateEntity("Sun");
 	sun.AddComponent<DirectionalLight>();
 
-	freeCameraController.setPosition({ 1.5f, 1.5f, 1.5f });
-	freeCameraController.rotate({ -30.0f, 130.f });
+	freeCameraController.SetPosition({ 1.5f, 1.5f, 1.5f });
+	freeCameraController.Rotate({ -30.0f, 130.f });
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().Fonts->AddFontFromFileTTF(Settings::GetAssetPath("fonts/NotoSans-Regular.ttf").c_str(), 32);
@@ -115,20 +115,20 @@ void EditorApplication::onLoad()
 
 	ImGui::GetIO().FontGlobalScale = 0.55;
 
-	m_viewport = CreateRef<Viewport>(this);
-	m_hierarchyPanel = CreateRef<HierarchyPanel>();
-	m_hierarchyPanel->initialize();
-	m_metricsPanel = CreateScope<MetricsPanel>(&freeCameraController);
-	m_batchesPanel = CreateScope<BatchesPanel>();
-	m_assetManagerPanel = CreateScope<AssetManagerPanel>();
-	m_fileExplorerPanel = CreateScope<FileExplorerPanel>();
+	mViewport = CreateRef<Viewport>(this);
+	mHierarchyPanel = CreateRef<HierarchyPanel>();
+	mHierarchyPanel->Initialize();
+	mMetricsPanel = CreateScope<MetricsPanel>(&freeCameraController);
+	mBatchesPanel = CreateScope<BatchesPanel>();
+	mAssetManagerPanel = CreateScope<AssetManagerPanel>();
+	mFileExplorerPanel = CreateScope<FileExplorerPanel>();
 	Inspector::Initialize();
 	Clipboard::Initialize();
 
-	stop(); // The scene is stopped on startup
+	Stop(); // The scene is stopped on startup
 }
 
-void EditorApplication::onUpdate(Time dt)
+void EditorApplication::OnUpdate(Time dt)
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -138,86 +138,86 @@ void EditorApplication::onUpdate(Time dt)
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 	
-	m_viewport->render();
-	m_hierarchyPanel->update();
-	m_hierarchyPanel->render();
-	m_metricsPanel->render();
-	m_batchesPanel->render();
-	m_assetManagerPanel->render();
-	m_fileExplorerPanel->render();
+	mViewport->Render();
+	mHierarchyPanel->Update();
+	mHierarchyPanel->Render();
+	mMetricsPanel->Render();
+	mBatchesPanel->Render();
+	mAssetManagerPanel->Render();
+	mFileExplorerPanel->Render();
 
 	//NativeScriptManager::OnUpdate(dt);
 	Inspector::Render();
 
-	if (m_metricsPanel->isDemoShown())
+	if (mMetricsPanel->IsDemoShown())
 		ImGui::ShowDemoWindow();
 
 	ImGui::Render();
 
-	Renderer::Get()->newFrame();
-	m_activeScene->OnUpdate(dt);
-	m_activeScene->Begin();
-	m_activeScene->Render();
+	Renderer::Get()->NewFrame();
+	mActiveScene->OnUpdate(dt);
+	mActiveScene->Begin();
+	mActiveScene->Render();
 
 	Renderer::RenderBatches();
 	Renderer::RenderUnits();
 
-	Renderer::Get()->displayFrame();
+	Renderer::Get()->DisplayFrame();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	m_activeScene->End();
-	m_window->onUpdate();
+	mActiveScene->End();
+	mWindow->OnUpdate();
 }
 
 
-void EditorApplication::play()
+void EditorApplication::Play()
 {
 	// TODO: make cameras work here
-	m_state = EditorState::Playing;
-	m_editorCamera.GetComponent<FreeCameraController>().setUpdating(false);
-	m_activeScene = &m_runtimeScene;
-	m_runtimeScene = Scene();
-	m_runtimeScene = m_scene.Copy(m_runtimeScene);
-	m_activeScene->SetUpdating(true);
-	m_activeScene->SetMainCamera(m_mainCamera);
-	m_activeScene->OnStart();
+	mState = EditorState::Playing;
+	mEditorCamera.GetComponent<FreeCameraController>().SetUpdating(false);
+	mActiveScene = &mRuntimeScene;
+	mRuntimeScene = Scene();
+	mRuntimeScene = mScene.Copy(mRuntimeScene);
+	mActiveScene->SetUpdating(true);
+	mActiveScene->SetMainCamera(mMainCamera);
+	mActiveScene->OnStart();
 }
 
-void EditorApplication::stop()
+void EditorApplication::Stop()
 {
-	m_state = EditorState::Stopped;
-	m_activeScene->OnExit();
-	m_activeScene = &m_scene;
-	m_activeScene->SetUpdating(false);
-	m_editorCamera.GetComponent<FreeCameraController>().setUpdating(true);
-	m_activeScene->SetMainCamera(m_editorCamera);
+	mState = EditorState::Stopped;
+	mActiveScene->OnExit();
+	mActiveScene = &mScene;
+	mActiveScene->SetUpdating(false);
+	mEditorCamera.GetComponent<FreeCameraController>().SetUpdating(true);
+	mActiveScene->SetMainCamera(mEditorCamera);
 }
 
-bool EditorApplication::onMouseScrolled(MouseScrolledEvent& e)
+bool EditorApplication::OnMouseScrolled(MouseScrolledEvent& e)
 {
 	return false;
 }
 
-bool EditorApplication::onKeyPressed(KeyPressedEvent& e)
+bool EditorApplication::OnKeyPressed(KeyPressedEvent& e)
 {
-	if (m_state == EditorState::Stopped)
+	if (mState == EditorState::Stopped)
 	{
-		if (e.getKeyCode() == OE_KEY_C && Inputs::IsKeyDown(OE_KEY_LEFT_CONTROL))
+		if (e.GetKeyCode() == OE_KEY_C && Inputs::IsKeyDown(OE_KEY_LEFT_CONTROL))
 		{
 			Clipboard::Copy(Inspector::GetInspectedObject());
 		}
 
-		else if (e.getKeyCode() == OE_KEY_V && Inputs::IsKeyDown(OE_KEY_LEFT_CONTROL))
+		else if (e.GetKeyCode() == OE_KEY_V && Inputs::IsKeyDown(OE_KEY_LEFT_CONTROL))
 		{
 			Clipboard::Paste();
 		}
 	}
 	else
 	{
-		if (e.getKeyCode() == OE_KEY_ESCAPE)
+		if (e.GetKeyCode() == OE_KEY_ESCAPE)
 		{
-			stop();
+			Stop();
 		}
 	}
 

@@ -25,7 +25,7 @@ namespace Orbital
 	class Settings
 	{
 	public:
-		static void Initialize() { s_instance = new Settings; }
+		static void Initialize() { sInstance = new Settings; }
 		enum class FloatSetting
 		{
 			FOV = 0,
@@ -48,9 +48,9 @@ namespace Orbital
 			_Size
 		};
 
-		static inline float& Get(FloatSetting name) { return s_instance->m_settings[(size_t)name].Value.Float; }
-		static inline unsigned int& Get(UIntSetting name) { return s_instance->m_settings[(size_t)name].Value.UInt; }
-		static inline bool& Get(BoolSetting name) { return s_instance->m_settings[(size_t)name].Value.Bool; }
+		static inline float& Get(FloatSetting name) { return sInstance->mSettings[(size_t)name].Value.Float; }
+		static inline unsigned int& Get(UIntSetting name) { return sInstance->mSettings[(size_t)name].Value.UInt; }
+		static inline bool& Get(BoolSetting name) { return sInstance->mSettings[(size_t)name].Value.Bool; }
 		static inline std::string GetAssetsFolder()
 		{
 			return "assets";
@@ -66,24 +66,24 @@ namespace Orbital
 		}
 
 	private:
-		Settings() : m_settings((size_t)BoolSetting::_Size)
+		Settings() : mSettings((size_t)BoolSetting::_Size)
 		{
 			// Float
-			m_settings[(size_t)FloatSetting::FOV] = { SettingType::Float, { .Float = 80.0f} };
+			mSettings[(size_t)FloatSetting::FOV] = { SettingType::Float, { .Float = 80.0f} };
 
 			// UInt
-			m_settings[(size_t)UIntSetting::WindowWidth] = { SettingType::UInt, { .UInt = 1600 } };
-			m_settings[(size_t)UIntSetting::WindowHeight] = { SettingType::UInt, { .UInt = 900 } };
-			m_settings[(size_t)UIntSetting::RenderingAreaWidth] = { SettingType::UInt, {.UInt = 1600 } };
-			m_settings[(size_t)UIntSetting::RenderingAreaHeight] = { SettingType::UInt, {.UInt = 900 } };
+			mSettings[(size_t)UIntSetting::WindowWidth] = { SettingType::UInt, { .UInt = 1600 } };
+			mSettings[(size_t)UIntSetting::WindowHeight] = { SettingType::UInt, { .UInt = 900 } };
+			mSettings[(size_t)UIntSetting::RenderingAreaWidth] = { SettingType::UInt, {.UInt = 1600 } };
+			mSettings[(size_t)UIntSetting::RenderingAreaHeight] = { SettingType::UInt, {.UInt = 900 } };
 
 			// Bool
-			m_settings[(size_t)BoolSetting::VSyncEnabled] = { SettingType::Bool, { .Bool = true } };
+			mSettings[(size_t)BoolSetting::VSyncEnabled] = { SettingType::Bool, { .Bool = true } };
 		}
 
 	private:
-		static inline Settings* s_instance = nullptr;
-		std::vector<Setting> m_settings;
+		static inline Settings* sInstance = nullptr;
+		std::vector<Setting> mSettings;
 	};
 }
 

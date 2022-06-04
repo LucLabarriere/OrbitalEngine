@@ -2,12 +2,13 @@
 #include "OrbitalEngine/Graphics/MeshManager.h"
 #include "OrbitalEngine/Graphics/MaterialManager.h"
 #include "OrbitalEngine/Components/Transform.h"
+#include "OrbitalEngine/Components/Component.h"
 
 namespace Orbital
 {
 	class Batch;
 
-	class MeshRenderer
+	class MeshRenderer : public Component
 	{
 	public:
 		struct DrawData
@@ -33,29 +34,29 @@ namespace Orbital
 		MeshRenderer(const std::string& meshTag, Transform* transform, bool batchedDraw, const std::string& materialName);
 		MeshRenderer(const MeshRenderer& other, Transform* transform);
 
-		void destroy();
-		void setMesh(const std::string& tag);
+		void Destroy();
+		void SetMesh(const std::string& tag);
 
-		DrawData getDrawData() const;
-		BatchData getBatchData() const;
-		WeakRef<Material> getMaterial() const;
-		WeakRef<Mesh> getMesh() const;
-		Vec2& getTexCoordsMultiplicator() { return m_texCoordsMultiplicator; }
-		const Vec2& getTexCoordsMultiplicator() const { return m_texCoordsMultiplicator; }
+		DrawData GetDrawData() const;
+		BatchData GetBatchData() const;
+		WeakRef<Material> GetMaterial() const;
+		WeakRef<Mesh> GetMesh() const;
+		Vec2& GetTexCoordsMultiplicator() { return mTexCoordsMultiplicator; }
+		const Vec2& GetTexCoordsMultiplicator() const { return mTexCoordsMultiplicator; }
 
-		void setBatchData(const BatchData& data);
-		void resetBatchData(const BatchData& data);
-		void setDrawData(const DrawData& data);
-		void setHidden(bool value);
-		void setMaterial(const std::string& materialTag);
+		void SetBatchData(const BatchData& data);
+		void ResetBatchData(const BatchData& data);
+		void SetDrawData(const DrawData& data);
+		void SetHidden(bool value);
+		void SetMaterial(const std::string& materialTag);
 
 	private:
-		WeakRef<Mesh> m_mesh;
-		WeakRef<Material> m_material;
-		Transform* m_transform;
-		Vec2 m_texCoordsMultiplicator = { 1.0f, 1.0f };
+		WeakRef<Mesh> mMesh;
+		WeakRef<Material> mMaterial;
+		Transform* mTransform;
+		Vec2 mTexCoordsMultiplicator = { 1.0f, 1.0f };
 
-		DrawData m_drawData;
-		BatchData m_batchData;
+		DrawData mDrawData;
+		BatchData mBatchData;
 	};
 }

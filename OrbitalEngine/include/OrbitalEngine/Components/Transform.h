@@ -1,34 +1,35 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Components/Component.h"
 
 namespace Orbital
 {
-	class Transform
+	class Transform : public Component
 	{
 	public:
 		Transform() { }
-		Transform(const Transform& other) : m_position(other.Position()) , m_rotation(other.Rotation()), m_scale(other.Scale()) { }
-		Transform(const Vec3& position) : m_position(position) { }
-		Transform(const Vec3& position, const Vec3& rotation) : m_position(position), m_rotation(rotation) { }
-		Transform(const Vec3& position, const Vec3& rotation, const Vec3& scale) : m_position(position), m_rotation(rotation), m_scale(scale) { }
+		Transform(const Transform& other) : mPosition(other.GetPosition()) , mRotation(other.GetRotation()), mScale(other.GetScale()) { }
+		Transform(const Vec3& position) : mPosition(position) { }
+		Transform(const Vec3& position, const Vec3& rotation) : mPosition(position), mRotation(rotation) { }
+		Transform(const Vec3& position, const Vec3& rotation, const Vec3& scale) : mPosition(position), mRotation(rotation), mScale(scale) { }
 
-		Vec3& Position() { m_dirty = true; return m_position; }
-		Vec3& Rotation() { m_dirty = true; return m_rotation; }
-		Vec3& Scale() { m_dirty = true; return m_scale; }
+		Vec3& GetPosition() { mDirty = true; return mPosition; }
+		Vec3& GetRotation() { mDirty = true; return mRotation; }
+		Vec3& GetScale() { mDirty = true; return mScale; }
 
-		const Vec3& Position() const { return m_position; }
-		const Vec3& Rotation() const { return m_rotation; }
-		const Vec3& Scale() const { return m_scale; }
+		const Vec3& GetPosition() const { return mPosition; }
+		const Vec3& GetRotation() const { return mRotation; }
+		const Vec3& GetScale() const { return mScale; }
 
-		bool isDirty() const { return m_dirty; }
-		void cleanUp() { m_dirty = false; }
-		void dirty() { m_dirty = true; }
+		bool IsDirty() const { return mDirty; }
+		void CleanUp() { mDirty = false; }
+		void Dirty() { mDirty = true; }
 
 	private:
-		Vec3 m_position = { 0.0f, 0.0f, 0.0f};
-		Vec3 m_rotation = { 0.0f, 0.0f, 0.0f};
-		Vec3 m_scale = { 1.0f, 1.0f, 1.0f};
-		bool m_dirty = true;
+		Vec3 mPosition = { 0.0f, 0.0f, 0.0f};
+		Vec3 mRotation = { 0.0f, 0.0f, 0.0f};
+		Vec3 mScale = { 1.0f, 1.0f, 1.0f};
+		bool mDirty = true;
 	};
 }

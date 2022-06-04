@@ -9,17 +9,17 @@ namespace Orbital
 	public:
 		BatchContainer(const WeakRef<Material>& material);
 
-		void registerMesh(MeshRenderer& mr, Transform& t);
-		void deleteMesh(MeshRenderer& mr);
-		void renderBatches();
+		void RegisterMesh(MeshRenderer& mr, Transform& t);
+		void DeleteMesh(MeshRenderer& mr);
+		void RenderBatches();
 
-		const std::vector<Ref<Batch>>& getBatches() const { return m_batches; }
-		std::vector<Ref<Batch>>::iterator begin() { return m_batches.begin(); }
-		std::vector<Ref<Batch>>::iterator end() { return m_batches.end(); }
+		const std::vector<Ref<Batch>>& GetBatches() const { return mBatches; }
+		std::vector<Ref<Batch>>::iterator begin() { return mBatches.begin(); }
+		std::vector<Ref<Batch>>::iterator end() { return mBatches.end(); }
 
 	private:
-		Ref<Material> m_material;
-		std::vector<Ref<Batch>> m_batches;
+		Ref<Material> mMaterial;
+		std::vector<Ref<Batch>> mBatches;
 	};
 
 	class BatchManager
@@ -27,18 +27,18 @@ namespace Orbital
 	public:
 		BatchManager();
 
-		void registerMesh(MeshRenderer& mr, Transform& t);
-		void deleteMesh(MeshRenderer& mr);
-		void renderBatches();
-		void onUpdate();
-		size_t getCount() const { return m_batchContainers.size(); }
-		const Ref<BatchContainer>& getBatch(size_t id) const { return m_batchContainers[id]; }
+		void RegisterMesh(MeshRenderer& mr, Transform& t);
+		void DeleteMesh(MeshRenderer& mr);
+		void RenderBatches();
+		void OnUpdate();
+		size_t GetCount() const { return mBatchContainers.size(); }
+		const Ref<BatchContainer>& getBatch(size_t id) const { return mBatchContainers[id]; }
 
-		const std::vector<Ref<BatchContainer>>& getBatchContainers() const { return m_batchContainers; }
-		std::vector<Ref<BatchContainer>>::iterator begin() { return m_batchContainers.begin(); }
-		std::vector<Ref<BatchContainer>>::iterator end() { return m_batchContainers.end(); }
+		const std::vector<Ref<BatchContainer>>& GetBatchContainers() const { return mBatchContainers; }
+		std::vector<Ref<BatchContainer>>::iterator begin() { return mBatchContainers.begin(); }
+		std::vector<Ref<BatchContainer>>::iterator end() { return mBatchContainers.end(); }
 
 	private:
-		std::vector<Ref<BatchContainer>> m_batchContainers;
+		std::vector<Ref<BatchContainer>> mBatchContainers;
 	};
 }

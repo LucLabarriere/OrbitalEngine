@@ -12,16 +12,16 @@ namespace Orbital
 	public:
 		FreeCameraController(const Entity& e);
 
-		virtual void onLoad() override;
-		virtual void onStart() override;
-		virtual void onUpdate(Time dt) override;
-		virtual bool onKeyPressed(const KeyPressedEvent& e) override;
-		virtual bool onMouseScrolled(const MouseScrolledEvent& e) override;
-		void rotate(const Vec2& rotation);
-		void setPosition(const Vec3& position);
+		virtual void OnLoad() override;
+		virtual void OnStart() override;
+		virtual void OnUpdate(Time dt) override;
+		virtual bool OnKeyPressed(const KeyPressedEvent& e) override;
+		virtual bool OnMouseScrolled(const MouseScrolledEvent& e) override;
+		void Rotate(const Vec2& rotation);
+		void SetPosition(const Vec3& position);
 
-		float& getRotationSpeed();
-		float& getTranslationSpeed();
+		float& GetRotationSpeed();
+		float& GetTranslationSpeed();
 
 	private:
 		Camera* mCamera = nullptr;

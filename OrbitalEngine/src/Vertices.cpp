@@ -4,19 +4,19 @@
 namespace Orbital
 {
 	template<class ...Vertices>
-	void VertexContainer<Vertices...>::allocateMemory(const VertexBuffer& buffer) const
+	void VertexContainer<Vertices...>::AllocateMemory(const VertexBuffer& buffer) const
 	{
-		buffer.allocateMemory(getData(), getSize());
+		buffer.AllocateMemory(GetData(), GetSize());
 	}
 
 	template<class ...Vertices>
-	void VertexContainer<Vertices...>::submitData(const VertexBuffer& buffer) const
+	void VertexContainer<Vertices...>::SubmitData(const VertexBuffer& buffer) const
 	{
-		buffer.submitData(getData(), getSize());
+		buffer.SubmitData(GetData(), GetSize());
 	}
 
 	template<class ...Vertices>
-	void VertexContainer<Vertices...>::setLayout(const VertexBuffer& buffer) const
+	void VertexContainer<Vertices...>::SetLayout(const VertexBuffer& buffer) const
 	{
 		std::vector<size_t> counts = { Vertices::GetCount() ... };
 		std::vector<size_t> sizes = { Vertices::GetSize() ... };

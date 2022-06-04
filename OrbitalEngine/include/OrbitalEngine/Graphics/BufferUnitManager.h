@@ -23,14 +23,14 @@ namespace Orbital
 	public:
 		BufferUnitManager();
 
-		void registerMesh(const MeshRenderer& mr, Transform& t);
-		void renderUnits();
-		void push(WeakRef<Mesh>& mesh);
-		void push(WeakRef<Material>& material, bool fill = true);
+		void RegisterMesh(const MeshRenderer& mr, Transform& t);
+		void RenderUnits();
+		void Push(WeakRef<Mesh>& mesh);
+		void Push(WeakRef<Material>& material, bool fill = true);
 
-		UnitTree m_units;
-		RenderDataTree m_data;
-		int m_currentIndex = 0;
+		UnitTree mUnits;
+		RenderDataTree mData;
+		int mCurrentIndex = 0;
 	};
 }
 	

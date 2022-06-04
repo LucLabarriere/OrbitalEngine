@@ -11,13 +11,13 @@ namespace Orbital
 	class Material : public Asset
 	{
 	public:
-		void bind() const;
-		WeakRef<Shader> getShader() const;
+		void Bind() const;
+		WeakRef<Shader> GetShader() const;
 
-		float& getAmbient() { return m_ambient; }
-		Vec3& getDiffuseTint() { return m_diffuseTint; }
-		Vec3& getSpecularTint() { return m_specularTint; }
-		float& getShininess() { return m_shininess; }
+		float& GetAmbient() { return mAmbient; }
+		Vec3& GetDiffuseTint() { return mDiffuseTint; }
+		Vec3& GetSpecularTint() { return mSpecularTint; }
+		float& GetShininess() { return mShininess; }
 
 	private:
 		Material(const std::string& tag);
@@ -34,15 +34,15 @@ namespace Orbital
 	private:
 		friend MaterialManager;
 
-		WeakRef<Shader> m_shader;
+		WeakRef<Shader> mShader;
 
-		float m_ambient = 1.0f;
-		Ref<Texture> m_diffuseMap;
-		Vec3 m_diffuseTint = { 1.0f, 1.0f, 1.0f };
-		Ref<Texture> m_specularMap;
-		Vec3 m_specularTint = { 1.0f, 1.0f, 1.0f };
-		float m_shininess = 32.0f;
+		float mAmbient = 1.0f;
+		Ref<Texture> mDiffuseMap;
+		Vec3 mDiffuseTint = { 1.0f, 1.0f, 1.0f };
+		Ref<Texture> mSpecularMap;
+		Vec3 mSpecularTint = { 1.0f, 1.0f, 1.0f };
+		float mShininess = 32.0f;
 
-		static inline size_t s_id = 0;
+		static inline size_t sId = 0;
 	};
 }

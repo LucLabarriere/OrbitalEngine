@@ -3,13 +3,13 @@
 
 namespace Orbital
 {
-	void IndexContainer::allocateMemory(const IndexBuffer& buffer) const
+	void IndexContainer::AllocateMemory(const IndexBuffer& buffer) const
 	{
-		buffer.allocateMemory(getData(), getSize());
+		buffer.AllocateMemory(GetData(), GetSize());
 	}
 
-	void IndexContainer::submitData(const IndexBuffer& buffer) const
+	void IndexContainer::SubmitData(const IndexBuffer& buffer) const
 	{
-		buffer.submitData(getData(), getSize());
+		buffer.SubmitData(GetData(), GetSize());
 	}
 }

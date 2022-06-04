@@ -11,31 +11,31 @@ namespace Orbital
 	OpenGLVertexBuffer::OpenGLVertexBuffer(unsigned int drawMode)
 		: VertexBuffer(drawMode)
 	{
- 		glad_glGenBuffers(1, &m_rendererId);
-		bind();
+ 		glad_glGenBuffers(1, &mRendererId);
+		Bind();
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glad_glDeleteBuffers(1, &m_rendererId);
+		glad_glDeleteBuffers(1, &mRendererId);
 	}
 
-	void OpenGLVertexBuffer::bind() const
+	void OpenGLVertexBuffer::Bind() const
 	{
-		glad_glBindBuffer(GL_ARRAY_BUFFER, m_rendererId);
+		glad_glBindBuffer(GL_ARRAY_BUFFER, mRendererId);
 	}
 
-	void OpenGLVertexBuffer::unbind() const
+	void OpenGLVertexBuffer::Unbind() const
 	{
 		glad_glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void OpenGLVertexBuffer::allocateMemory(const void* data, size_t size) const
+	void OpenGLVertexBuffer::AllocateMemory(const void* data, size_t size) const
 	{
-		glad_glBufferData(GL_ARRAY_BUFFER, size, data, m_drawMode);
+		glad_glBufferData(GL_ARRAY_BUFFER, size, data, mDrawMode);
 	}
 
-	void OpenGLVertexBuffer::submitData(const void* data, size_t size) const
+	void OpenGLVertexBuffer::SubmitData(const void* data, size_t size) const
 	{
 		glad_glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}

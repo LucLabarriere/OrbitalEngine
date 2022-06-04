@@ -7,22 +7,22 @@ namespace Orbital
 	class IndexContainer
 	{
 	public:
-		IndexContainer(const std::vector<unsigned int>& indices) : m_indices(indices) { }
-		IndexContainer(size_t count) : m_indices(count) { }
+		IndexContainer(const std::vector<unsigned int>& indices) : mIndices(indices) { }
+		IndexContainer(size_t count) : mIndices(count) { }
 
-		void allocateMemory(const IndexBuffer& buffer) const;
-		void submitData(const IndexBuffer& buffer) const;
+		void AllocateMemory(const IndexBuffer& buffer) const;
+		void SubmitData(const IndexBuffer& buffer) const;
 
-		void setIndex(size_t i, unsigned int index) { m_indices[i] = index; }
+		void SetIndex(size_t i, unsigned int index) { mIndices[i] = index; }
 
-		size_t getCount() const { return m_indices.size(); }
-		size_t getSize() const { return m_indices.size() * sizeof(unsigned int); }
-		const void* getData() const { return m_indices.data(); }
-		const unsigned int* getFirstIndex() const { return &m_indices[0]; }
-		unsigned int& operator[](size_t i) { return m_indices[i]; }
-		const unsigned int& operator[](size_t i) const { return m_indices[i]; }
+		size_t GetCount() const { return mIndices.size(); }
+		size_t GetSize() const { return mIndices.size() * sizeof(unsigned int); }
+		const void* GetData() const { return mIndices.data(); }
+		const unsigned int* GetFirstIndex() const { return &mIndices[0]; }
+		unsigned int& operator[](size_t i) { return mIndices[i]; }
+		const unsigned int& operator[](size_t i) const { return mIndices[i]; }
 
 	private:
-		std::vector <unsigned int> m_indices;
+		std::vector <unsigned int> mIndices;
 	};
 }

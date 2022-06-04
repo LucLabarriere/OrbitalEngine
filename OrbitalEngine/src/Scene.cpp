@@ -12,27 +12,14 @@
 namespace Orbital
 {
 	// Initializing
-	Scene::Scene()
-		: mMainEntity()
+	Scene::Scene() : ECS()
 	{
 
 	}
 
 	void Scene::Initialize()
 	{
-		for (auto& layer : mLayers)
-		{
-			layer = CreateRef<entt::registry>();
-		}
-
-		mMainEntity = Entity(OE_LAST_LAYER, mLayers[OE_LAST_LAYER]->create());
-
-		mMainEntity.AddComponent<UUID>();
-		mMainEntity.AddComponent<Tag>(GetUniqueTag("Scene"));
-		auto& hierarchy = mMainEntity.AddComponent<Hierarchy>(mMainEntity, Entity());
-		// TODO: have a Component parent class with a static pointer to active scene
-
-		mMainEntity.AddComponent<LayerID>(OE_LAST_LAYER);
+		ECS::Initialize();
 	}
 
 	Scene Scene::Copy(Scene& newScene)
@@ -71,149 +58,10 @@ namespace Orbital
 		return newScene;
 	}
 
-	// Working on ECS
-	Entity Scene::GetEntity(const Tag& tag)
-	{
-		for (size_t i = 0; i < mLayers.size(); i++)
-		{
-			auto& layer = mLayers[i];
-
-			auto view = layer->view<Tag>();
-
-			for (auto entity : view)
-			{
-				auto& otherTag = view.get<Tag>(entity);
-
-				if (tag == otherTag)
-					return Entity(i, entity);
-			}
-		}
-
-		// TODO test this function in scripts
-		OE_RAISE_SIGSEGV("Error, the entity {} does not exist", tag);
-	}
-
-	Entity Scene::GetEntity(const UUID& uuid)
-	{
-		for (size_t i = 0; i < mLayers.size(); i++)
-		{
-			auto& layer = mLayers[i];
-			auto view = layer->view<UUID>();
-
-			for (auto entity : view)
-			{
-				auto& otherUUID = view.get<UUID>(entity);
-
-				if (uuid == otherUUID)
-					return Entity(i, entity);
-			}
-		}
-
-		// TODO: test this function in scripts
-		OE_RAISE_SIGSEGV("Error, the entity {} does not exist", (size_t)uuid);
-	}
-
-	void Scene::DeleteEntity(const entt::entity& handle, const LayerID& layerId)
-	{
-		mLayers[layerId]->destroy(handle);
-	}
-
-	Entity Scene::GetSceneEntity()
-	{
-		return mMainEntity;
-	}
-
-	bool Scene::IsValid(const entt::entity& handle, const LayerID& layerId) const
-	{
-		return mLayers[layerId]->valid(handle);
-	}
-
-	Entity Scene::CreateEntity(const Tag& tag, LayerID layerId)
-	{
-		Entity e(layerId, mLayers[layerId]->create());
-
-		e.AddComponent<UUID>();
-		e.AddComponent<Tag>(GetUniqueTag(tag));
-		auto& hierarchy = e.AddComponent<Hierarchy>(e, GetSceneEntity());
-
-		e.AddComponent<LayerID>(layerId);
-		mCreatedEntities.push_back(e);
-
-		return e;
-	}
-
-	Entity Scene::CreateEntity(const Tag& tag, LayerID layerId, const entt::entity& handle)
-	{
-		Entity e(layerId, mLayers[layerId]->create(handle));
-
-		e.AddComponent<UUID>();
-		e.AddComponent<Tag>(GetUniqueTag(tag));
-		auto& hierarchy = e.AddComponent<Hierarchy>(e, GetSceneEntity());
-
-		e.AddComponent<LayerID>(layerId);
-		mCreatedEntities.push_back(e);
-
-		return e;
-	}
-
-	Entity Scene::DuplicateEntity(const Entity& e)
-	{
-		// TODO correct bug when copy pasting a child entity with children /
-		auto& tag = e.GetComponent<Tag>();
-		auto& layerId = e.GetComponent<LayerID>();
-		auto& hiearchy = e.GetComponent<Hierarchy>();
-		auto* transform = e.TryGetComponent<Transform>();
-		auto* meshRenderer = e.TryGetComponent<MeshRenderer>();
-		auto* directionalLight = e.TryGetComponent<DirectionalLight>();
-		auto* pointLight = e.TryGetComponent<PointLight>();
-		auto* spotLight = e.TryGetComponent<SpotLight>();
-
-		auto newEntity = CreateEntity(tag, layerId);
-
-		if (transform)
-		{
-			auto& newTransform = newEntity.AddComponent<Transform>(*transform);
-
-			if (meshRenderer)
-				newEntity.AddComponent<MeshRenderer>(*meshRenderer, &newTransform);
-		}
-
-		if (directionalLight)
-			newEntity.AddComponent<DirectionalLight>(*directionalLight);
-
-		if (pointLight)
-			newEntity.AddComponent<PointLight>(*pointLight);
-
-		if (spotLight)
-			newEntity.AddComponent<SpotLight>(*spotLight);
-
-		newEntity.GetComponent<Hierarchy>().setParent(hiearchy.getParent());
-
-		auto& children = hiearchy.getChildren();
-
-		for (auto& child : children)
-		{
-			auto newChild = DuplicateEntity(child);
-			newChild.GetComponent<Hierarchy>().setParent(newEntity);
-		}
-
-		return newEntity;
-	}
-
-	void Scene::RequireDelete(const Entity& entity)
-	{
-		mDeleteRequired.push_back(entity);
-	}
-
-	void Scene::RenameEntity(Entity& e, const Tag& newTag)
-	{
-		e.GetComponent<Tag>() = GetUniqueTag(newTag, &e);
-	}
-
 	void Scene::SetUpdating(bool value)
 	{
-		SetUpdating<FirstPersonController>(value);
-		SetUpdating<FreeCameraController>(value);
+		ECS::SetUpdating<FirstPersonController>(value);
+		ECS::SetUpdating<FreeCameraController>(value);
 	}
 
 	// Rendering
@@ -222,11 +70,11 @@ namespace Orbital
 		auto& camera = mMainCamera.GetComponent<Camera>();
 		auto shader = ShaderManager::Get("Base").lock();
 
-		shader->bind();
-		shader->setUniform3f("u_ViewPosition", camera.getPosition());
-		shader->setUniformMat4f("u_VPMatrix", camera.getVPMatrix());
-		shader->setUniformMat4f("u_MMatrix", Mat4(1.0f));
-		shader->setUniform2f("u_TexCoordsMultiplicator", Vec2(1.0f));
+		shader->Bind();
+		shader->SetUniform3f("u_ViewPosition", camera.GetPosition());
+		shader->SetUniformMat4f("u_VPMatrix", camera.GetVPMatrix());
+		shader->SetUniformMat4f("u_MMatrix", Mat4(1.0f));
+		shader->SetUniform2f("u_TexCoordsMultiplicator", Vec2(1.0f));
 
 		size_t i = 0;
 
@@ -238,12 +86,12 @@ namespace Orbital
 				for (auto entity : view)
 				{
 					auto& light = view.get<DirectionalLight>(entity);
-					light.bind(shader, i);
+					light.Bind(shader, i);
 					i++;
 				}
 			}
 		}
-		shader->setUniform1i("u_nDirectionalLights", i);
+		shader->SetUniform1i("u_nDirectionalLights", i);
 
 		i = 0;
 
@@ -256,12 +104,12 @@ namespace Orbital
 				for (auto entity : view)
 				{
 					auto& light = view.get<PointLight>(entity);
-					light.bind(shader, i);
+					light.Bind(shader, i);
 					i++;
 				}
 			}
 		}
-		shader->setUniform1i("u_nPointLights", i);
+		shader->SetUniform1i("u_nPointLights", i);
 
 		i = 0;
 
@@ -274,12 +122,12 @@ namespace Orbital
 				for (auto entity : view)
 				{
 					auto& light = view.get<SpotLight>(entity);
-					light.bind(shader, i);
+					light.Bind(shader, i);
 					i++;
 				}
 			}
 		}
-		shader->setUniform1i("u_nSpotLights", i);
+		shader->SetUniform1i("u_nSpotLights", i);
 	}
 
 	void Scene::End()
@@ -305,7 +153,7 @@ namespace Orbital
 				auto& meshRenderer = view.get<MeshRenderer>(entity);
 				auto& tag = view.get<Tag>(entity);
 
-				if (!meshRenderer.getDrawData().hidden)
+				if (!meshRenderer.GetDrawData().hidden)
 				{
 					Renderer::RegisterMesh(meshRenderer, transform);
 				}
@@ -346,7 +194,7 @@ namespace Orbital
 				auto& meshRenderer = view.get<MeshRenderer>(entity);
 				auto& tag = view.get<Tag>(entity);
 
-				if (!meshRenderer.getDrawData().hidden)
+				if (!meshRenderer.GetDrawData().hidden)
 				{
 					Renderer::RegisterMesh(meshRenderer, transform);
 				}
@@ -365,9 +213,9 @@ namespace Orbital
 			for (auto entity : view)
 			{
 				auto& camera = view.get<Camera>(entity);
-				if (camera.isMainCamera())
+				if (camera.IsMainCamera())
 				{
-					camera.setAspectRatio(aspectRatio);
+					camera.SetAspectRatio(aspectRatio);
 				}
 			}
 		}
@@ -384,40 +232,5 @@ namespace Orbital
 				// TODO: serialize
 			}
 		}
-	}
-
-	std::string Scene::GetUniqueTag(const std::string& tag, Entity* entity)
-	{
-		// TODO: check this method, why do we use Entity* ?
-		size_t count = 0;
-
-		std::string newTag(tag);
-		bool changedName = true;
-		entt::entity handle = entt::null;
-
-		if (entity)
-			handle = entity->GetHandle();
-
-		while (changedName)
-		{
-			changedName = false;
-
-			for (auto& registry : mLayers)
-			{
-				auto view = registry->view<Tag>();
-				for (auto e : view)
-				{
-					auto& otherTag = view.get<Tag>(e);
-					if (newTag == otherTag && e != handle)
-					{
-						count += 1;
-						newTag = tag + "_" + std::to_string(count);
-						changedName = true;
-					}
-				}
-			}
-		}
-
-		return newTag;
 	}
 }

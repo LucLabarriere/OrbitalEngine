@@ -8,14 +8,14 @@ namespace Orbital
 	public:
 		virtual ~OpenGLTexture() override;
 
-		virtual void bind() const override;
-		virtual void bind(unsigned int slot) const override;
-		virtual void unbind() const override;
+		virtual void Bind() const override;
+		virtual void Bind(unsigned int slot) const override;
+		virtual void Unbind() const override;
 
-		virtual void setWrapS(unsigned int value) override;
-		virtual void setWrapT(unsigned int value) override;
-		virtual void setMinFilter(unsigned int value) override;
-		virtual void setMagFilter(unsigned int value) override;
+		virtual void SetWrapS(unsigned int value) override;
+		virtual void SetWrapT(unsigned int value) override;
+		virtual void SetMinFilter(unsigned int value) override;
+		virtual void SetMagFilter(unsigned int value) override;
 
 	private:
 		OpenGLTexture(

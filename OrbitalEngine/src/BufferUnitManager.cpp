@@ -9,64 +9,64 @@ namespace Orbital
 
 	}
 
-	void BufferUnitManager::registerMesh(const MeshRenderer& mr, Transform& t)
+	void BufferUnitManager::RegisterMesh(const MeshRenderer& mr, Transform& t)
 	{
-		auto mesh = mr.getMesh().lock();
-		auto material = mr.getMaterial().lock();
+		auto mesh = mr.GetMesh().lock();
+		auto material = mr.GetMaterial().lock();
 
-		m_data[material->getId()][mesh->getId()].push_back(
-			CreateRef<RenderData>(&t, mr.getTexCoordsMultiplicator(), material->getId(), mesh->getId())
+		mData[material->GetId()][mesh->GetId()].push_back(
+			CreateRef<RenderData>(&t, mr.GetTexCoordsMultiplicator(), material->GetId(), mesh->GetId())
 		);
 	}
 
-	void BufferUnitManager::renderUnits()
+	void BufferUnitManager::RenderUnits()
 	{
-		for (auto [materialId, materialTree] : m_data)
+		for (auto [materialId, materialTree] : mData)
 		{
 			auto material = MaterialManager::Get(materialId).lock();
-			material->bind();
+			material->Bind();
 
 			for (auto [meshId, meshTree] : materialTree)
 			{
 				auto mesh = MeshManager::Get(meshId).lock();
-				auto unit = m_units[materialId][meshId];
+				auto unit = mUnits[materialId][meshId];
 
-				unit->bind();
+				unit->Bind();
 
 				for (auto renderData : meshTree)
 				{
-					unit->setModelMatrixUniform(material->getShader(), *(renderData->transform));
-					material->getShader().lock()
-						->setUniform2f("u_TexCoordsMultiplicator", renderData->texCoordsMultiplicator);
-					RenderCommands::DrawIndexed(OE_TRIANGLES, mesh->getIndices().getSize());
+					unit->SetModelMatrixUniform(material->GetShader(), *(renderData->transform));
+					material->GetShader().lock()
+						->SetUniform2f("u_TexCoordsMultiplicator", renderData->texCoordsMultiplicator);
+					RenderCommands::DrawIndexed(OE_TRIANGLES, mesh->getIndices().GetSize());
 					Metrics::IncrementBatchCount();
 				}
 			}
 		}
 
-		m_data.clear();
+		mData.clear();
 	}
 
-	void BufferUnitManager::push(WeakRef<Mesh>& mesh)
+	void BufferUnitManager::Push(WeakRef<Mesh>& mesh)
 	{
 		for (auto material : *MaterialManager::GetInstance())
 		{
-			m_units[material->getId()].emplace(
-				mesh.lock()->getId(), CreateRef<BufferUnit>(mesh, material)
+			mUnits[material->GetId()].emplace(
+				mesh.lock()->GetId(), CreateRef<BufferUnit>(mesh, material)
 			);
 		}
 	}
 
-	void BufferUnitManager::push(WeakRef<Material>& material, bool fill)
+	void BufferUnitManager::Push(WeakRef<Material>& material, bool fill)
 	{
-		size_t materialId = material.lock()->getId();
-		m_units.emplace(materialId, std::unordered_map<size_t, Ref<BufferUnit>>());
+		size_t materialId = material.lock()->GetId();
+		mUnits.emplace(materialId, std::unordered_map<size_t, Ref<BufferUnit>>());
 
 		if (fill)
 		{
 			for (WeakRef<Mesh> mesh : *MeshManager::GetInstance())
 			{
-				m_units[materialId].emplace(mesh.lock()->getId(), CreateRef<BufferUnit>(mesh, material));
+				mUnits[materialId].emplace(mesh.lock()->GetId(), CreateRef<BufferUnit>(mesh, material));
 
 			}
 		}

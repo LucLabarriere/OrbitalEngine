@@ -17,20 +17,20 @@ namespace Orbital
 	public:
 		BufferUnit(WeakRef<Mesh> mesh, WeakRef<Material> material);
 
-		void setModelMatrixUniform(WeakRef<Shader> shader, const Transform& t);
+		void SetModelMatrixUniform(WeakRef<Shader> shader, const Transform& t);
 		bool operator==(const BufferUnit& otherUnit);
-		void bind() const;
-		size_t getId() const { return m_id; }
-		WeakRef<Mesh> getMesh() const { return m_mesh; }
-		WeakRef<Material> getMaterial() const { return m_material; }
+		void Bind() const;
+		size_t GetId() const { return mId; }
+		WeakRef<Mesh> GetMesh() const { return mMesh; }
+		WeakRef<Material> GetMaterial() const { return mMaterial; }
 
 	private:
-		size_t m_id;
-		WeakRef<Mesh> m_mesh;
-		WeakRef<Material> m_material;
-		Ref<VertexArray> m_vao;
-		Ref<VertexBuffer> m_vbo;
-		Ref<IndexBuffer> m_ibo;
+		size_t mId;
+		WeakRef<Mesh> mMesh;
+		WeakRef<Material> mMaterial;
+		Ref<VertexArray> mVao;
+		Ref<VertexBuffer> mVbo;
+		Ref<IndexBuffer> mIbo;
 
 	};
 }

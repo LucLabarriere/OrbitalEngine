@@ -17,101 +17,101 @@ namespace Orbital
 	}
 
 	MeshRenderer::MeshRenderer(const std::string& meshTag, Transform* transform)
-			: m_mesh(MeshManager::Get(meshTag))
-			, m_material(MaterialManager::Get("Blank"))
-			, m_transform(transform)
+			: mMesh(MeshManager::Get(meshTag))
+			, mMaterial(MaterialManager::Get("Blank"))
+			, mTransform(transform)
 	{
 
 	}
 
 	MeshRenderer::MeshRenderer(const std::string& meshTag, Transform* transform, bool batchedDraw)
-		: m_mesh(MeshManager::Get(meshTag))
-		, m_material(MaterialManager::Get("Blank"))
-		, m_transform(transform)
+		: mMesh(MeshManager::Get(meshTag))
+		, mMaterial(MaterialManager::Get("Blank"))
+		, mTransform(transform)
 	{
-		m_drawData.batchDraw = batchedDraw;
+		mDrawData.batchDraw = batchedDraw;
 	}
 
 	MeshRenderer::MeshRenderer(const std::string& meshTag,
 		Transform* transform, bool batchedDraw,
 		const std::string& materialTag)
-		: m_mesh(MeshManager::Get(meshTag))
-		, m_transform(transform)
-		, m_material(MaterialManager::Get(materialTag))
+		: mMesh(MeshManager::Get(meshTag))
+		, mTransform(transform)
+		, mMaterial(MaterialManager::Get(materialTag))
 	{
-		m_drawData.batchDraw = batchedDraw;
+		mDrawData.batchDraw = batchedDraw;
 	}
 
 	MeshRenderer::MeshRenderer(const MeshRenderer& other, Transform* transform)
-		: m_mesh(other.getMesh())
-		, m_transform(transform)
-		, m_material(other.getMaterial())
+		: mMesh(other.GetMesh())
+		, mTransform(transform)
+		, mMaterial(other.GetMaterial())
 	{
-		m_drawData.hidden = other.getDrawData().hidden;
-		m_drawData.batchDraw = other.getDrawData().batchDraw;
-		m_drawData.staticDraw = other.getDrawData().staticDraw;
+		mDrawData.hidden = other.GetDrawData().hidden;
+		mDrawData.batchDraw = other.GetDrawData().batchDraw;
+		mDrawData.staticDraw = other.GetDrawData().staticDraw;
 	}
 
-	void MeshRenderer::destroy()
+	void MeshRenderer::Destroy()
 	{
 		Renderer::DeleteMesh(*this);
 	}
 
-	void MeshRenderer::setMesh(const std::string& tag)
+	void MeshRenderer::SetMesh(const std::string& tag)
 	{
-		destroy();
-		m_batchData = BatchData();
-		m_transform->dirty();
-		m_mesh = MeshManager::Get(tag);
+		Destroy();
+		mBatchData = BatchData();
+		mTransform->Dirty();
+		mMesh = MeshManager::Get(tag);
 	}
 
-	MeshRenderer::DrawData MeshRenderer::getDrawData() const
+	MeshRenderer::DrawData MeshRenderer::GetDrawData() const
 	{
-		return m_drawData;
+		return mDrawData;
 	}
 
-	MeshRenderer::BatchData MeshRenderer::getBatchData() const
+	MeshRenderer::BatchData MeshRenderer::GetBatchData() const
 	{
-		return m_batchData;
+		return mBatchData;
 	}
 
-	WeakRef<Material> MeshRenderer::getMaterial() const
+	WeakRef<Material> MeshRenderer::GetMaterial() const
 	{
-		return m_material;
+		return mMaterial;
 	}
 
-	WeakRef<Mesh> MeshRenderer::getMesh() const
+	WeakRef<Mesh> MeshRenderer::GetMesh() const
 	{
-		return m_mesh;
+		return mMesh;
 	}
 
-	void MeshRenderer::setBatchData(const BatchData& data)
+	void MeshRenderer::SetBatchData(const BatchData& data)
 	{
-		m_batchData = data;
+		mBatchData = data;
 	}
 
-	void MeshRenderer::resetBatchData(const BatchData& data)
+	void MeshRenderer::ResetBatchData(const BatchData& data)
 	{
-		destroy();
-		setBatchData(data);
+		Destroy();
+		SetBatchData(data);
 	}
 
-	void MeshRenderer::setDrawData(const DrawData& data)
+	void MeshRenderer::SetDrawData(const DrawData& data)
 	{
-		destroy();
-		m_drawData = data;
-		m_batchData = BatchData();
+		Destroy();
+		mDrawData = data;
+		mBatchData = BatchData();
 	}
 
-	void MeshRenderer::setHidden(bool value)
+	void MeshRenderer::SetHidden(bool value)
 	{
-		m_drawData.hidden = value;
+		mDrawData.hidden = value;
 	}
 
-	void MeshRenderer::setMaterial(const std::string& materialTag)
+	void MeshRenderer::SetMaterial(const std::string& materialTag)
 	{
-		destroy();
-		m_material = MaterialManager::Get(materialTag);
-		m_batchData = BatchData();
+		Destroy();
+		mMaterial = MaterialManager::Get(materialTag);
+		mBatchData = BatchData();
 	}
 }

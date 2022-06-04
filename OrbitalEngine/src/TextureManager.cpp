@@ -3,7 +3,7 @@
 
 namespace Orbital
 {
-	bool TextureManager::load(const std::string& tag, const std::string& filepath,
+	bool TextureManager::Load(const std::string& tag, const std::string& filepath,
 		unsigned int internalFormat, unsigned int format)
 	{
 		TextureData texData = Texture::Load(filepath);
@@ -16,7 +16,7 @@ namespace Orbital
 
 		Ref<Texture> texture(Texture::Create(tag, texData));
 
-		m_assets.push_back(texture);
+		mAssets.push_back(texture);
 		stbi_image_free(texData.data);
 
 		return true;

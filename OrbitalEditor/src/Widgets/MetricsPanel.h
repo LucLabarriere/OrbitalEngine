@@ -8,23 +8,23 @@ using namespace Orbital;
 class MetricsPanel
 {
 public:
-	MetricsPanel(FreeCameraController* cameraController) : m_cameraController(cameraController) { }
+	MetricsPanel(FreeCameraController* cameraController) : mCameraController(cameraController) { }
 
-	void render()
+	void Render()
 	{
 		bool vsyncEnabled = Metrics::Get<bool>(Metric::VSyncEnabled);
 
 		ImGui::Begin("Metrics");
-		ImGui::Checkbox("Show demo Panel", &m_isDemoShown);
-		ImGui::Text("Time per frame %.2f ms", Metrics::Get<Time>(Metric::ApproximateTimePerFrame).milliseconds());
+		ImGui::Checkbox("Show demo Panel", &mIsDemoShown);
+		ImGui::Text("Time per frame %.2f ms", Metrics::Get<Time>(Metric::ApproximateTimePerFrame).Milliseconds());
 		ImGui::Text("FPS %.1f", Metrics::Get<float>(Metric::ApproximateFrameRate));
 		ImGui::Text("BatchCount: %d", Metrics::Get<unsigned int>(Metric::BatchCount));
 		ImGui::Checkbox("VSync enabled", &vsyncEnabled);
-		ImGui::SliderFloat("Camera translation speed", &m_cameraController->getTranslationSpeed(), 0.01f, 50.0f);
-		ImGui::SliderFloat("Camera rotation speed", &m_cameraController->getRotationSpeed(), 0.01f, 50.0f);
+		ImGui::SliderFloat("Camera translation speed", &mCameraController->GetTranslationSpeed(), 0.01f, 50.0f);
+		ImGui::SliderFloat("Camera rotation speed", &mCameraController->GetRotationSpeed(), 0.01f, 50.0f);
 		ImGui::End();
 
-		Metrics::setVSyncEnabled(vsyncEnabled);
+		Metrics::SetVSyncEnabled(vsyncEnabled);
 
 		if (ImGui::Begin("Batches"))
 		{
@@ -33,9 +33,9 @@ public:
 		ImGui::End();
 	}
 
-	bool isDemoShown() const { return m_isDemoShown; }
+	bool IsDemoShown() const { return mIsDemoShown; }
 
 private:
-	bool m_isDemoShown = true;
-	FreeCameraController* m_cameraController;
+	bool mIsDemoShown = true;
+	FreeCameraController* mCameraController;
 };

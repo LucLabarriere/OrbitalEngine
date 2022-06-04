@@ -18,7 +18,7 @@ namespace Orbital
 		size_t firstIndex;
 		size_t lastIndex;
 
-		size_t getStride() const { return lastIndex - firstIndex + 1; }
+		size_t GetStride() const { return lastIndex - firstIndex + 1; }
 	};
 
 	class Batch : public std::enable_shared_from_this<Batch>
@@ -26,41 +26,41 @@ namespace Orbital
 	public:
 		Batch(WeakRef<Material>& material, size_t vertexCount, size_t indexCount = 0);
 
-		void bind() const;
-		void bindMaterial() const;
-		void allocateMemory() const;
-		void submitData() const;
-		void render();
-		void registerMesh(MeshRenderer& mr, Transform& t);
-		void deleteMesh(MeshRenderer& mr);
-		bool meshFits(MeshRenderer& mr);
+		void Bind() const;
+		void BindMaterial() const;
+		void AllocateMemory() const;
+		void SubmitData() const;
+		void Render();
+		void RegisterMesh(MeshRenderer& mr, Transform& t);
+		void DeleteMesh(MeshRenderer& mr);
+		bool MeshFits(MeshRenderer& mr);
 
-		const BasicVertexContainer& getVertices() const { return m_vertices; }
-		const std::vector<bool>& getFreeVerticesList() const { return m_freeVertices; }
-		std::tuple<int, int> getAvailableSlot(size_t vertexCount, size_t indexCount, bool record = true);
-		bool isFull() const { return m_full; }
+		const BasicVertexContainer& GetVertices() const { return mVertices; }
+		const std::vector<bool>& GetFreeVerticesList() const { return mFreeVertices; }
+		std::tuple<int, int> GetAvailableSlot(size_t vertexCount, size_t indexCount, bool record = true);
+		bool IsFull() const { return mFull; }
 
 	private:
 		void updateFullStatus();
 
 	private:
-		Ref<VertexArray> m_vao;
-		Ref<VertexBuffer> m_vbo;
-		Ref<IndexBuffer> m_ibo;
-		WeakRef<Material> m_material;
+		Ref<VertexArray> mVao;
+		Ref<VertexBuffer> mVbo;
+		Ref<IndexBuffer> mIbo;
+		WeakRef<Material> mMaterial;
 
-		BasicVertexContainer m_vertices;
-		IndexContainer m_indices;
+		BasicVertexContainer mVertices;
+		IndexContainer mIndices;
 		
-		std::vector<bool> m_freeVertices;
-		std::vector<BufferSubData> m_subDataFreeVertices;
-		std::vector<BufferSubData> m_subDataFreeIndices;
-		std::vector<BufferSubData> m_subDataVertices;
-		std::vector<BufferSubData> m_subDataIndices;
-		BufferSubData* m_currentSubDataVertices = nullptr;
-		BufferSubData* m_currentSubDataIndices = nullptr;
+		std::vector<bool> mFreeVertices;
+		std::vector<BufferSubData> mSubDataFreeVertices;
+		std::vector<BufferSubData> mSubDataFreeIndices;
+		std::vector<BufferSubData> mSubDataVertices;
+		std::vector<BufferSubData> mSubDataIndices;
+		BufferSubData* mCurrentSubDataVertices = nullptr;
+		BufferSubData* mCurrentSubDataIndices = nullptr;
 
-		bool m_full = false;
-		unsigned int m_renderMode;
+		bool mFull = false;
+		unsigned int mRenderMode;
 	};
 }

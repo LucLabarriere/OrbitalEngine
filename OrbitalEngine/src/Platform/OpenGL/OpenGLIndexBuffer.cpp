@@ -10,31 +10,31 @@ namespace Orbital
 	OpenGLIndexBuffer::OpenGLIndexBuffer(unsigned int drawMode)
 		: IndexBuffer(drawMode)
 	{
-		glad_glGenBuffers(1, &m_rendererId);
-		bind();
+		glad_glGenBuffers(1, &mRendererId);
+		Bind();
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		glad_glDeleteBuffers(1, &m_rendererId);
+		glad_glDeleteBuffers(1, &mRendererId);
 	}
 
-	void OpenGLIndexBuffer::bind() const
+	void OpenGLIndexBuffer::Bind() const
 	{
-		glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererId);
+		glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererId);
 	}
 
-	void OpenGLIndexBuffer::unbind() const
+	void OpenGLIndexBuffer::Unbind() const
 	{
 		glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void OpenGLIndexBuffer::allocateMemory(const void* data, size_t size) const
+	void OpenGLIndexBuffer::AllocateMemory(const void* data, size_t size) const
 	{
-		glad_glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, m_drawMode);
+		glad_glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, mDrawMode);
 	}
 
-	void OpenGLIndexBuffer::submitData(const void* data, size_t size) const
+	void OpenGLIndexBuffer::SubmitData(const void* data, size_t size) const
 	{
 		glad_glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
 	}

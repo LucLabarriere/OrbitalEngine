@@ -18,47 +18,47 @@ namespace Orbital
 	public:
 		static void inline Initialize()
 		{
-			if (s_instance == nullptr)
-				s_instance = new Renderer();
+			if (sInstance == nullptr)
+				sInstance = new Renderer();
 			else
 				OE_RAISE_SIGSEGV("Renderer: You're trying to initialize the Renderer again");
 		}
 		static void InitializeFramebuffers();
 		static void InitializeBatchManager();
 
-		static void inline Terminate() { delete s_instance; RenderCommands::Terminate(); }
-		static Renderer* Get() { return s_instance; }
-		static WeakRef<BatchManager> GetBatchManager() { return s_instance->m_batchManager; }
+		static void inline Terminate() { delete sInstance; RenderCommands::Terminate(); }
+		static Renderer* Get() { return sInstance; }
+		static WeakRef<BatchManager> GetBatchManager() { return sInstance->mBatchManager; }
 
-		static void RegisterMesh(MeshRenderer& mr, Transform& t) { s_instance->registerMesh(mr, t); }
-		static void DeleteMesh(MeshRenderer& mr) { s_instance->deleteMesh(mr); }
+		static void RegisterMesh(MeshRenderer& mr, Transform& t) { sInstance->RegisterMeshImpl(mr, t); }
+		static void DeleteMesh(MeshRenderer& mr) { sInstance->DeleteMeshImpl(mr); }
 		static void PushBufferUnit(WeakRef<Mesh> mesh);
 		static void PushBufferUnit(WeakRef<Material> material, bool fill = true);
 
-		static void RenderBatches() { s_instance->renderBatches(); }
-		static void RenderUnits() { s_instance->renderUnits(); }
+		static void RenderBatches() { sInstance->RenderBatchesImpl(); }
+		static void RenderUnits() { sInstance->RenderUnitsImpl(); }
 
 		static void OnWindowResized();
-		static unsigned int GetFrame() { return s_instance->getFrame(); }
+		static unsigned int GetFrame() { return sInstance->GetFrameImpl(); }
 
-		void newFrame();
-		void displayFrame();
+		void NewFrame();
+		void DisplayFrame();
 
 	private:
 		Renderer();
 
-		void onWindowResized();
-		unsigned int getFrame() const { return m_frameBuffer->getTextureId(); }
-		void registerMesh(MeshRenderer& mr, Transform& t);
-		void deleteMesh(MeshRenderer& mr);
-		void renderBatches();
-		void renderUnits();
+		void OnWindowResizedImpl();
+		unsigned int GetFrameImpl() const { return mFrameBuffer->GetTextureId(); }
+		void RegisterMeshImpl(MeshRenderer& mr, Transform& t);
+		void DeleteMeshImpl(MeshRenderer& mr);
+		void RenderBatchesImpl();
+		void RenderUnitsImpl();
 
 	private:
-		static inline Renderer* s_instance = nullptr;
-		Scope<FrameBuffer> m_frameBuffer;
-		Scope<MultisampledFrameBuffer> m_msFrameBuffer;
-		Ref<BatchManager> m_batchManager;
-		Ref<BufferUnitManager> m_unitManager;
+		static inline Renderer* sInstance = nullptr;
+		Scope<FrameBuffer> mFrameBuffer;
+		Scope<MultisampledFrameBuffer> mMSFrameBuffer;
+		Ref<BatchManager> mBatchManager;
+		Ref<BufferUnitManager> mUnitManager;
 	};
 }

@@ -16,27 +16,27 @@ namespace Orbital
 		Application();
 		virtual ~Application();
 		
-		void onEvent(Event& e);
-		virtual bool onKeyPressed(KeyPressedEvent& e) { return false; }
-		virtual bool onKeyReleased(KeyReleasedEvent& e) { return false; }
-		virtual bool onMouseMoved(MouseMovedEvent& e) { return false; }
-		virtual bool onMouseScrolled(MouseScrolledEvent& e) { return false; }
-		virtual bool onMouseButtonPressed(MouseButtonPressedEvent& e) { return false; }
-		virtual bool onMouseButtonReleased(MouseButtonReleasedEvent& e) { return false; }
-		virtual bool onWindowResized(WindowResizedEvent& e) { return false; }
+		void OnEvent(Event& e);
+		virtual bool OnKeyPressed(KeyPressedEvent& e) { return false; }
+		virtual bool OnKeyReleased(KeyReleasedEvent& e) { return false; }
+		virtual bool OnMouseMoved(MouseMovedEvent& e) { return false; }
+		virtual bool OnMouseScrolled(MouseScrolledEvent& e) { return false; }
+		virtual bool OnMouseButtonPressed(MouseButtonPressedEvent& e) { return false; }
+		virtual bool OnMouseButtonReleased(MouseButtonReleasedEvent& e) { return false; }
+		virtual bool OnWindowResized(WindowResizedEvent& e) { return false; }
 
-		virtual void onLoad() = 0;
-		virtual void onStart() = 0;
-		virtual void onUpdate(Time dt) = 0;
+		virtual void OnLoad() = 0;
+		virtual void OnStart() = 0;
+		virtual void OnUpdate(Time dt) = 0;
 
-		void run();
+		void Run();
 
 	protected:
-		Scope<Window> m_window;
-		Scene m_scene;
-		Scene* m_activeScene;
+		Scope<Window> mWindow;
+		Scene mScene;
+		Scene* mActiveScene;
 
-		Time m_averageTimePerFrame;
-		Time m_timeAtLastUpdate;
+		Time mAverageTimePerFrame;
+		Time mTimeAtLastUpdate;
 	};
 }

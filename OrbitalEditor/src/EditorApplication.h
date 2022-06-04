@@ -22,43 +22,43 @@ public:
 	EditorApplication();
 	virtual ~EditorApplication() override;
 
-	virtual void onLoad() override;
-	virtual void onStart() override { };
-	virtual void onUpdate(Time dt) override;
+	virtual void OnLoad() override;
+	virtual void OnStart() override { };
+	virtual void OnUpdate(Time dt) override;
 
-	void play();
-	void stop();
-	bool isPlaying() const { return m_state == EditorState::Playing ? true : false; }
+	void Play();
+	void Stop();
+	bool IsPlaying() const { return mState == EditorState::Playing ? true : false; }
 
-	virtual bool onMouseScrolled(MouseScrolledEvent& e) override;
-	virtual bool onKeyPressed(KeyPressedEvent& e) override;
+	virtual bool OnMouseScrolled(MouseScrolledEvent& e) override;
+	virtual bool OnKeyPressed(KeyPressedEvent& e) override;
 
-	void checkRenderAreaSize(unsigned int width, unsigned int height)
+	void CheckRenderAreaSize(unsigned int width, unsigned int height)
 	{
-		if (width != m_renderAreaWidth || height != m_renderAreaHeight)
+		if (width != mRenderAreaWidth || height != mRenderAreaHeight)
 		{
-			m_renderAreaWidth = width;
-			m_renderAreaHeight = height;
+			mRenderAreaWidth = width;
+			mRenderAreaHeight = height;
 			Settings::Get(Settings::UIntSetting::RenderingAreaWidth) = width;
 			Settings::Get(Settings::UIntSetting::RenderingAreaHeight) = height;
 			Settings::Get(Settings::FloatSetting::AspectRatio) = (float)width / height;
-			m_activeScene->SetAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
+			mActiveScene->SetAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
 			Renderer::OnWindowResized();
 		}
 	}
 
 private:
-	EditorState m_state = EditorState::Stopped;
-	unsigned int m_renderAreaWidth = 0;
-	unsigned int m_renderAreaHeight = 0;
-	Ref<Viewport> m_viewport;
-	Ref<HierarchyPanel> m_hierarchyPanel;
-	Entity m_editorCamera;
-	Entity m_mainCamera;
-	Scene m_runtimeScene;
+	EditorState mState = EditorState::Stopped;
+	unsigned int mRenderAreaWidth = 0;
+	unsigned int mRenderAreaHeight = 0;
+	Ref<Viewport> mViewport;
+	Ref<HierarchyPanel> mHierarchyPanel;
+	Entity mEditorCamera;
+	Entity mMainCamera;
+	Scene mRuntimeScene;
 
-	Scope<MetricsPanel> m_metricsPanel;
-	Scope<BatchesPanel> m_batchesPanel;
-	Scope<AssetManagerPanel> m_assetManagerPanel;
-	Scope<FileExplorerPanel> m_fileExplorerPanel;
+	Scope<MetricsPanel> mMetricsPanel;
+	Scope<BatchesPanel> mBatchesPanel;
+	Scope<AssetManagerPanel> mAssetManagerPanel;
+	Scope<FileExplorerPanel> mFileExplorerPanel;
 };

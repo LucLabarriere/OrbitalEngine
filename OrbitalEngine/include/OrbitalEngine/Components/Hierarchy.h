@@ -15,20 +15,20 @@ namespace Orbital
 		Hierarchy(const Entity& entity, const Entity& parent);
 		~Hierarchy();
 
-		void setParent(const Entity& parent);
-		void removeChild(const Entity& entity);
+		void SetParent(const Entity& parent);
+		void RemoveChild(const Entity& entity);
 
-		Entity& getParent();
-		std::vector<Entity>& getChildren();
+		Entity& GetParent();
+		std::vector<Entity>& GetChildren();
 
 		std::vector<Entity>::iterator begin();
 		std::vector<Entity>::iterator end();
 
 	private:
-		void addChild(const Entity& child);
+		void AddChild(const Entity& child);
 
-		Entity m_parent;
-		Entity m_entity;
-		std::vector<Entity> m_children;
+		Entity mParent;
+		Entity mEntity;
+		std::vector<Entity> mChildren;
 	};
 }

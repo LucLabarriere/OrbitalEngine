@@ -29,17 +29,17 @@ namespace Orbital
 	void Entity::Destroy()
 	{
 		auto& hierarchy = GetComponent<Hierarchy>();
-		auto& children = hierarchy.getChildren();
+		auto& children = hierarchy.GetChildren();
 
 		for (int i = children.size() - 1; i >= 0; i--)
 		{
 			children[i].Destroy();
 		}
 
-		hierarchy.getParent().GetComponent<Hierarchy>().removeChild(*this);
+		hierarchy.GetParent().GetComponent<Hierarchy>().RemoveChild(*this);
 
 		auto mr = TryGetComponent<MeshRenderer>();
-		if (mr) mr->destroy();
+		if (mr) mr->Destroy();
 
 		(*sActiveScene)->DeleteEntity(mHandle, mLayerId);
 	}

@@ -9,12 +9,8 @@
 
 namespace Orbital
 {
-	namespace Components
-	{
-		class MeshRenderer;
-		class Transform;
-	}
-
+	class MeshRenderer;
+	class Transform;
 	class Batch;
 
 	class Renderer
@@ -34,8 +30,8 @@ namespace Orbital
 		static Renderer* Get() { return s_instance; }
 		static WeakRef<BatchManager> GetBatchManager() { return s_instance->m_batchManager; }
 
-		static void RegisterMesh(Components::MeshRenderer& mr, Components::Transform& t) { s_instance->registerMesh(mr, t); }
-		static void DeleteMesh(Components::MeshRenderer& mr) { s_instance->deleteMesh(mr); }
+		static void RegisterMesh(MeshRenderer& mr, Transform& t) { s_instance->registerMesh(mr, t); }
+		static void DeleteMesh(MeshRenderer& mr) { s_instance->deleteMesh(mr); }
 		static void PushBufferUnit(WeakRef<Mesh> mesh);
 		static void PushBufferUnit(WeakRef<Material> material, bool fill = true);
 
@@ -53,8 +49,8 @@ namespace Orbital
 
 		void onWindowResized();
 		unsigned int getFrame() const { return m_frameBuffer->getTextureId(); }
-		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
-		void deleteMesh(Components::MeshRenderer& mr);
+		void registerMesh(MeshRenderer& mr, Transform& t);
+		void deleteMesh(MeshRenderer& mr);
 		void renderBatches();
 		void renderUnits();
 

@@ -41,7 +41,7 @@ namespace Orbital
 	{
 		for (const auto& shader : m_assets)
 			if (shader->getTag() == tag)
-				//return shader;
+				return shader;
 
 		OE_RAISE_SIGSEGV("ShaderManager: {} is not stored in the ShaderManager", tag);
 	}

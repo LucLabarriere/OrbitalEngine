@@ -3,8 +3,6 @@
 #include "OrbitalEngine/Utils/Time.h"
 #include "OrbitalEngine/Utils/Logger.h"
 
-
-
 namespace Orbital
 {
 

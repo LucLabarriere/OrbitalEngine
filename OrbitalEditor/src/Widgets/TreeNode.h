@@ -1,7 +1,7 @@
 #pragma once
 
 #include "OrbitalEngine/Utils/Logger.h"
-#include "OrbitalEngine/Logic/Entity.h"
+#include "OrbitalEngine/Logic.h"
 #include "OrbitalEngine/Components.h"
 
 using namespace Orbital;

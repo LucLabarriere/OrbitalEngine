@@ -1,55 +1,51 @@
-#include "OrbitalEngine/Logic/Entity.h"
-#include "OrbitalEngine/Logic/Scene.h"
+#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Logic.h"
 
 namespace Orbital
 {
+	Entity::Entity(const LayerID& layerId, const entt::entity& handle)
+		: mLayerId(layerId), mHandle(handle)
+	{
+
+	}
+
 	Entity::Entity()
+		: mLayerId(0), mHandle(entt::null)
 	{
 
 	}
 
 	Entity::Entity(const Entity& e)
+		: mLayerId(e.mLayerId), mHandle(e.mHandle)
 	{
-		m_registry = e.m_registry;
-		m_handle = e.m_handle;
+
 	}
 
-	void Entity::changeLayer(LayerID layerId)
+	void Entity::ChangeLayer(LayerID layerId)
 	{
 		OE_NOT_IMPLEMENTED();
 	}
 
-	void Entity::destroy()
+	void Entity::Destroy()
 	{
-		auto& hierarchy = get<Components::Hierarchy>();
+		auto& hierarchy = GetComponent<Hierarchy>();
 		auto& children = hierarchy.getChildren();
 
 		for (int i = children.size() - 1; i >= 0; i--)
 		{
-			children[i].destroy();
+			children[i].Destroy();
 		}
-		hierarchy.getParent().get<Components::Hierarchy>().removeChild(*this);
 
-		auto mr = tryGet<Components::MeshRenderer>();
+		hierarchy.getParent().GetComponent<Hierarchy>().removeChild(*this);
+
+		auto mr = TryGetComponent<MeshRenderer>();
 		if (mr) mr->destroy();
 
-		m_registry->destroy(m_handle);
+		(*sActiveScene)->DeleteEntity(mHandle, mLayerId);
 	}
 
-	Entity::Entity(Ref<entt::registry>& registry)
-		: m_registry(registry), m_handle(registry->create())
+	bool Entity::IsValid() const
 	{
-
-	}
-
-	Entity::Entity(entt::entity handle, Ref<entt::registry>& registry)
-		: m_registry(registry), m_handle(handle)
-	{
-
-	}
-
-	Entity::~Entity()
-	{
-
+		return mHandle != entt::null && (*sActiveScene)->IsValid(mHandle, mLayerId);
 	}
 }

@@ -10,7 +10,7 @@ namespace Orbital
 	void MeshManager::Initialize()
 	{
 		s_instance = new MeshManager();
-		LoadMesh(Settings::GetAssetPath("models/backpack/backpack.obj"), "Backpack");
+		//LoadMesh(Settings::GetAssetPath("models/backpack/backpack.obj"), "Backpack");
 	}
 
 	bool MeshManager::LoadMesh(const std::string filepath, const std::string& meshName)

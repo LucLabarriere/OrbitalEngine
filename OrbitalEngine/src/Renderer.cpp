@@ -60,7 +60,7 @@ namespace Orbital
 		m_frameBuffer.reset(FrameBuffer::Create());
 	}
 
-	void Renderer::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
+	void Renderer::registerMesh(MeshRenderer& mr, Transform& t)
 	{
 		auto drawData = mr.getDrawData();
 
@@ -74,7 +74,7 @@ namespace Orbital
 		}
 	}
 
-	void Renderer::deleteMesh(Components::MeshRenderer& mr)
+	void Renderer::deleteMesh(MeshRenderer& mr)
 	{
 		auto drawData = mr.getDrawData();
 

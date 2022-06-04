@@ -10,12 +10,8 @@ namespace Orbital
 	class VertexBuffer;
 	class IndexBuffer;
 	class Material;
-
-	namespace Components
-	{
-		class MeshRenderer;
-		class Transform;
-	}
+	class MeshRenderer;
+	class Transform;
 
 	struct BufferSubData
 	{
@@ -35,9 +31,9 @@ namespace Orbital
 		void allocateMemory() const;
 		void submitData() const;
 		void render();
-		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
-		void deleteMesh(Components::MeshRenderer& mr);
-		bool meshFits(Components::MeshRenderer& mr);
+		void registerMesh(MeshRenderer& mr, Transform& t);
+		void deleteMesh(MeshRenderer& mr);
+		bool meshFits(MeshRenderer& mr);
 
 		const BasicVertexContainer& getVertices() const { return m_vertices; }
 		const std::vector<bool>& getFreeVerticesList() const { return m_freeVertices; }

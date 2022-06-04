@@ -31,7 +31,7 @@ namespace Orbital
 		m->getVertices().setLayout(*m_vbo);
 	}
 
-	void BufferUnit::setModelMatrixUniform(WeakRef<Shader> shader, const Components::Transform& t)
+	void BufferUnit::setModelMatrixUniform(WeakRef<Shader> shader, const Transform& t)
 	{
 		Mat4 model(1.0f);
 		model = glm::translate(model, t.Position());

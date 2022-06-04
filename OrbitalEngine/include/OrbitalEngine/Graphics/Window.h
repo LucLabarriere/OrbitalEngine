@@ -15,6 +15,8 @@ namespace Orbital
 		virtual bool shouldClose() = 0;
 		virtual void onUpdate() = 0;
 		virtual void shutdown() = 0;
+		virtual void enableCursor() = 0;
+		virtual void disableCursor() = 0;
 		void applicationCallback(Event& e) { m_eventCallback(e); }
 
 		unsigned int getWidth() { return m_width; }
@@ -33,6 +35,6 @@ namespace Orbital
 		unsigned int m_height;
 		std::string m_title;
 		std::function<void(Event& e)> m_eventCallback;
-		bool m_vsyncEnabled;
+		bool m_vsyncEnabled = false;
 	};
 }

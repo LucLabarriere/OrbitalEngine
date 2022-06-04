@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OrbitalEngine/Logic/Application.h"
-#include "OrbitalEngine/Logic/Entity.h"
-#include "OrbitalEngine/Logic/Scene.h"
-#include "OrbitalEngine/Logic/NativeScriptManager.h"
+#include "Logic/Application.h"
+#include "Logic/ScriptableEntity.h"
+#include "Logic/Scene.h"
+#include "Logic/NativeScriptManager.h"

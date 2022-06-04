@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Constants.h"
+#include "Widget.h"
 
 using namespace Orbital;
 
-class FileExplorerPanel
+class FileExplorerPanel : public Widget
 {
 public:
 	FileExplorerPanel();

@@ -1,10 +1,10 @@
 #include "OrbitalEngine/Graphics/Batch.h"
+#include "OrbitalEngine/Graphics/RenderCommands.h"
 #include "OrbitalEngine/Components.h"
 #include "OrbitalEngine/Utils.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
-#include <span>
 
 namespace Orbital
 {
@@ -93,7 +93,7 @@ namespace Orbital
 		m_subDataIndices.resize(0);
 	}
 
-	void Batch::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
+	void Batch::registerMesh(MeshRenderer& mr, Transform& t)
 	{
 		auto mesh = mr.getMesh().lock();
 		auto& vertices = mesh->getVertices();
@@ -173,7 +173,7 @@ namespace Orbital
 	}
 
 
-	void Batch::deleteMesh(Components::MeshRenderer& mr)
+	void Batch::deleteMesh(MeshRenderer& mr)
 	{
 		// TODO: make it work
 		auto batchData = mr.getBatchData();
@@ -224,12 +224,12 @@ namespace Orbital
 		m_subDataVertices.push_back(BufferSubData(vertexPointer, vertexPointer + vertices.getCount() - 1));
 		m_subDataIndices.push_back(BufferSubData(indexPointer, indexPointer + indices.getCount() - 1));
 
-		mr.setBatchData(Components::MeshRenderer::BatchData());
+		mr.setBatchData(MeshRenderer::BatchData());
 
 		updateFullStatus();
 	}
 
-	bool Batch::meshFits(Components::MeshRenderer& mr)
+	bool Batch::meshFits(MeshRenderer& mr)
 	{
 		auto mesh = mr.getMesh();
 		auto& vertices = mesh.lock()->getVertices();

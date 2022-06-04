@@ -1,15 +1,12 @@
 #pragma once
 
-#include "OrbitalEngine/Components/Transform.h"
-#include "OrbitalEngine/Components/Hierarchy.h"
-#include "OrbitalEngine/Components/MeshRenderer.h"
-#include "OrbitalEngine/Components/Lights.h"
-#include "OrbitalEngine/Components/NativeScript.h"
-
-namespace Orbital
-{
-	namespace Components
-	{
-		using Tag = std::string;
-	}
-}
+#include "Components/Transform.h"
+#include "Components/Hierarchy.h"
+#include "Components/MeshRenderer.h"
+#include "Components/Lights.h"
+#include "Components/NativeScript.h"
+#include "Components/Camera.h"
+#include "Components/UUID.h"
+#include "Components/Tag.h"
+#include "Components/Scripts/FirstPersonController.h"
+#include "Components/Scripts/FreeCameraController.h"

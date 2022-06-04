@@ -1,14 +1,14 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
-#include "OrbitalEngine/Graphics/CameraController.h"
+#include "OrbitalEngine/Components/Scripts/FreeCameraController.h"
 
 using namespace Orbital;
 
 class MetricsPanel
 {
 public:
-	MetricsPanel(Ref<CameraController> cameraController) : m_cameraController(cameraController) { }
+	MetricsPanel(FreeCameraController* cameraController) : m_cameraController(cameraController) { }
 
 	void render()
 	{
@@ -37,5 +37,5 @@ public:
 
 private:
 	bool m_isDemoShown = true;
-	Ref<CameraController> m_cameraController;
+	FreeCameraController* m_cameraController;
 };

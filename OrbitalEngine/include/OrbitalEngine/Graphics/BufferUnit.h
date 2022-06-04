@@ -4,11 +4,7 @@
 
 namespace Orbital
 {
-	namespace Components
-	{
-		class Transform;
-	}
-
+	class Transform;
 	class Material;
 	class Shader;
 	class Mesh;
@@ -21,7 +17,7 @@ namespace Orbital
 	public:
 		BufferUnit(WeakRef<Mesh> mesh, WeakRef<Material> material);
 
-		void setModelMatrixUniform(WeakRef<Shader> shader, const Components::Transform& t);
+		void setModelMatrixUniform(WeakRef<Shader> shader, const Transform& t);
 		bool operator==(const BufferUnit& otherUnit);
 		void bind() const;
 		size_t getId() const { return m_id; }

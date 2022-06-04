@@ -30,7 +30,7 @@ namespace Orbital
 		Scope<VertexArray> m_vao;
 		Scope<VertexBuffer> m_vbo;
 		Scope<IndexBuffer> m_ibo;
-		const Components::Transform m_screenTransform = {
+		const Transform m_screenTransform = {
 			{ 0.0f, 0.0f, 0.0f },
 			{ 0.0f, 0.0f, 0.0f },
 			{ 2.0f, 2.0f, 0.0f }

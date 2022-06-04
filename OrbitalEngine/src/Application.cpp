@@ -5,6 +5,10 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 
+#define OE_DISPATCH_EVENT(eventType)\
+dispatcher.dispatch< ## eventType ## Event>([this]( ## eventType ## Event e) -> bool {\
+	return on##eventType(e);\
+});
 
 namespace Orbital
 {
@@ -35,8 +39,9 @@ namespace Orbital
 		Metrics::Initialize();
 		NativeScriptManager::Initialize();
 
-		m_scene = CreateRef<Scene>();
-		m_scene->initialize();
+		m_activeScene = &m_scene;
+		Entity::SetSceneReference(&m_activeScene);
+		m_scene.Initialize();
 	}
 
 	Application::~Application()
@@ -55,9 +60,9 @@ namespace Orbital
 	{
 		EventDispatcher dispatcher(e);
 
-		dispatcher.dispatch<KeyPressedEvent>([this](KeyPressedEvent& e) -> bool {
-			return onKeyPressed(e);
-		});
+		OE_DISPATCH_EVENT(KeyPressed);
+		OE_DISPATCH_EVENT(MouseButtonPressed);
+		OE_DISPATCH_EVENT(MouseScrolled);
 	}
 
 	void Application::run()

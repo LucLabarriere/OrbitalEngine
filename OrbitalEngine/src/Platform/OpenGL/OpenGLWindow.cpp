@@ -114,6 +114,18 @@ namespace Orbital
 		m_initialized = false;
 	}
 
+	void OpenGLWindow::enableCursor()
+	{
+		glfwSetInputMode(m_glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		glfwSetInputMode(m_glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	}
+
+	void OpenGLWindow::disableCursor()
+	{
+		glfwSetInputMode(m_glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(m_glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	}
+
 	void* OpenGLWindow::getNativeWindow() const
 	{
 		return m_glfwWindow;

@@ -2,11 +2,12 @@
 
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics.h"
+#include "Widget.h"
 #include "imgui.h"
 
 using namespace Orbital;
 
-class BatchesPanel
+class BatchesPanel : public Widget
 {
 public:
 	BatchesPanel() { }

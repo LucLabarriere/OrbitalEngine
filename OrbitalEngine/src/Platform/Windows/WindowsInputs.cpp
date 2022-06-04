@@ -29,6 +29,14 @@ namespace Orbital
 		return false;
 	}
 
+	void WindowsInputs::lockCursor(bool value)
+	{
+		if (value)
+			glfwSetInputMode(m_glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		else
+			glfwSetInputMode(m_glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+
 	const glm::vec2 WindowsInputs::getMousePosition() const
 	{
 		double xPos;

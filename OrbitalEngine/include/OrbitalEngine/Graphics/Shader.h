@@ -1,8 +1,8 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
-namespace 
-	Orbital
+
+namespace Orbital
 {
 	class ShaderManager;
 

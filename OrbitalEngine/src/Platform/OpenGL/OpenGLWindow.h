@@ -13,6 +13,8 @@ namespace Orbital
 		virtual bool shouldClose() override;
 		virtual void onUpdate() override;
 		virtual void shutdown() override;
+		virtual void enableCursor() override;
+		virtual void disableCursor() override;
 
 		virtual void* getNativeWindow() const override;
 		

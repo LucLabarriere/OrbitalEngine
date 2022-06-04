@@ -5,8 +5,8 @@
 
 static void renderTreeNode(Entity& entity, Ref<HierarchyPanel> panel)
 {
-	auto& hierarchy = entity.get<Components::Hierarchy>();
-	auto& tag = entity.get<Components::Tag>();
+	auto& hierarchy = entity.GetComponent<Hierarchy>();
+	auto& tag = entity.GetComponent<Tag>();
 	auto& children = hierarchy.getChildren();
 
 	bool nodeOpen = false;
@@ -15,7 +15,7 @@ static void renderTreeNode(Entity& entity, Ref<HierarchyPanel> panel)
 		ImGuiTreeNodeFlags_OpenOnDoubleClick |
 		ImGuiTreeNodeFlags_SpanAvailWidth;
 
-	if (panel->getSelectedEntityHandle() == entity.getHandle())
+	if (panel->getSelectedEntityHandle() == entity.GetHandle())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
@@ -44,7 +44,7 @@ static void renderTreeNode(Entity& entity, Ref<HierarchyPanel> panel)
 		if (payload)
 		{
 			Entity e = *static_cast<Entity*>(payload->Data);
-			e.get<Components::Hierarchy>().setParent(entity);
+			e.GetComponent<Hierarchy>().setParent(entity);
 		}
 		ImGui::EndDragDropTarget();
 	}
@@ -64,17 +64,16 @@ static void renderTreeNode(Entity& entity, Ref<HierarchyPanel> panel)
 	}
 }
 
-HierarchyPanel::HierarchyPanel(Ref<Scene>& scene)
-	: m_scene(scene)
+HierarchyPanel::HierarchyPanel()
 {
 
 }
 
 void HierarchyPanel::initialize()
 {
-	Entity entity = m_scene->getSceneEntity();
+	Entity entity = (*sActiveScene)->GetSceneEntity();
 
-	auto& hierarchy = entity.get<Components::Hierarchy>();
+	auto& hierarchy = entity.GetComponent<Hierarchy>();
 	m_sceneChildren = &hierarchy.getChildren();
 
 	m_treeNodes.resize(m_sceneChildren->size());
@@ -105,9 +104,9 @@ void HierarchyPanel::update()
 void HierarchyPanel::render()
 {
 	auto texture = TextureManager::Get("Icons").lock();
-	Entity entity = m_scene->getSceneEntity();
+	Entity entity = (*sActiveScene)->GetSceneEntity();
 
-	auto& hierarchy = entity.get<Components::Hierarchy>();
+	auto& hierarchy = entity.GetComponent<Hierarchy>();
 	m_sceneChildren = &hierarchy.getChildren();
 
 	bool p_open = true;
@@ -118,7 +117,7 @@ void HierarchyPanel::render()
 		bool createEntityButton = Tools::RenderIconButton(TextureIconIndex::Plus);
 
 		if (createEntityButton)
-			m_scene->createEntity("Entity");		
+			(*sActiveScene)->CreateEntity("Entity");
 
         ImGui::EndMenuBar();
     }

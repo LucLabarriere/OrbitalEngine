@@ -3,24 +3,24 @@
 #include "OrbitalEngine/Utils/Misc.h"
 #include "OrbitalEngine/Logic/Scene.h"
 #include "TreeNode.h"
+#include "Widget.h"
 
 using namespace Orbital;
 
-class HierarchyPanel : public std::enable_shared_from_this<HierarchyPanel>
+class HierarchyPanel : public std::enable_shared_from_this<HierarchyPanel>, Widget
 {
 public:
-	HierarchyPanel(Ref<Scene>& scene);
+	HierarchyPanel();
 	
 	void initialize();
 	void update();
 	void render();
 
 	Entity& getSelectedEntity() { return m_selectedEntity; };
-	entt::entity getSelectedEntityHandle() { return m_selectedEntity.getHandle(); };
+	entt::entity getSelectedEntityHandle() { return m_selectedEntity.GetHandle(); };
 	void setSelectedEntity(const Entity& entity) { m_selectedEntity = entity; }
 
 private:
-	Ref<Scene> m_scene;
 	std::vector<TreeNode> m_treeNodes;
 	Entity m_selectedEntity;
 

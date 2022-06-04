@@ -14,7 +14,7 @@ namespace Orbital
 		m_batches[0]->allocateMemory();
 	}
 
-	void BatchContainer::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
+	void BatchContainer::registerMesh(MeshRenderer& mr, Transform& t)
 	{
 		auto batchData = mr.getBatchData();
 
@@ -55,7 +55,7 @@ namespace Orbital
 		}
 	}
 
-	void BatchContainer::deleteMesh(Components::MeshRenderer& mr)
+	void BatchContainer::deleteMesh(MeshRenderer& mr)
 	{
 		for (auto& batch : m_batches)
 			batch->deleteMesh(mr);
@@ -71,12 +71,12 @@ namespace Orbital
 		}
 	}
 
-	void BatchManager::registerMesh(Components::MeshRenderer& mr, Components::Transform& t)
+	void BatchManager::registerMesh(MeshRenderer& mr, Transform& t)
 	{
 		m_batchContainers[mr.getMaterial().lock()->getId()]->registerMesh(mr, t);
 	}
 
-	void BatchManager::deleteMesh(Components::MeshRenderer& mr)
+	void BatchManager::deleteMesh(MeshRenderer& mr)
 	{
 		m_batchContainers[mr.getMaterial().lock()->getId()]->deleteMesh(mr);
 	}

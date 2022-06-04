@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Widget.h"
+
 using namespace Orbital;
 
-class AssetManagerPanel
+class AssetManagerPanel: public Widget
 {
 public:
 	AssetManagerPanel();

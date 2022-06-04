@@ -27,6 +27,7 @@ target_include_directories(${PROJECT_NAME}
 		${CMAKE_SOURCE_DIR}/vendor/entt/single_include
 		${CMAKE_SOURCE_DIR}/vendor/fmt/include
 		${CMAKE_SOURCE_DIR}/vendor/assimp/include
+		${CMAKE_SOURCE_DIR}/vendor/uuid_v4/
 	PRIVATE
 		src
 )

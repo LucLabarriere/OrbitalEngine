@@ -2,8 +2,8 @@
 
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics/Window.h"
-#include "OrbitalEngine/Graphics/CameraController.h"
 #include "OrbitalEngine/Components/NativeScript.h"
+#include "OrbitalEngine/Logic/Scene.h"
 
 namespace Orbital
 {
@@ -33,7 +33,8 @@ namespace Orbital
 
 	protected:
 		Scope<Window> m_window;
-		Ref<Scene> m_scene;
+		Scene m_scene;
+		Scene* m_activeScene;
 
 		Time m_averageTimePerFrame;
 		Time m_timeAtLastUpdate;

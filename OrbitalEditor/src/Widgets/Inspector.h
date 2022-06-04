@@ -1,7 +1,7 @@
 #pragma once
 #include "OrbitalEngine/Logic/Scene.h"
-#include "OrbitalEngine/Logic/Entity.h"
-#include "OrbitalEngine/Graphics/Texture.h"
+#include "OrbitalEngine/Graphics.h"
+#include "Widget.h"
 
 using namespace Orbital;
 
@@ -26,12 +26,12 @@ struct InspectedObject
 	> Value = Entity();
 };
 
-class Inspector
+class Inspector : public Widget
 {
 public:
 
 public:
-	static inline void Initialize(Ref<Scene>& scene) { s_instance = new Inspector(scene); }
+	static inline void Initialize() { s_instance = new Inspector(); }
 	static inline void Render() { s_instance->render(); };
 
 	static inline void SetEntity(const Entity& entity)
@@ -58,7 +58,7 @@ public:
 	static const InspectedObject& GetInspectedObject() { return s_instance->m_object; }
 
 private:
-	Inspector(Ref<Scene>& scene);
+	Inspector();
 
 	void render();
 	void renderEntity();
@@ -68,8 +68,7 @@ private:
 
 private:
 	static inline Inspector* s_instance = nullptr;
-
-	Ref<Scene> m_scene;
+	
 	InspectedObject m_object;
 	inline static const char* m_layerRange[OE_LAST_LAYER + 1] = {
 		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",

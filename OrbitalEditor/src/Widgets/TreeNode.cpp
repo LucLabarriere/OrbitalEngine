@@ -11,14 +11,14 @@ TreeNode::TreeNode()
 TreeNode::TreeNode(const Entity& entity, Ref<HierarchyPanel> panel)
 	: m_entity(entity), m_panel(panel)
 {
-	auto& hierarchy = m_entity.get<Components::Hierarchy>();
+	auto& hierarchy = m_entity.GetComponent<Hierarchy>();
 	const auto& children = hierarchy.getChildren();
 	for (auto& child : children)
 	{
 		m_children.push_back(TreeNode(child, m_panel));
 	}
 
-	m_title = m_entity.get<Components::Tag>();
+	m_title = m_entity.GetComponent<Tag>();
 }
 
 void TreeNode::initialize(const Entity& entity, Ref<HierarchyPanel> panel)
@@ -26,7 +26,7 @@ void TreeNode::initialize(const Entity& entity, Ref<HierarchyPanel> panel)
 	m_entity = entity;
 	m_panel = panel;
 
-	auto& hierarchy = m_entity.get<Components::Hierarchy>();
+	auto& hierarchy = m_entity.GetComponent<Hierarchy>();
 	const auto& children = hierarchy.getChildren();
 	m_children.resize(children.size());
 
@@ -35,7 +35,7 @@ void TreeNode::initialize(const Entity& entity, Ref<HierarchyPanel> panel)
 		m_children[i].initialize(children[i], m_panel);
 	}
 
-	m_title = m_entity.get<Components::Tag>();
+	m_title = m_entity.GetComponent<Tag>();
 }
 
 void TreeNode::update()
@@ -60,7 +60,7 @@ void TreeNode::render()
 		ImGuiTreeNodeFlags_OpenOnDoubleClick |
 		ImGuiTreeNodeFlags_SpanAvailWidth;
 
-	if (m_panel->getSelectedEntityHandle() == m_entity.getHandle())
+	if (m_panel->getSelectedEntityHandle() == m_entity.GetHandle())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
@@ -89,7 +89,7 @@ void TreeNode::render()
 		if (payload)
 		{
 			Entity e = *static_cast<Entity*>(payload->Data);
-			e.get<Components::Hierarchy>().setParent(m_entity);
+			e.GetComponent<Hierarchy>().setParent(m_entity);
 		}
 		ImGui::EndDragDropTarget();
 	}

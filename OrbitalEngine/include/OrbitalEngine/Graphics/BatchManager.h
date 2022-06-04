@@ -9,8 +9,8 @@ namespace Orbital
 	public:
 		BatchContainer(const WeakRef<Material>& material);
 
-		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
-		void deleteMesh(Components::MeshRenderer& mr);
+		void registerMesh(MeshRenderer& mr, Transform& t);
+		void deleteMesh(MeshRenderer& mr);
 		void renderBatches();
 
 		const std::vector<Ref<Batch>>& getBatches() const { return m_batches; }
@@ -27,8 +27,8 @@ namespace Orbital
 	public:
 		BatchManager();
 
-		void registerMesh(Components::MeshRenderer& mr, Components::Transform& t);
-		void deleteMesh(Components::MeshRenderer& mr);
+		void registerMesh(MeshRenderer& mr, Transform& t);
+		void deleteMesh(MeshRenderer& mr);
 		void renderBatches();
 		void onUpdate();
 		size_t getCount() const { return m_batchContainers.size(); }

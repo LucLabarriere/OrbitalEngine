@@ -2,11 +2,12 @@
 #include "Widgets/Inspector.h"
 #include "OrbitalEngine/Graphics.h"
 #include "OrbitalEngine/Utils.h"
+#include "Widgets/Widget.h"
 
-class Clipboard
+class Clipboard : public Widget
 {
 public:
-	static void Initialize(WeakRef<Scene> scene) { s_instance = new Clipboard(scene); };
+	static void Initialize() { s_instance = new Clipboard(); };
 	static void Copy(const InspectedObject& object)
 	{
 		s_instance->m_object.Tag = object.Tag;
@@ -17,12 +18,12 @@ public:
 	{
 		if (s_instance->m_object.Tag == InspectedObjectTag::Entity)
 		{
-			s_instance->m_scene.lock()->duplicateEntity(std::get<Entity>(s_instance->m_object.Value));
+			(*s_instance->sActiveScene)->DuplicateEntity(std::get<Entity>(s_instance->m_object.Value));
 		}
 	};
 
 private:
-	Clipboard(WeakRef<Scene> scene) : m_scene(scene), m_object()
+	Clipboard() : m_object()
 	{
 		m_object.Tag = InspectedObjectTag::None; m_object.Value = false;
 	}
@@ -30,7 +31,6 @@ private:
 private:
 	static inline Clipboard* s_instance = nullptr;
 
-	WeakRef<Scene> m_scene;
 	InspectedObject m_object;
 
 };

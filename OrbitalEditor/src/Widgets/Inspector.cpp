@@ -1,9 +1,10 @@
 #include "Inspector.h"
 #include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Components.h"
 
 
-Inspector::Inspector(Ref<Scene>& scene)
-	: m_scene(scene), m_object()
+Inspector::Inspector()
+	: m_object()
 {
 
 }
@@ -41,16 +42,16 @@ void Inspector::renderEntity()
 {
 	auto& entity = std::get<Entity>(m_object.Value);
 
-	if (entity.isValid())
+	if (entity.IsValid())
 	{
-		auto& tag = entity.get<Components::Tag>();
-		auto& layerId = entity.get<LayerID>();
-		auto& hiearchy = entity.get<Components::Hierarchy>();
-		auto* transform = entity.tryGet<Components::Transform>();
-		auto* meshRenderer = entity.tryGet<Components::MeshRenderer>();
-		auto* directionalLight = entity.tryGet<Components::DirectionalLight>();
-		auto* pointLight = entity.tryGet<Components::PointLight>();
-		auto* spotLight = entity.tryGet<Components::SpotLight>();
+		auto& tag = entity.GetComponent<Tag>();
+		auto& layerId = entity.GetComponent<LayerID>();
+		auto& hiearchy = entity.GetComponent<Hierarchy>();
+		auto* transform = entity.TryGetComponent<Transform>();
+		auto* meshRenderer = entity.TryGetComponent<MeshRenderer>();
+		auto* directionalLight = entity.TryGetComponent<DirectionalLight>();
+		auto* pointLight = entity.TryGetComponent<PointLight>();
+		auto* spotLight = entity.TryGetComponent<SpotLight>();
 
 		if (ImGui::CollapsingHeader("General"))
 		{
@@ -58,10 +59,10 @@ void Inspector::renderEntity()
 			char buffer[64];
 			strcpy(buffer, tag.c_str());
 			ImGui::InputText("Tag", buffer, 64);
-			Components::Tag tag(buffer);
+			Tag tag(buffer);
 
 			if (buffer[0] != 0)
-				m_scene->renameEntity(entity, tag);
+				(*sActiveScene)->RenameEntity(entity, tag);
 
 			//LayerID
 			int bufferLayerId = (int)layerId;
@@ -69,7 +70,7 @@ void Inspector::renderEntity()
 
 			if ((LayerID)bufferLayerId != layerId)
 			{
-				entity.changeLayer(bufferLayerId);
+				entity.ChangeLayer(bufferLayerId);
 			}
 		}
 
@@ -83,7 +84,7 @@ void Inspector::renderEntity()
 
 				if (ImGui::Button("X"))
 				{
-					entity.remove<Components::Transform>();
+					entity.RemoveComponent<Transform>();
 				}
 			}
 		}
@@ -92,7 +93,7 @@ void Inspector::renderEntity()
 		{
 			if (ImGui::CollapsingHeader("MeshRenderer"))
 			{
-				Components::MeshRenderer::DrawData drawData = meshRenderer->getDrawData();
+				MeshRenderer::DrawData drawData = meshRenderer->getDrawData();
 
 				ImGui::Checkbox("Static", &drawData.staticDraw);
 				ImGui::Checkbox("Batched", &drawData.batchDraw);
@@ -105,7 +106,7 @@ void Inspector::renderEntity()
 					// TODO correct here, set hidden should be done for the children of the children
 					for (auto child : hiearchy)
 					{
-						child.get<Components::MeshRenderer>().setHidden(drawData.hidden);
+						child.GetComponent<MeshRenderer>().setHidden(drawData.hidden);
 					}
 				}
 
@@ -148,7 +149,7 @@ void Inspector::renderEntity()
 				// Delete
 				if (ImGui::Button("X"))
 				{
-					entity.remove<Components::MeshRenderer>();
+					entity.RemoveComponent<MeshRenderer>();
 					meshRenderer->destroy();
 				}
 			}
@@ -165,7 +166,7 @@ void Inspector::renderEntity()
 
 				if (ImGui::Button("X"))
 				{
-					entity.remove<Components::DirectionalLight>();
+					entity.RemoveComponent<DirectionalLight>();
 				}
 			}
 		}
@@ -184,7 +185,7 @@ void Inspector::renderEntity()
 				ImGui::DragFloat("Quadratic", &pointLight->QuadraticAttenuation, 0.001f);
 				if (ImGui::Button("X"))
 				{
-					entity.remove<Components::PointLight>();
+					entity.RemoveComponent<PointLight>();
 				}
 			}
 		}
@@ -207,7 +208,7 @@ void Inspector::renderEntity()
 				ImGui::DragFloat("Edge %", &spotLight->Edge, 0.01f);
 				if (ImGui::Button("X"))
 				{
-					entity.remove<Components::SpotLight>();
+					entity.RemoveComponent<SpotLight>();
 				}
 			}
 		}
@@ -226,23 +227,23 @@ void Inspector::renderEntity()
 				{
 					if (!transform)
 					{
-						transform = &entity.add<Components::Transform>();
+						transform = &entity.AddComponent<Transform>();
 					}
-					entity.add<Components::MeshRenderer>("Cube", transform);
+					entity.AddComponent<MeshRenderer>("Cube", transform);
 				}
 			}
 			if (!transform)
 			{
 				if (ImGui::Selectable("Transform"))
 				{
-					entity.add<Components::Transform>();
+					entity.AddComponent<Transform>();
 				}
 			}
 			if (!directionalLight)
 			{
 				if (ImGui::Selectable("DirectionalLight"))
 				{
-					entity.add<Components::DirectionalLight>();
+					entity.AddComponent<DirectionalLight>();
 				}
 			}
 			if (!pointLight)
@@ -251,10 +252,10 @@ void Inspector::renderEntity()
 				{
 					if (!transform)
 					{
-						entity.add<Components::Transform>();
-						transform = entity.tryGet<Components::Transform>();
+						entity.AddComponent<Transform>();
+						transform = entity.TryGetComponent<Transform>();
 					}
-					entity.add<Components::PointLight>(&transform->Position());
+					entity.AddComponent<PointLight>(&transform->Position());
 				}
 			}
 			if (!spotLight)
@@ -263,10 +264,10 @@ void Inspector::renderEntity()
 				{
 					if (!transform)
 					{
-						entity.add<Components::Transform>();
-						transform = entity.tryGet<Components::Transform>();
+						entity.AddComponent<Transform>();
+						transform = entity.TryGetComponent<Transform>();
 					}
-					entity.add<Components::SpotLight>(&transform->Position());
+					entity.AddComponent<SpotLight>(&transform->Position());
 				}
 			}
 			ImGui::EndPopup();
@@ -275,7 +276,7 @@ void Inspector::renderEntity()
 		ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f, 0.1f, 0.1f, 1.0f });
 		if (ImGui::Button("Delete entity"))
 		{
-			m_scene->requireDelete(entity);
+			(*sActiveScene)->RequireDelete(entity);
 		}
 		ImGui::PopStyleColor();
 	}

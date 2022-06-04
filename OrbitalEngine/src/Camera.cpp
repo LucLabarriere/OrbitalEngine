@@ -1,4 +1,4 @@
-#include "OrbitalEngine/Graphics/Camera.h"
+#include "OrbitalEngine/Components/Camera.h"
 #include "OrbitalEngine/Utils.h"
 
 namespace Orbital

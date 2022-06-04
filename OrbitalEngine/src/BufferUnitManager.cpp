@@ -9,7 +9,7 @@ namespace Orbital
 
 	}
 
-	void BufferUnitManager::registerMesh(const Components::MeshRenderer& mr, Components::Transform& t)
+	void BufferUnitManager::registerMesh(const MeshRenderer& mr, Transform& t)
 	{
 		auto mesh = mr.getMesh().lock();
 		auto material = mr.getMaterial().lock();

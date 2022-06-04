@@ -26,8 +26,8 @@ public:
 	virtual void onStart() override { };
 	virtual void onUpdate(Time dt) override;
 
-	void play() { m_state = EditorState::Playing; }
-	void stop() { m_state = EditorState::Stopped; }
+	void play();
+	void stop();
 	bool isPlaying() const { return m_state == EditorState::Playing ? true : false; }
 
 	virtual bool onMouseScrolled(MouseScrolledEvent& e) override;
@@ -42,19 +42,21 @@ public:
 			Settings::Get(Settings::UIntSetting::RenderingAreaWidth) = width;
 			Settings::Get(Settings::UIntSetting::RenderingAreaHeight) = height;
 			Settings::Get(Settings::FloatSetting::AspectRatio) = (float)width / height;
-			m_scene->getCamera()->setAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
+			m_activeScene->SetAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
 			Renderer::OnWindowResized();
 		}
 	}
 
 private:
-	Ref<CameraController> m_cameraController;
-
 	EditorState m_state = EditorState::Stopped;
-	unsigned int m_renderAreaWidth;
-	unsigned int m_renderAreaHeight;
+	unsigned int m_renderAreaWidth = 0;
+	unsigned int m_renderAreaHeight = 0;
 	Ref<Viewport> m_viewport;
 	Ref<HierarchyPanel> m_hierarchyPanel;
+	Entity m_editorCamera;
+	Entity m_mainCamera;
+	Scene m_runtimeScene;
+
 	Scope<MetricsPanel> m_metricsPanel;
 	Scope<BatchesPanel> m_batchesPanel;
 	Scope<AssetManagerPanel> m_assetManagerPanel;

@@ -11,7 +11,7 @@ namespace Orbital
 	private:
 		struct RenderData
 		{
-			const Components::Transform* transform;
+			const Transform* transform;
 			const Vec2& texCoordsMultiplicator;
 			size_t materialId;
 			size_t meshId;
@@ -23,7 +23,7 @@ namespace Orbital
 	public:
 		BufferUnitManager();
 
-		void registerMesh(const Components::MeshRenderer& mr, Components::Transform& t);
+		void registerMesh(const MeshRenderer& mr, Transform& t);
 		void renderUnits();
 		void push(WeakRef<Mesh>& mesh);
 		void push(WeakRef<Material>& material, bool fill = true);

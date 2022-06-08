@@ -3,6 +3,12 @@
 
 namespace Orbital
 {
+	Hierarchy::Hierarchy()
+		: mEntity(Entity()), mParent(Entity())
+	{
+
+	}
+
 	Hierarchy::Hierarchy(const Entity& entity, const Entity& parent)
 		: mEntity(entity), mParent(parent)
 	{
@@ -15,15 +21,33 @@ namespace Orbital
 
 	}
 
+	void Hierarchy::SetEntity(const Entity& entity)
+	{
+		mEntity = entity;
+	}
+
 	void Hierarchy::SetParent(const Entity& parent)
 	{
 		// Removing former parent
-		auto& parentHierarchy = mParent.GetComponent<Hierarchy>();
-		parentHierarchy.RemoveChild(mEntity);
+		if (mParent.IsValid())
+		{
+			auto& parentHierarchy = mParent.GetComponent<Hierarchy>();
+			parentHierarchy.RemoveChild(mEntity);
+		}
 
 		// Setting new parent
-		mParent = Entity(parent);
-		mParent.GetComponent<Hierarchy>().AddChild(mEntity);
+		mParent = parent;
+
+		if (mParent.IsValid())
+			mParent.GetComponent<Hierarchy>().AddChild(mEntity);
+	}
+
+	void Hierarchy::SetParent(const UUID& uuid)
+	{
+		if (OE::ActiveScene->IsValid(uuid))
+			SetParent(Entity::FromUUID(uuid));
+		else
+			SetParent(Entity());
 	}
 
 	void Hierarchy::RemoveChild(const Entity& entity)
@@ -38,7 +62,17 @@ namespace Orbital
 		return mParent;
 	}
 
+	const Entity& Hierarchy::GetParent() const
+	{
+		return mParent;
+	}
+
 	std::vector<Entity>& Hierarchy::GetChildren()
+	{
+		return mChildren;
+	}
+
+	const std::vector<Entity>& Hierarchy::GetChildren() const
 	{
 		return mChildren;
 	}

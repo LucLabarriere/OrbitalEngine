@@ -71,7 +71,7 @@ HierarchyPanel::HierarchyPanel()
 
 void HierarchyPanel::Initialize()
 {
-	Entity entity = (*sActiveScene)->GetSceneEntity();
+	Entity entity = OE::ActiveScene->GetSceneEntity();
 
 	auto& hierarchy = entity.GetComponent<Hierarchy>();
 	mSceneChildren = &hierarchy.GetChildren();
@@ -104,7 +104,7 @@ void HierarchyPanel::Update()
 void HierarchyPanel::Render()
 {
 	auto texture = TextureManager::Get("Icons").lock();
-	Entity entity = (*sActiveScene)->GetSceneEntity();
+	Entity entity = OE::ActiveScene->GetSceneEntity();
 
 	auto& hierarchy = entity.GetComponent<Hierarchy>();
 	mSceneChildren = &hierarchy.GetChildren();
@@ -117,7 +117,7 @@ void HierarchyPanel::Render()
 		bool createEntityButton = Tools::RenderIconButton(TextureIconIndex::Plus);
 
 		if (createEntityButton)
-			(*sActiveScene)->CreateEntity("Entity");
+			OE::ActiveScene->CreateEntity("Entity");
 
         ImGui::EndMenuBar();
     }

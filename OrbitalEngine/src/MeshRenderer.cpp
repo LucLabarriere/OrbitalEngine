@@ -65,6 +65,11 @@ namespace Orbital
 		mMesh = MeshManager::Get(tag);
 	}
 
+	MeshRenderer::DrawData& MeshRenderer::GetDrawData()
+	{
+		return mDrawData;
+	}
+
 	MeshRenderer::DrawData MeshRenderer::GetDrawData() const
 	{
 		return mDrawData;

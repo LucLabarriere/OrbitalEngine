@@ -14,6 +14,8 @@ namespace Orbital
 		Entity GetEntity(const UUID& uuid);
 		Entity GetSceneEntity();
 		void DeleteEntity(const entt::entity& handle, const LayerID& layerId);
+		bool IsValid(const Entity& entity) const;
+		bool IsValid(const UUID& uuid) const;
 		bool IsValid(const entt::entity& handle, const LayerID& layerId) const;
 		Entity CreateEntity(const Tag& tag, LayerID layerId = 0);
 		Entity CreateEntity(const Tag& tag, LayerID layerId, const entt::entity& handle);
@@ -148,3 +150,8 @@ namespace Orbital
 		Entity mMainEntity;
 	};
 }
+
+/* TODO:
+ * Don't use entt::handle in the the code but only the UUID.
+ * Find a way to export data and import them from serializing more easily (decorating ?)
+ */

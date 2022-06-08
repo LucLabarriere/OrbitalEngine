@@ -8,7 +8,7 @@
 
 using namespace Orbital;
 
-class HierarchyPanel : public std::enable_shared_from_this<HierarchyPanel>, Widget
+class HierarchyPanel : public std::enable_shared_from_this<HierarchyPanel>
 {
 public:
 	HierarchyPanel();

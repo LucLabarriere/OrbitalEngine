@@ -4,7 +4,7 @@
 #include "OrbitalEngine/Utils.h"
 #include "Widgets/Widget.h"
 
-class Clipboard : public Widget
+class Clipboard
 {
 public:
 	static void Initialize() { sInstance = new Clipboard(); };
@@ -18,7 +18,7 @@ public:
 	{
 		if (sInstance->mObject.Tag == InspectedObjectTag::Entity)
 		{
-			(*sInstance->sActiveScene)->DuplicateEntity(std::get<Entity>(sInstance->mObject.Value));
+			OE::ActiveScene->DuplicateEntity(std::get<Entity>(sInstance->mObject.Value));
 		}
 	};
 

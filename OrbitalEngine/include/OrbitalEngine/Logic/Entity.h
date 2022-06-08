@@ -21,16 +21,15 @@ namespace Orbital
 
 		void ChangeLayer(LayerID layerId);
 		void Destroy();
-		static void SetSceneReference(Scene** scene) { sActiveScene = scene; }
 
 		entt::entity GetHandle() const { return mHandle; }
 		LayerID GetLayerID() const { return mLayerId; }
 		bool IsValid() const;
+		static Entity FromUUID(const UUID& uuid);
 
 		bool operator==(const Entity& e);
 
 	private:
-		static inline Scene** sActiveScene;
 		LayerID mLayerId = 0;
 		entt::entity mHandle = entt::null;
 	};

@@ -5,7 +5,7 @@
 
 using namespace Orbital;
 
-class FileExplorerPanel : public Widget
+class FileExplorerPanel
 {
 public:
 	FileExplorerPanel();

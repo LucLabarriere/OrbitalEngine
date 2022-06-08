@@ -37,10 +37,6 @@ namespace Orbital
 		Renderer::InitializeBatchManager();
 		Renderer::InitializeFramebuffers();
 		Metrics::Initialize();
-
-		mActiveScene = &mScene;
-		Entity::SetSceneReference(&mActiveScene);
-		mScene.Initialize();
 	}
 
 	Application::~Application()

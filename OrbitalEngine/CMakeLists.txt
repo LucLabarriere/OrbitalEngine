@@ -28,6 +28,7 @@ target_include_directories(${PROJECT_NAME}
 		${CMAKE_SOURCE_DIR}/vendor/fmt/include
 		${CMAKE_SOURCE_DIR}/vendor/assimp/include
 		${CMAKE_SOURCE_DIR}/vendor/uuid_v4/
+		${CMAKE_SOURCE_DIR}/vendor/yaml-cpp-0.7.0/include
 	PRIVATE
 		src
 )
@@ -35,10 +36,12 @@ target_include_directories(${PROJECT_NAME}
 target_precompile_headers(${PROJECT_NAME} PUBLIC include/OrbitalEngine/Utils/Context.h)
 
 target_link_libraries(${PROJECT_NAME}
+	PUBLIC
+		yaml-cpp::yaml-cpp
+		imgui
 	PRIVATE
 		glad2
 		glfw
-		imgui
 		fmt::fmt
 		assimp::assimp
 )

@@ -3,7 +3,7 @@
 namespace Orbital
 {
 	FirstPersonController::FirstPersonController(const Entity& e)
-		: ScriptableEntity(e)
+		: NativeScript(e)
 	{
 		mCamera = &GetComponent<Camera>();
 	}
@@ -60,7 +60,7 @@ namespace Orbital
 		mFormerMousePosition.y = mousePosition.y;
 	}
 
-	void FirstPersonController::onExit()
+	void FirstPersonController::OnExit()
 	{
 		Inputs::LockCursor(false);
 	}
@@ -71,16 +71,36 @@ namespace Orbital
 		return false;
 	}
 
-	void FirstPersonController::SetPosition(const Vec3& position)
-	{
-		mCamera->SetPosition(position);
-	}
-
 	void FirstPersonController::Rotate(const Vec2& rotation)
 	{
 		mCamera->Rotate(rotation);
 	}
 
+	void FirstPersonController::SetPosition(const Vec3& position)
+	{
+		mCamera->SetPosition(position);
+	}
+
+	void FirstPersonController::SetTranslationSpeed(float speed)
+	{
+		mTranslationSpeed = speed;
+	}
+
+	void FirstPersonController::SetRotationSpeed(float speed)
+	{
+		mRotationSpeed = speed;
+	}
+
+	void FirstPersonController::SetZoomSpeed(float speed)
+	{
+		mZoomSpeed = speed;
+	}
+
 	float& FirstPersonController::GetRotationSpeed() { return mRotationSpeed; }
 	float& FirstPersonController::GetTranslationSpeed() { return mTranslationSpeed; }
+	float& FirstPersonController::GetZoomSpeed() { return mZoomSpeed; }
+
+	float FirstPersonController::GetRotationSpeed() const { return mRotationSpeed; }
+	float FirstPersonController::GetTranslationSpeed() const { return mTranslationSpeed; }
+	float FirstPersonController::GetZoomSpeed() const { return mZoomSpeed; }
 }

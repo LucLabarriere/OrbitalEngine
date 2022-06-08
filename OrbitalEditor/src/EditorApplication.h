@@ -9,6 +9,10 @@
 
 using namespace Orbital;
 
+// TODO move this out from this file
+OE_SCRIPT_INFO(FreeCameraController)
+OE_SCRIPT_INFO(FirstPersonController)
+
 class EditorApplication : public Application, public std::enable_shared_from_this<EditorApplication>
 {
 public:
@@ -42,7 +46,7 @@ public:
 			Settings::Get(Settings::UIntSetting::RenderingAreaWidth) = width;
 			Settings::Get(Settings::UIntSetting::RenderingAreaHeight) = height;
 			Settings::Get(Settings::FloatSetting::AspectRatio) = (float)width / height;
-			mActiveScene->SetAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
+			OE::ActiveScene->SetAspectRatio(Settings::Get(Settings::FloatSetting::AspectRatio));
 			Renderer::OnWindowResized();
 		}
 	}
@@ -55,7 +59,9 @@ private:
 	Ref<HierarchyPanel> mHierarchyPanel;
 	Entity mEditorCamera;
 	Entity mMainCamera;
-	Scene mRuntimeScene;
+
+	SceneManager mRuntimeSceneManager;
+	std::string mCurrentSceneTag;
 
 	Scope<MetricsPanel> mMetricsPanel;
 	Scope<BatchesPanel> mBatchesPanel;

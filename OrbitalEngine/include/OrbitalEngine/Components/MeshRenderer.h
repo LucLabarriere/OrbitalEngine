@@ -37,6 +37,7 @@ namespace Orbital
 		void Destroy();
 		void SetMesh(const std::string& tag);
 
+		DrawData& GetDrawData();
 		DrawData GetDrawData() const;
 		BatchData GetBatchData() const;
 		WeakRef<Material> GetMaterial() const;
@@ -58,5 +59,35 @@ namespace Orbital
 
 		DrawData mDrawData;
 		BatchData mBatchData;
+	};
+}
+
+namespace YAML
+{
+	template<>
+	struct convert<Orbital::MeshRenderer>
+	{
+		static Node encode(const Orbital::MeshRenderer& mr)
+		{
+			Node node;
+			node["StaticDraw"] = mr.GetDrawData().staticDraw;
+			node["BatchDraw"] = mr.GetDrawData().batchDraw;
+			node["Hidden"] = mr.GetDrawData().hidden;
+			node["Material"] = mr.GetMaterial().lock()->GetTag();
+			node["Mesh"] = mr.GetMesh().lock()->GetTag();
+			node["TexCoordsMultiplicator"] = mr.GetTexCoordsMultiplicator();
+			return node;
+		}
+
+		static bool decode(const Node& node, Orbital::MeshRenderer& mr)
+		{
+			mr.GetDrawData().staticDraw = node["StaticDraw"].as<bool>();
+			mr.GetDrawData().batchDraw = node["BatchDraw"].as<bool>();
+			mr.GetDrawData().hidden = node["Hidden"].as<bool>();
+			mr.SetMaterial(node["Material"].as<std::string>());
+			mr.SetMesh(node["Mesh"].as<std::string>());
+			mr.GetTexCoordsMultiplicator() = node["TexCoordsMultiplicator"].as<Orbital::Vec2>();
+			return true;
+		}
 	};
 }

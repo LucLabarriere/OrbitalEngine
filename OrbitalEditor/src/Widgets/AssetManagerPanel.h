@@ -4,7 +4,7 @@
 
 using namespace Orbital;
 
-class AssetManagerPanel: public Widget
+class AssetManagerPanel
 {
 public:
 	AssetManagerPanel();

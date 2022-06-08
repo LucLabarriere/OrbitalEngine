@@ -7,7 +7,7 @@
 
 using namespace Orbital;
 
-class BatchesPanel : public Widget
+class BatchesPanel
 {
 public:
 	BatchesPanel() { }

@@ -62,7 +62,7 @@ void Inspector::RenderEntity()
 			Tag tag(buffer);
 
 			if (buffer[0] != 0)
-				(*sActiveScene)->RenameEntity(entity, tag);
+				OE::ActiveScene->RenameEntity(entity, tag);
 
 			//LayerID
 			int bufferLayerId = (int)layerId;
@@ -276,7 +276,7 @@ void Inspector::RenderEntity()
 		ImGui::PushStyleColor(ImGuiCol_Button, { 1.0f, 0.1f, 0.1f, 1.0f });
 		if (ImGui::Button("Delete entity"))
 		{
-			(*sActiveScene)->RequireDelete(entity);
+			OE::ActiveScene->RequireDelete(entity);
 		}
 		ImGui::PopStyleColor();
 	}

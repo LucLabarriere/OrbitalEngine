@@ -14,6 +14,7 @@
 #include <glm/gtx/transform.hpp>
 #include <functional>
 #include <entt/entt.hpp>
+#include <yaml-cpp/yaml.h>
 
 #ifdef __INTELLISENSE__
 #pragma diag_suppress 2500
@@ -42,8 +43,8 @@
 
 // Setting up macros
 #define OE_ASSERT(x, ...) { if(!(x)) { Logger::Critical(__VA_ARGS__); DEBUGBREAK; }}
-#define OE_RAISE_SIGSEGV(...) { Logger::Critical(__VA_ARGS__); raise(SIGSEGV); }
-#define OE_NOT_IMPLEMENTED() { Logger::Critical("Function {} is not implemented.", __func__); raise(SIGSEGV); }
+#define OE_RAISE_SIGSEGV(...) { Logger::Critical(__VA_ARGS__); DEBUGBREAK; }
+#define OE_NOT_IMPLEMENTED() { Logger::Critical("Function {} is not implemented.", __func__); DEBUGBREAK; }
 #define OE_BIT(x) 1 << x
 
 #include "Constants.h"

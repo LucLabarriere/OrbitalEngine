@@ -2,12 +2,30 @@
 
 namespace Orbital
 {
-	FreeCameraController::FreeCameraController(const Entity& e)
-		: ScriptableEntity(e)
+	FreeCameraController::FreeCameraController()
+		: NativeScript()
 	{
 		// TODO: remove all the setting here
 		// Check how and when the Constructor, OnLoad and OnStart methods should be called
 		// Move the position to a transform component and use it instead
+		mCamera = &GetComponent<Camera>();
+	}
+
+	FreeCameraController::FreeCameraController(const Entity& e)
+		: NativeScript(e)
+	{
+		// TODO: remove all the setting here
+		// Check how and when the Constructor, OnLoad and OnStart methods should be called
+		// Move the position to a transform component and use it instead
+		mCamera = &GetComponent<Camera>();
+	}
+
+	FreeCameraController::FreeCameraController(const FreeCameraController& other)
+		: NativeScript(Entity(other.GetLayerID(), other.GetHandle()))
+		, mTranslationSpeed(other.mTranslationSpeed)
+		, mRotationSpeed(other.mRotationSpeed)
+		, mZoomSpeed(other.mZoomSpeed)
+	{
 		mCamera = &GetComponent<Camera>();
 	}
 
@@ -92,6 +110,21 @@ namespace Orbital
 		mCamera->SetPosition(position);
 	}
 
+	void FreeCameraController::SetTranslationSpeed(float speed)
+	{
+		mTranslationSpeed = speed;
+	}
+
+	void FreeCameraController::SetRotationSpeed(float speed)
+	{
+		mRotationSpeed = speed;
+	}
+
+	void FreeCameraController::SetZoomSpeed(float speed)
+	{
+		mZoomSpeed = speed;
+	}
+
 	void FreeCameraController::Rotate(const Vec2& rotation)
 	{
 		mCamera->Rotate(rotation);
@@ -99,4 +132,8 @@ namespace Orbital
 
 	float& FreeCameraController::GetRotationSpeed() { return mRotationSpeed; }
 	float& FreeCameraController::GetTranslationSpeed() { return mTranslationSpeed; }
+	float& FreeCameraController::GetZoomSpeed() { return mZoomSpeed; }
+	float FreeCameraController::GetRotationSpeed() const { return mRotationSpeed; }
+	float FreeCameraController::GetTranslationSpeed() const { return mTranslationSpeed; }
+	float FreeCameraController::GetZoomSpeed() const { return mZoomSpeed; }
 }

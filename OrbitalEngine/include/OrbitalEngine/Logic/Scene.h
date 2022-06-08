@@ -9,33 +9,37 @@
 namespace Orbital
 {
 	class Camera;
+	class SceneManager;
 
 	class Scene : public ECS
 	{
 	public:
 		// Initializing
-		Scene();
+		Scene(const std::string& tag);
+		~Scene();
 		virtual void Initialize() override;
+		Scene Copy();
 		Scene Copy(Scene& newScene);
-
-		void SetMainCamera(const Entity& camera) { mMainCamera = camera; }
-		void SetUpdating(bool value);
 
 		// Rendering
 		void Begin();
 		void End();
 		void Render();
-		void OnStart();
-		void OnLoad();
-		void OnExit();
 		void OnUpdate(Time dt);
 
 		// Tools
 		void SetAspectRatio(float aspectRatio);
 		void Serialize();
+		void SetMainCamera(const Entity& camera) { mMainCamera = camera; }
+		void SetUpdating(bool value);
+
+		const std::string& GetTag() const { return mTag; }
 
 	private:
-			Entity mMainCamera;
+		friend SceneManager;
+
+		Entity mMainCamera;
+		std::string mTag;
 	};
 }
 

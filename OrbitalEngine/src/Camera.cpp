@@ -11,6 +11,16 @@ namespace Orbital
 		UpdateMatrices();
 	}
 
+	Camera::Camera(const Camera& other)
+		: mPosition(other.mPosition), mUp(other.mUp), mFront(other.mFront)
+		, mRight(other.mRight), mRotation(other.mRotation), mFov(other.mFov)
+		, mAspectRatio((float)Settings::Get(Settings::UIntSetting::WindowWidth) / (float)Settings::Get(Settings::UIntSetting::WindowHeight))
+		, mViewMatrix(other.mViewMatrix), mProjectionMatrix(other.mProjectionMatrix), mVPMatrix(other.mVPMatrix)
+
+	{
+
+	}
+
 	void Camera::UpdateMatrices()
 	{
 		mFront.x = cos(glm::radians(mRotation.y)) * cos(glm::radians(mRotation.x));

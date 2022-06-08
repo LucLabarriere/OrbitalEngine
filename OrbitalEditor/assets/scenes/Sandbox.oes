@@ -1,0 +1,227 @@
+Scene Tag: Sandbox
+Scene UUID: 0f164faa-027e-44d7-8730-388396d023ee
+0:
+  4e28e5b7-7366-4a0c-b840-b96add69ce67:
+    Tag: Sun
+    Parent: 0f164faa-027e-44d7-8730-388396d023ee
+    DirectionalLight:
+      Direction:
+        - -0.300000012
+        - -1
+        - -0.300000012
+      Ambient:
+        - 0.100000001
+        - 0.100000001
+        - 0.100000001
+      Diffuse:
+        - 1
+        - 1
+        - 0.899999976
+      Specular:
+        - 1
+        - 1
+        - 0.899999976
+  897c3d19-a122-4d81-8a7f-8b2073d12b5c:
+    Tag: Point Light2
+    Parent: 0f164faa-027e-44d7-8730-388396d023ee
+    Transform:
+      Position:
+        - 1.29999995
+        - 0.5
+        - 0
+      Rotation:
+        - 0
+        - 0
+        - 0
+      Scale:
+        - 0.100000001
+        - 0.100000001
+        - 0.100000001
+    MeshRenderer:
+      StaticDraw: false
+      BatchDraw: true
+      Hidden: false
+      Material: Blank
+      Mesh: Cube
+      TexCoordsMultiplicator:
+        - 1
+        - 1
+    PointLight:
+      Ambient:
+        - 0.200000003
+        - 0.200000003
+        - 0.200000003
+      Diffuse:
+        - 1
+        - 0
+        - 0
+      Specular:
+        - 1
+        - 0
+        - 0
+      ConstantAttenuation: 1
+      LinearAttenuation: 0.100000001
+      QuadraticAttenuation: 2
+  2003badf-14db-44e5-9eac-023120a29d5b:
+    Tag: Point Light
+    Parent: 0f164faa-027e-44d7-8730-388396d023ee
+    Transform:
+      Position:
+        - 0
+        - 0.5
+        - 1.29999995
+      Rotation:
+        - 0
+        - 0
+        - 0
+      Scale:
+        - 0.100000001
+        - 0.100000001
+        - 0.100000001
+    MeshRenderer:
+      StaticDraw: false
+      BatchDraw: true
+      Hidden: false
+      Material: Blank
+      Mesh: Cube
+      TexCoordsMultiplicator:
+        - 1
+        - 1
+    PointLight:
+      Ambient:
+        - 0.200000003
+        - 0.200000003
+        - 0.200000003
+      Diffuse:
+        - 0
+        - 0
+        - 1
+      Specular:
+        - 0
+        - 0
+        - 1
+      ConstantAttenuation: 1
+      LinearAttenuation: 0.100000001
+      QuadraticAttenuation: 2
+  609cb440-c6b5-456c-8dd9-2e55aaea0dbf:
+    Tag: Cube
+    Parent: 0f164faa-027e-44d7-8730-388396d023ee
+    Transform:
+      Position:
+        - 0
+        - 0.5
+        - 0
+      Rotation:
+        - 0
+        - 0
+        - 0
+      Scale:
+        - 1
+        - 1
+        - 1
+    MeshRenderer:
+      StaticDraw: false
+      BatchDraw: true
+      Hidden: false
+      Material: Damier
+      Mesh: Cube
+      TexCoordsMultiplicator:
+        - 1
+        - 1
+  c868736c-2484-4c40-8c02-ec574c1fbce2:
+    Tag: Floor
+    Parent: 0f164faa-027e-44d7-8730-388396d023ee
+    Transform:
+      Position:
+        - 0
+        - 0
+        - 0
+      Rotation:
+        - 90
+        - 0
+        - 0
+      Scale:
+        - 10
+        - 10
+        - 1
+    MeshRenderer:
+      StaticDraw: false
+      BatchDraw: true
+      Hidden: false
+      Material: Blank
+      Mesh: Quad
+      TexCoordsMultiplicator:
+        - 1
+        - 1
+  7486980b-761a-4d76-bad3-bafee19ba375:
+    Tag: Player
+    Parent: 0f164faa-027e-44d7-8730-388396d023ee
+    Camera:
+      Main: true
+      Orthographic: false
+      FOV: 60
+      Position:
+        - 0
+        - 0.5
+        - -1
+      Rotation:
+        - 0
+        - 90
+        - 0
+    FirstPersonController:
+      TranslationSpeed: 1
+      RotationSpeed: 10
+      ZoomSpeed: 0.100000001
+1: ~
+2: ~
+3: ~
+4: ~
+5: ~
+6: ~
+7: ~
+8: ~
+9: ~
+10: ~
+11: ~
+12: ~
+13: ~
+14: ~
+15: ~
+16: ~
+17: ~
+18: ~
+19: ~
+20: ~
+21: ~
+22: ~
+23: ~
+24: ~
+25: ~
+26: ~
+27: ~
+28: ~
+29: ~
+30: ~
+31:
+  ecc3c493-6bec-4bac-b5dd-ffed7724a03d:
+    Tag: FreeCamera
+    Parent: 0f164faa-027e-44d7-8730-388396d023ee
+    Camera:
+      Main: true
+      Orthographic: false
+      FOV: 60
+      Position:
+        - 1.5
+        - 1.5
+        - 1.5
+      Rotation:
+        - -30
+        - 220
+        - 0
+    FreeCameraController:
+      TranslationSpeed: 10
+      RotationSpeed: 35
+      ZoomSpeed: 0.100000001
+  0f164faa-027e-44d7-8730-388396d023ee:
+    Tag: Scene
+    Parent: None

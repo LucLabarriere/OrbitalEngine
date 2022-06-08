@@ -17,6 +17,7 @@ add_subdirectory(vendor/glm)
 add_subdirectory(vendor/imgui)
 add_subdirectory(vendor/fmt)
 add_subdirectory(vendor/assimp)
+add_subdirectory(vendor/yaml-cpp-0.7.0)
 
 add_subdirectory(OrbitalEngine)
 add_subdirectory(OrbitalEditor)

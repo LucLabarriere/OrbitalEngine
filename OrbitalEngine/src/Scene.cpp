@@ -12,7 +12,12 @@
 namespace Orbital
 {
 	// Initializing
-	Scene::Scene() : ECS()
+	Scene::Scene(const std::string& tag) : ECS(), mTag(tag)
+	{
+
+	}
+
+	Scene::~Scene()
 	{
 
 	}
@@ -22,8 +27,10 @@ namespace Orbital
 		ECS::Initialize();
 	}
 
-	Scene Scene::Copy(Scene& newScene)
+	Scene Scene::Copy()
 	{
+		Scene newScene(mTag);
+		OE::ActiveScene = &newScene;
 		newScene.Initialize();
 
 		auto& srcLayers = this->mLayers;
@@ -39,10 +46,12 @@ namespace Orbital
 				auto& tag = srcLayers[i]->get<Tag>(e);
 				auto& layer = srcLayers[i]->get<LayerID>(e);
 				auto& hierarchy = srcLayers[i]->get<Hierarchy>(e);
+				auto& nativeScriptManager = srcLayers[i]->get<NativeScriptManager>(e);
 
 				auto newEntity = newScene.CreateEntity(tag, layer, e);
 				newEntity.GetComponent<UUID>() = uuid;
 				newEntity.GetComponent<Hierarchy>() = hierarchy;
+				newEntity.GetComponent<NativeScriptManager>() = nativeScriptManager;
 
 				OE_COPY_COMPONENT(Transform);
 				OE_COPY_COMPONENT(MeshRenderer);
@@ -161,29 +170,8 @@ namespace Orbital
 		}
 	}
 
-	void Scene::OnStart()
-	{
-		StartScript<FirstPersonController>();
-		StartScript<FreeCameraController>();
-	}
-
-	void Scene::OnLoad()
-	{
-		LoadScript<FirstPersonController>();
-		LoadScript<FreeCameraController>();
-	}
-
-	void Scene::OnExit()
-	{
-		ExitScript<FirstPersonController>();
-		ExitScript<FreeCameraController>();
-	}
-
 	void Scene::OnUpdate(Time dt)
 	{
-		UpdateScript<FirstPersonController>(dt);
-		UpdateScript<FreeCameraController>(dt);
-
 		for (auto& layer : mLayers)
 		{
 			auto view = layer->view<Transform, MeshRenderer, Tag>();

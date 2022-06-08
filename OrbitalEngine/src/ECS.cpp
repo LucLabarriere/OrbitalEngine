@@ -23,8 +23,8 @@ namespace Orbital
 
 		mMainEntity.AddComponent<UUID>();
 		mMainEntity.AddComponent<Tag>(GetUniqueTag("Scene"));
+		mMainEntity.AddComponent<NativeScriptManager>();
 		auto& hierarchy = mMainEntity.AddComponent<Hierarchy>(mMainEntity, Entity());
-		// TODO: have a Component parent class with a static pointer to active scene
 
 		mMainEntity.AddComponent<LayerID>(OE_LAST_LAYER);
 	}
@@ -47,7 +47,7 @@ namespace Orbital
 		}
 
 		// TODO test this function in scripts
-		OE_RAISE_SIGSEGV("Error, the entity {} does not exist", tag);
+		OE_RAISE_SIGSEGV("ECS: The entity {} does not exist", tag);
 	}
 
 	Entity ECS::GetEntity(const UUID& uuid)
@@ -67,12 +67,36 @@ namespace Orbital
 		}
 
 		// TODO: test this function in scripts
-		OE_RAISE_SIGSEGV("Error, the entity {} does not exist", (size_t)uuid);
+		OE_RAISE_SIGSEGV("ECS: The entity {} does not exist", (size_t)uuid);
 	}
 
 	void ECS::DeleteEntity(const entt::entity& handle, const LayerID& layerId)
 	{
 		mLayers[layerId]->destroy(handle);
+	}
+
+	bool ECS::IsValid(const Entity& entity) const
+	{
+		return mLayers[entity.GetLayerID()]->valid(entity.GetHandle());
+	}
+
+	bool ECS::IsValid(const UUID& uuid) const
+	{
+		for (size_t i = 0; i < mLayers.size(); i++)
+		{
+			auto& layer = mLayers[i];
+			auto view = layer->view<UUID>();
+
+			for (auto entity : view)
+			{
+				auto& otherUUID = view.get<UUID>(entity);
+
+				if (uuid == otherUUID)
+					return true;
+			}
+		}
+
+		return false;
 	}
 
 	Entity ECS::GetSceneEntity()

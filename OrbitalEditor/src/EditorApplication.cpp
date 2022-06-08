@@ -6,9 +6,11 @@
 #include "Clipboard.h"
 #include "Tools.h"
 
+
+
 EditorApplication::EditorApplication() : Application()
 {
-	//mCameraController = CreateRef<CameraController>(&m_camera);
+
 }
 
 EditorApplication::~EditorApplication()
@@ -21,24 +23,30 @@ EditorApplication::~EditorApplication()
 
 void EditorApplication::OnLoad()
 {
+	mCurrentSceneTag = "Sandbox";
+	mSceneManager.NewScene(mCurrentSceneTag);
+
 	// TODO: move most of the things into a start up script tied to the Scene entity.
 	// - Add a freeCamera entity with transform and camera components
 	// - It should be possible to hide it from the editor
 	// - Remove position from camera, add reference to transform instead
 	Tools::Initialize();
-	Widget::SetActiveScene(&mActiveScene);
-
-	mEditorCamera = mActiveScene->CreateEntity("FreeCamera", OE_LAST_LAYER);
+	
+	mEditorCamera = OE::ActiveScene->CreateEntity("FreeCamera", OE_LAST_LAYER);
 	mEditorCamera.AddComponent<Camera>();
-	auto& freeCameraController = mEditorCamera.AddComponent<FreeCameraController>();
-	mActiveScene->SetMainCamera(mEditorCamera);
+	mEditorCamera.AddComponent<FreeCameraController>();
+	auto& freeCameraController = mEditorCamera.GetComponent<NativeScriptManager>().Push<FreeCameraController>();
+	freeCameraController->SetPosition({ 1.5f, 1.5f, 1.5f });
+	freeCameraController->Rotate({ -30.0f, 130.f });
 
-	mMainCamera = mActiveScene->CreateEntity("Player");
+	OE::ActiveScene->SetMainCamera(mEditorCamera);
+
+	mMainCamera = OE::ActiveScene->CreateEntity("Player");
 	mMainCamera.AddComponent<Camera>();
-	auto& playerController = mMainCamera.AddComponent<FirstPersonController>();
-	playerController.SetPosition({ 0.0f, 0.5f, -1.0f });
+	auto& playerController = mMainCamera.GetComponent<NativeScriptManager>().Push<FirstPersonController>();
+	playerController->SetPosition({ 0.0f, 0.5f, -1.0f });
 
-	auto floor = mActiveScene->CreateEntity("Floor");
+	auto floor = OE::ActiveScene->CreateEntity("Floor");
 	auto& tFloor = floor.AddComponent<Transform>(Transform({
 		{ 0.0f,  0.0f, 0.0f },
 		{ 90.0f, 0.0f, 0.0f },
@@ -47,7 +55,7 @@ void EditorApplication::OnLoad()
 
 	floor.AddComponent<MeshRenderer>("Quad", &tFloor, true, "Blank");
 
-	auto cube = mActiveScene->CreateEntity("Cube");
+	auto cube = OE::ActiveScene->CreateEntity("Cube");
 	auto& tCube = cube.AddComponent<Transform>(Transform({
 		{ 0.0f, 0.5f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f },
@@ -56,7 +64,7 @@ void EditorApplication::OnLoad()
 
 	auto& mr = cube.AddComponent<MeshRenderer>("Cube", &tCube, true, "Damier");
 
-	auto pointLight = mActiveScene->CreateEntity("Point Light");
+	auto pointLight = OE::ActiveScene->CreateEntity("Point Light");
 	auto& tPointLight = pointLight.AddComponent<Transform>(Transform({
 		{ 0.0f, 0.5f, 1.3f },
 		{ 0.0f, 0.0f, 0.0f },
@@ -69,7 +77,7 @@ void EditorApplication::OnLoad()
 	lPointLight.Specular = { 0.0f, 0.0f, 1.0f };
 	pointLight.AddComponent<MeshRenderer>("Cube", &tPointLight);
 
-	auto pointLight2 = mActiveScene->CreateEntity("Point Light2");
+	auto pointLight2 = OE::ActiveScene->CreateEntity("Point Light2");
 	auto& tPointLight2 = pointLight2.AddComponent<Transform>(Transform({
 		{ 1.3f, 0.5f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f },
@@ -82,11 +90,8 @@ void EditorApplication::OnLoad()
 	lPointLight2.Specular = { 1.0f, 0.0f, 0.0f };
 	pointLight2.AddComponent<MeshRenderer>("Cube", &tPointLight2);
 
-	auto sun = mActiveScene->CreateEntity("Sun");
+	auto sun = OE::ActiveScene->CreateEntity("Sun");
 	sun.AddComponent<DirectionalLight>();
-
-	freeCameraController.SetPosition({ 1.5f, 1.5f, 1.5f });
-	freeCameraController.Rotate({ -30.0f, 130.f });
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().Fonts->AddFontFromFileTTF(Settings::GetAssetPath("fonts/NotoSans-Regular.ttf").c_str(), 32);
@@ -122,8 +127,12 @@ void EditorApplication::OnLoad()
 	mBatchesPanel = CreateScope<BatchesPanel>();
 	mAssetManagerPanel = CreateScope<AssetManagerPanel>();
 	mFileExplorerPanel = CreateScope<FileExplorerPanel>();
+
 	Inspector::Initialize();
 	Clipboard::Initialize();
+
+	//mSceneManager.SerializeActiveScene("scenes/Sandbox.oes");
+	//mSceneManager.DeserializeScene("scenes/Sandbox.oes");
 
 	Stop(); // The scene is stopped on startup
 }
@@ -155,9 +164,9 @@ void EditorApplication::OnUpdate(Time dt)
 	ImGui::Render();
 
 	Renderer::Get()->NewFrame();
-	mActiveScene->OnUpdate(dt);
-	mActiveScene->Begin();
-	mActiveScene->Render();
+	OE::ActiveScene->OnUpdate(dt);
+	OE::ActiveScene->Begin();
+	OE::ActiveScene->Render();
 
 	Renderer::RenderBatches();
 	Renderer::RenderUnits();
@@ -165,8 +174,8 @@ void EditorApplication::OnUpdate(Time dt)
 	Renderer::Get()->DisplayFrame();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	OE::ActiveScene->End();
 
-	mActiveScene->End();
 	mWindow->OnUpdate();
 }
 
@@ -175,23 +184,23 @@ void EditorApplication::Play()
 {
 	// TODO: make cameras work here
 	mState = EditorState::Playing;
-	mEditorCamera.GetComponent<FreeCameraController>().SetUpdating(false);
-	mActiveScene = &mRuntimeScene;
-	mRuntimeScene = Scene();
-	mRuntimeScene = mScene.Copy(mRuntimeScene);
-	mActiveScene->SetUpdating(true);
-	mActiveScene->SetMainCamera(mMainCamera);
-	mActiveScene->OnStart();
+	mEditorCamera.GetComponent<NativeScriptManager>().Get<FreeCameraController>()->SetUpdating(false);
+	mRuntimeSceneManager = mSceneManager.Copy();
+	mRuntimeSceneManager.SetActive(mCurrentSceneTag);
+	OE::ActiveScene->SetUpdating(true);
+	OE::ActiveScene->SetMainCamera(mMainCamera);
+	mSceneManager.OnStart();
 }
 
 void EditorApplication::Stop()
 {
 	mState = EditorState::Stopped;
-	mActiveScene->OnExit();
-	mActiveScene = &mScene;
-	mActiveScene->SetUpdating(false);
-	mEditorCamera.GetComponent<FreeCameraController>().SetUpdating(true);
-	mActiveScene->SetMainCamera(mEditorCamera);
+	mSceneManager.SetActive(mCurrentSceneTag);
+	mSceneManager.OnExit();
+	OE::ActiveScene->SetUpdating(false);
+	mEditorCamera.GetComponent<NativeScriptManager>().Get<FreeCameraController>()->SetUpdating(true);
+	OE::ActiveScene->SetMainCamera(mEditorCamera);
+	//mSceneManager.SerializeActiveScene("scenes/Sandbox.oes");
 }
 
 bool EditorApplication::OnMouseScrolled(MouseScrolledEvent& e)

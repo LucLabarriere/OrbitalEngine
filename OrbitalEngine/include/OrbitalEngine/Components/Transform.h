@@ -33,3 +33,27 @@ namespace Orbital
 		bool mDirty = true;
 	};
 }
+
+namespace YAML
+{
+	template<>
+	struct convert<Orbital::Transform>
+	{
+		static Node encode(const Orbital::Transform& transform)
+		{
+			Node node;
+			node["Position"] = transform.GetPosition();
+			node["Rotation"] = transform.GetRotation();
+			node["Scale"] = transform.GetScale();
+			return node;
+		}
+
+		static bool decode(const Node& node, Orbital::Transform& transform)
+		{
+			transform.GetPosition() = node["Position"].as<Orbital::Vec3>();
+			transform.GetRotation() = node["Rotation"].as<Orbital::Vec3>();
+			transform.GetScale() = node["Scale"].as<Orbital::Vec3>();
+			return true;
+		}
+	};
+}

@@ -33,4 +33,16 @@ namespace Orbital
 	{
 		return OE::ActiveScene->AddComponent<T>(mHandle, mLayerId, args...);
 	}
+
+	template <typename T, typename ...Args>
+	Ref<T> Entity::AddNativeScript(Args... args)
+	{
+		return OE::ActiveScene->AddNativeScript<T>(*this, args...);
+	}
+
+	template <typename T>
+	Ref<T> Entity::GetNativeScript()
+	{
+		return OE::ActiveScene->GetNativeScript<T>(mHandle, mLayerId);
+	}
 }

@@ -1,15 +1,7 @@
-#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Logic/ECS.h"
 
 namespace Orbital
 {
-	FreeCameraController::FreeCameraController()
-		: NativeScript()
-	{
-		// TODO: remove all the setting here
-		// Check how and when the Constructor, OnLoad and OnStart methods should be called
-		// Move the position to a transform component and use it instead
-		mCamera = &GetComponent<Camera>();
-	}
 
 	FreeCameraController::FreeCameraController(const Entity& e)
 		: NativeScript(e)

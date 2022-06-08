@@ -1,7 +1,6 @@
 #pragma once
 
-#include "OrbitalEngine/Logic/Scene.h"
-#include "OrbitalEngine/Components/NativeScriptManager.h"
+#include "OrbitalEngine/Logic/ECS.h"
 
 #define OE_CALL_NATIVE_SCRIPT_METHOD(method, ...)\
 	for (auto& layer : OE::ActiveScene->mLayers)\

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "OrbitalEngine/Logic/Scene.h"
 #include "OrbitalEngine/Events.h"
 #include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Logic/Entity.h"
 
 namespace Orbital
 {
@@ -41,11 +41,6 @@ namespace Orbital
 	private:
 		void* mValue;
 		std::string mType;
-	};
-
-	class ScriptImplementer
-	{
-
 	};
 
 	class NativeScript : public Entity

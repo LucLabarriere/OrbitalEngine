@@ -1,6 +1,8 @@
 #pragma once
 
 #include "OrbitalEngine/Utils.h"
+#include "OrbitalEngine/Components/UUID.h"
+#include "OrbitalEngine/Components/Tag.h"
 
 namespace Orbital
 {
@@ -18,6 +20,8 @@ namespace Orbital
 		template <typename T> T* TryGetComponent() const;
 		template <typename T> void RemoveComponent() const;
 		template <typename T, typename... Args> T& AddComponent(Args... args);
+		template <typename T, typename ...Args> Ref<T> AddNativeScript(Args... args);
+		template <typename T> Ref<T> GetNativeScript();
 
 		void ChangeLayer(LayerID layerId);
 		void Destroy();

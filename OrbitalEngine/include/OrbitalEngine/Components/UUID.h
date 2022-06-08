@@ -1,5 +1,6 @@
 #pragma once
 
+// Todo remove those headers
 #include <endianness.h>
 #include <uuid_v4.h>
 #include "OrbitalEngine/Components/Component.h"

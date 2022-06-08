@@ -10,7 +10,6 @@ namespace Orbital
 	class FreeCameraController : public NativeScript
 	{
 	public:
-		FreeCameraController();
 		FreeCameraController(const Entity& e);
 		FreeCameraController(const FreeCameraController& other);
 

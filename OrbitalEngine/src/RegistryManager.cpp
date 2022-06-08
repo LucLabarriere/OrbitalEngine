@@ -1,5 +1,4 @@
 #include "OrbitalEngine/Logic.h"
-#include "OrbitalEngine/Components.h"
 #include "OrbitalEngine/Graphics.h"
 
 #define OE_COPY_COMPONENT(ClassName)\
@@ -12,7 +11,7 @@
 namespace Orbital
 {
 	// Initializing
-	void ECS::Initialize()
+	void RegistryManager::Initialize()
 	{
 		for (auto& layer : mLayers)
 		{
@@ -29,7 +28,7 @@ namespace Orbital
 		mMainEntity.AddComponent<LayerID>(OE_LAST_LAYER);
 	}
 
-	Entity ECS::GetEntity(const Tag& tag)
+	Entity RegistryManager::GetEntity(const Tag& tag)
 	{
 		for (size_t i = 0; i < mLayers.size(); i++)
 		{
@@ -50,7 +49,7 @@ namespace Orbital
 		OE_RAISE_SIGSEGV("ECS: The entity {} does not exist", tag);
 	}
 
-	Entity ECS::GetEntity(const UUID& uuid)
+	Entity RegistryManager::GetEntity(const UUID& uuid)
 	{
 		for (size_t i = 0; i < mLayers.size(); i++)
 		{
@@ -70,17 +69,17 @@ namespace Orbital
 		OE_RAISE_SIGSEGV("ECS: The entity {} does not exist", (size_t)uuid);
 	}
 
-	void ECS::DeleteEntity(const entt::entity& handle, const LayerID& layerId)
+	void RegistryManager::DeleteEntity(const entt::entity& handle, const LayerID& layerId)
 	{
 		mLayers[layerId]->destroy(handle);
 	}
 
-	bool ECS::IsValid(const Entity& entity) const
+	bool RegistryManager::IsValid(const Entity& entity) const
 	{
 		return mLayers[entity.GetLayerID()]->valid(entity.GetHandle());
 	}
 
-	bool ECS::IsValid(const UUID& uuid) const
+	bool RegistryManager::IsValid(const UUID& uuid) const
 	{
 		for (size_t i = 0; i < mLayers.size(); i++)
 		{
@@ -99,31 +98,31 @@ namespace Orbital
 		return false;
 	}
 
-	Entity ECS::GetSceneEntity()
+	Entity RegistryManager::GetSceneEntity()
 	{
 		return mMainEntity;
 	}
 
-	bool ECS::IsValid(const entt::entity& handle, const LayerID& layerId) const
+	bool RegistryManager::IsValid(const entt::entity& handle, const LayerID& layerId) const
 	{
 		return mLayers[layerId]->valid(handle);
 	}
 
-	Entity ECS::CreateEntity(const Tag& tag, LayerID layerId)
+	Entity RegistryManager::CreateEntity(const Tag& tag, LayerID layerId)
 	{
 		Entity e(layerId, mLayers[layerId]->create());
 
 		e.AddComponent<UUID>();
 		e.AddComponent<Tag>(GetUniqueTag(tag));
 		auto& hierarchy = e.AddComponent<Hierarchy>(e, GetSceneEntity());
-
+		e.AddComponent<NativeScriptManager>();
 		e.AddComponent<LayerID>(layerId);
 		mCreatedEntities.push_back(e);
 
 		return e;
 	}
 
-	Entity ECS::CreateEntity(const Tag& tag, LayerID layerId, const entt::entity& handle)
+	Entity RegistryManager::CreateEntity(const Tag& tag, LayerID layerId, const entt::entity& handle)
 	{
 		Entity e(layerId, mLayers[layerId]->create(handle));
 
@@ -131,13 +130,14 @@ namespace Orbital
 		e.AddComponent<Tag>(GetUniqueTag(tag));
 		auto& hierarchy = e.AddComponent<Hierarchy>(e, GetSceneEntity());
 
+		e.AddComponent<NativeScriptManager>();
 		e.AddComponent<LayerID>(layerId);
 		mCreatedEntities.push_back(e);
 
 		return e;
 	}
 
-	Entity ECS::DuplicateEntity(const Entity& e)
+	Entity RegistryManager::DuplicateEntity(const Entity& e)
 	{
 		// TODO correct bug when copy pasting a child entity with children /
 		auto& tag = e.GetComponent<Tag>();
@@ -181,17 +181,17 @@ namespace Orbital
 		return newEntity;
 	}
 
-	void ECS::RequireDelete(const Entity& entity)
+	void RegistryManager::RequireDelete(const Entity& entity)
 	{
 		mDeleteRequired.push_back(entity);
 	}
 
-	void ECS::RenameEntity(Entity& e, const Tag& newTag)
+	void RegistryManager::RenameEntity(Entity& e, const Tag& newTag)
 	{
 		e.GetComponent<Tag>() = GetUniqueTag(newTag, &e);
 	}
 
-	std::string ECS::GetUniqueTag(const std::string& tag, Entity* entity)
+	std::string RegistryManager::GetUniqueTag(const std::string& tag, Entity* entity)
 	{
 		// TODO: check this method, why do we use Entity* ?
 		size_t count = 0;

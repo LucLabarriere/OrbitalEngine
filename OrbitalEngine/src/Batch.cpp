@@ -1,6 +1,7 @@
 #include "OrbitalEngine/Graphics/Batch.h"
 #include "OrbitalEngine/Graphics/RenderCommands.h"
-#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Components/MeshRenderer.h"
+#include "OrbitalEngine/Components/Transform.h"
 #include "OrbitalEngine/Utils.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"

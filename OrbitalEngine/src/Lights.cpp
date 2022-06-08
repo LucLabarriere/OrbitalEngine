@@ -1,4 +1,5 @@
-#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Components/Lights.h"
+#include "OrbitalEngine/Components/Transform.h"
 #include "OrbitalEngine/Utils.h"
 #include "OrbitalEngine/Graphics.h"
 

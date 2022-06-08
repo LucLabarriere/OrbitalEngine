@@ -1,5 +1,4 @@
-#include "OrbitalEngine/Components.h"
-#include "OrbitalEngine/Logic.h"
+#include "OrbitalEngine/Logic/ECS.h"
 
 namespace Orbital
 {

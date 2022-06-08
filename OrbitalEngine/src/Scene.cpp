@@ -1,5 +1,4 @@
-#include "OrbitalEngine/Logic.h"
-#include "OrbitalEngine/Components.h"
+#include "OrbitalEngine/Logic/ECS.h"
 #include "OrbitalEngine/Graphics.h"
 
 #define OE_COPY_COMPONENT(ClassName)\
@@ -12,7 +11,7 @@
 namespace Orbital
 {
 	// Initializing
-	Scene::Scene(const std::string& tag) : ECS(), mTag(tag)
+	Scene::Scene(const std::string& tag) : RegistryManager(), mTag(tag)
 	{
 
 	}
@@ -24,7 +23,7 @@ namespace Orbital
 
 	void Scene::Initialize()
 	{
-		ECS::Initialize();
+		RegistryManager::Initialize();
 	}
 
 	Scene Scene::Copy()
@@ -69,8 +68,8 @@ namespace Orbital
 
 	void Scene::SetUpdating(bool value)
 	{
-		ECS::SetUpdating<FirstPersonController>(value);
-		ECS::SetUpdating<FreeCameraController>(value);
+		RegistryManager::SetUpdating<FirstPersonController>(value);
+		RegistryManager::SetUpdating<FreeCameraController>(value);
 	}
 
 	// Rendering

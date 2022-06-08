@@ -8,7 +8,7 @@ using namespace Orbital;
 class MetricsPanel
 {
 public:
-	MetricsPanel(FreeCameraController* cameraController) : mCameraController(cameraController) { }
+	MetricsPanel(Ref<FreeCameraController> cameraController) : mCameraController(cameraController) { }
 
 	void Render()
 	{
@@ -37,5 +37,5 @@ public:
 
 private:
 	bool mIsDemoShown = true;
-	FreeCameraController* mCameraController;
+	Ref<FreeCameraController> mCameraController;
 };

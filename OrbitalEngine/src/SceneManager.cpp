@@ -1,5 +1,4 @@
 #include "OrbitalEngine/Logic.h"
-#include "OrbitalEngine/Components.h"
 
 #define OE_SERIALIZE_COMPONENT(Component)\
 {\
@@ -73,8 +72,8 @@ namespace Orbital
 				OE_SERIALIZE_COMPONENT(PointLight);
 				OE_SERIALIZE_COMPONENT(SpotLight);
 				OE_SERIALIZE_COMPONENT(Camera);
-				OE_SERIALIZE_COMPONENT(FirstPersonController);
-				OE_SERIALIZE_COMPONENT(FreeCameraController);
+				//OE_SERIALIZE_COMPONENT(FirstPersonController);
+				//OE_SERIALIZE_COMPONENT(FreeCameraController);
 				layerNode[uuidString] = entityNode;
 			}
 
@@ -90,7 +89,7 @@ namespace Orbital
 
 	void SceneManager::DeserializeScene(const std::string& filepath)
 	{
-		assert(FileExists(Settings::GetAssetPath(filepath)), "SceneManager: {} does not exist", Settings::GetAssetPath(filepath));
+		OE_ASSERT(FileExists(Settings::GetAssetPath(filepath)), "SceneManager: {} does not exist", Settings::GetAssetPath(filepath));
 		YAML::Node node = YAML::LoadFile(Settings::GetAssetPath(filepath));
 		auto sceneTag = node["Scene Tag"].as<std::string>();
 		auto sceneUUID = node["Scene UUID"].as<UUID>();
@@ -160,10 +159,10 @@ namespace Orbital
 						auto rotationSpeed = component.second["RotationSpeed"].as<float>();
 						auto zoomSpeed = component.second["ZoomSpeed"].as<float>();
 
-						auto& newFcc = newEntity.AddComponent<FreeCameraController>();
+						/*auto& newFcc = newEntity.AddComponent<FreeCameraController>();
 						newFcc.SetTranslationSpeed(translationSpeed);
 						newFcc.SetRotationSpeed(rotationSpeed);
-						newFcc.SetZoomSpeed(zoomSpeed);
+						newFcc.SetZoomSpeed(zoomSpeed);*/
 					}
 					else if (component.first.as<std::string>() == "FirstPersonController")
 					{
@@ -171,10 +170,10 @@ namespace Orbital
 						auto rotationSpeed = component.second["RotationSpeed"].as<float>();
 						auto zoomSpeed = component.second["ZoomSpeed"].as<float>();
 
-						auto& newFcc = newEntity.AddComponent<FirstPersonController>();
+						/*auto& newFcc = newEntity.AddComponent<FirstPersonController>();
 						newFcc.SetTranslationSpeed(translationSpeed);
 						newFcc.SetRotationSpeed(rotationSpeed);
-						newFcc.SetZoomSpeed(zoomSpeed);
+						newFcc.SetZoomSpeed(zoomSpeed);*/
 					}
 				}
 			}

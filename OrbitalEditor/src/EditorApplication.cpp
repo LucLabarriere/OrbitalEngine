@@ -34,8 +34,7 @@ void EditorApplication::OnLoad()
 	
 	mEditorCamera = OE::ActiveScene->CreateEntity("FreeCamera", OE_LAST_LAYER);
 	mEditorCamera.AddComponent<Camera>();
-	mEditorCamera.AddComponent<FreeCameraController>();
-	auto& freeCameraController = mEditorCamera.GetComponent<NativeScriptManager>().Push<FreeCameraController>();
+	auto freeCameraController = mEditorCamera.AddNativeScript<FreeCameraController>();
 	freeCameraController->SetPosition({ 1.5f, 1.5f, 1.5f });
 	freeCameraController->Rotate({ -30.0f, 130.f });
 
@@ -43,7 +42,7 @@ void EditorApplication::OnLoad()
 
 	mMainCamera = OE::ActiveScene->CreateEntity("Player");
 	mMainCamera.AddComponent<Camera>();
-	auto& playerController = mMainCamera.GetComponent<NativeScriptManager>().Push<FirstPersonController>();
+	auto playerController = mMainCamera.AddNativeScript<FirstPersonController>();
 	playerController->SetPosition({ 0.0f, 0.5f, -1.0f });
 
 	auto floor = OE::ActiveScene->CreateEntity("Floor");
@@ -123,7 +122,7 @@ void EditorApplication::OnLoad()
 	mViewport = CreateRef<Viewport>(this);
 	mHierarchyPanel = CreateRef<HierarchyPanel>();
 	mHierarchyPanel->Initialize();
-	mMetricsPanel = CreateScope<MetricsPanel>(&freeCameraController);
+	mMetricsPanel = CreateScope<MetricsPanel>(freeCameraController);
 	mBatchesPanel = CreateScope<BatchesPanel>();
 	mAssetManagerPanel = CreateScope<AssetManagerPanel>();
 	mFileExplorerPanel = CreateScope<FileExplorerPanel>();
@@ -184,7 +183,7 @@ void EditorApplication::Play()
 {
 	// TODO: make cameras work here
 	mState = EditorState::Playing;
-	mEditorCamera.GetComponent<NativeScriptManager>().Get<FreeCameraController>()->SetUpdating(false);
+	mEditorCamera.GetNativeScript<FreeCameraController>()->SetUpdating(false);
 	mRuntimeSceneManager = mSceneManager.Copy();
 	mRuntimeSceneManager.SetActive(mCurrentSceneTag);
 	OE::ActiveScene->SetUpdating(true);
@@ -198,7 +197,7 @@ void EditorApplication::Stop()
 	mSceneManager.SetActive(mCurrentSceneTag);
 	mSceneManager.OnExit();
 	OE::ActiveScene->SetUpdating(false);
-	mEditorCamera.GetComponent<NativeScriptManager>().Get<FreeCameraController>()->SetUpdating(true);
+	mEditorCamera.GetNativeScript<FreeCameraController>()->SetUpdating(true);
 	OE::ActiveScene->SetMainCamera(mEditorCamera);
 	//mSceneManager.SerializeActiveScene("scenes/Sandbox.oes");
 }

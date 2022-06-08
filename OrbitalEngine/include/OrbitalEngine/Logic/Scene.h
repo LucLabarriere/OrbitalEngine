@@ -2,16 +2,14 @@
 #define SCENE_H
 
 #include "OrbitalEngine/Utils.h"
-#include "OrbitalEngine/Components/Tag.h"
-#include "OrbitalEngine/Components/UUID.h"
-#include "OrbitalEngine/Logic/ECS.h"
+#include "OrbitalEngine/Logic/RegistryManager.h"
 
 namespace Orbital
 {
 	class Camera;
 	class SceneManager;
 
-	class Scene : public ECS
+	class Scene : public RegistryManager
 	{
 	public:
 		// Initializing

@@ -10,9 +10,5 @@ namespace Orbital
 	{
 	public:
 		Component() { }
-		static void SetActiveScene(Scene** scene) { sActiveScene = scene; }
-
-	private:
-		static inline Scene** sActiveScene;
 	};
 }

@@ -79,6 +79,7 @@ namespace Orbital
 			}
 
 			OnUpdate(dt);
+			mSceneManager.OnUpdate(dt);
 		}
 
 		Logger::Trace("Leaving Application");
